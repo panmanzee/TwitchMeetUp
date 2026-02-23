@@ -8,8 +8,9 @@ namespace testforproject.Models
         public int Eid { get; set; }//
         
         public string Name { get; set; }//
+
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
         
-        public ICollection<String> Catagories { get; set; }//
         
         
         public ICollection<User> Particitpant { get; set; }
@@ -18,9 +19,7 @@ namespace testforproject.Models
         
         public int MaxParticitpant { get; set; }//
         
-        public String DurationStart { get; set; }//
-
-        public String DurationEnd { get; set; }
+       
 
         public bool IsExpired => DateTimeOffset.Now > ExpiredDate; // Utc
         public DateTimeOffset ExpiredDate { get; set; }
