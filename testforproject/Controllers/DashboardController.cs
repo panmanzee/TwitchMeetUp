@@ -19,7 +19,7 @@ namespace testforproject.Controllers
         public IActionResult Show()
         {
             var events = _db.Events
-                            .Include(e => e.requirements)
+                            
                             .Include(e => e.Owner)
                             .OrderByDescending(e => e.Eid)
                             .Take(4)
@@ -43,9 +43,9 @@ namespace testforproject.Controllers
                                 name = x.Name,
                                 owner = x.Owner.Username,
                                 location = x.Location,
-                                duration = x.Duration,
+                                Expire = x.ExpiredDate,
                                 maxParticitpant = x.MaxParticitpant,
-                                particitpant = x.Particitpant
+                                particitpant = x.Participants
                             })
                             .ToList();
 

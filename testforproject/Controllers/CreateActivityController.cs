@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using testforproject.Data;
 using testforproject.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace testforproject.Controllers
 {
@@ -27,8 +28,8 @@ namespace testforproject.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(
             string Name, string Location, int MaxParticitpant,
-            List<int> SelectedCategoryIds, DateTime ExpiredDate,
-            string Decription, DateTime EventStart, DateTime EventStop)
+            List<int> SelectedCategoryIds, DateTime Expired_Date,
+            string Decription, DateTime StartTime, DateTime closetime)
         {
             
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -52,13 +53,13 @@ namespace testforproject.Controllers
                 Location = Location,
                 MaxParticitpant = MaxParticitpant,
                 OwnerId = currentUserId, 
-                ExpiredDate = ExpiredDate,
-                EventStart = EventStart == default ? DateTime.Now : EventStart,
-                EventStop = EventStop == default ? EventStop : EventStop,
+                ExpiredDate = Expired_Date,
+                EventStart = StartTime == default ? DateTime.Now : StartTime,
+                EventStop = closetime == default ? closetime : closetime,
                 status = "open",
-                Decription = Decription ?? "",
-                RequirementsId = defaultReq.RequirementsId,
-                Particitpant = new List<int>()
+                Description = Decription ?? "",
+                
+                
             };
 
            

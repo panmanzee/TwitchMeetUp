@@ -33,7 +33,7 @@ namespace testforproject.Controllers.API.Dashboard
                                 location = x.Location,
                                 //duration = x.Duration,
                                 maxParticitpant = x.MaxParticitpant,
-                                particitpant = x.Particitpant
+                                particitpant = x.Participants
                             })
                             .ToList();
 

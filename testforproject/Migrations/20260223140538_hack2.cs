@@ -5,7 +5,7 @@
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class jfjf : Migration
+    public partial class hack2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,38 +14,29 @@ namespace testforproject.Migrations
                 name: "FK_Events_Requirements_RequirementsId",
                 table: "Events");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "RequirementsId",
-                table: "Events",
-                type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
+            migrationBuilder.DropIndex(
+                name: "IX_Events_RequirementsId",
+                table: "Events");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Events_Requirements_RequirementsId",
-                table: "Events",
-                column: "RequirementsId",
-                principalTable: "Requirements",
-                principalColumn: "RequirementsId");
+            migrationBuilder.DropColumn(
+                name: "RequirementsId",
+                table: "Events");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Events_Requirements_RequirementsId",
-                table: "Events");
-
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.AddColumn<int>(
                 name: "RequirementsId",
                 table: "Events",
                 type: "int",
                 nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "int",
-                oldNullable: true);
+                defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_RequirementsId",
+                table: "Events",
+                column: "RequirementsId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Events_Requirements_RequirementsId",

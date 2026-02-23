@@ -21,7 +21,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INotification, NotificationService>();
 builder.Services.AddOpenApi();
-builder.Services.AddHostedService<EventIsExpired>();
+//builder.Services.AddHostedService<EventIsExpired>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyApp", builder =>

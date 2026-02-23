@@ -10,11 +10,11 @@ namespace testforproject.Models
         public string Name { get; set; }//
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
-        
-        
-        
-        public ICollection<User> Particitpant { get; set; }
-       
+
+
+
+        public ICollection<User> Participants { get; set; } = new List<User>();
+
         public string Location { get; set; }//
         
         public int MaxParticitpant { get; set; }//
@@ -23,9 +23,9 @@ namespace testforproject.Models
 
         public bool IsExpired => DateTimeOffset.Now > ExpiredDate; // Utc
         public DateTimeOffset ExpiredDate { get; set; }
-        public bool Status { get; set; }
-        public string Discription { get; set; }
-        public Requirements requirements { get; set; }
+        
+        
+        //public Requirements requirements { get; set; }
 
         // gu เพิ่มเอง 
         [Required]
@@ -40,11 +40,11 @@ namespace testforproject.Models
         public string status { get; set; } = "open";
 
         [Required]
-        public string Decription { get; set; }
+        public string Description { get; set; }
         public int OwnerId { get; set; }
 
         public User Owner { get; set; }
-        public Requirements? requirements { get; set; }
+        
 
     }
 

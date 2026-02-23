@@ -3,14 +3,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class addnotification : Migration
+    public partial class hack : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Requirements",
                 columns: table => new
@@ -55,14 +70,14 @@ namespace testforproject.Migrations
                     Eid = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Catagories = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaxParticitpant = table.Column<int>(type: "int", nullable: false),
-                    DurationStart = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DurationEnd = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpiredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpiredDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     RequirementsId = table.Column<int>(type: "int", nullable: false),
+                    EventStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EventStop = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -90,7 +105,8 @@ namespace testforproject.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserUid = table.Column<int>(type: "int", nullable: false)
+                    UserUid = table.Column<int>(type: "int", nullable: false),
+                    IsReaded = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,6 +143,30 @@ namespace testforproject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventCategories",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<int>(type: "int", nullable: false),
+                    EventsEid = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventCategories", x => new { x.CategoriesId, x.EventsEid });
+                    table.ForeignKey(
+                        name: "FK_EventCategories_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventCategories_Events_EventsEid",
+                        column: x => x.EventsEid,
+                        principalTable: "Events",
+                        principalColumn: "Eid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventUser",
                 columns: table => new
                 {
@@ -148,6 +188,48 @@ namespace testforproject.Migrations
                         principalTable: "Users",
                         principalColumn: "Uid");
                 });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Board Games" },
+                    { 2, "PC Gaming" },
+                    { 3, "Console Gaming" },
+                    { 4, "Tabletop RPG" },
+                    { 5, "Cafe Hopping" },
+                    { 6, "Movie Night" },
+                    { 7, "Karaoke" },
+                    { 8, "Escape Room" },
+                    { 9, "Theme Park" },
+                    { 10, "Camping" },
+                    { 11, "Hiking" },
+                    { 12, "Cycling" },
+                    { 13, "Football" },
+                    { 14, "Basketball" },
+                    { 15, "Badminton" },
+                    { 16, "Bowling" },
+                    { 17, "Gym & Fitness" },
+                    { 18, "Street Food" },
+                    { 19, "Fine Dining" },
+                    { 20, "Pub Crawl" },
+                    { 21, "BBQ / Grill" },
+                    { 22, "Concert & Live Music" },
+                    { 23, "Museum / Art Gallery" },
+                    { 24, "Photography" },
+                    { 25, "Shopping" },
+                    { 26, "Road Trip" },
+                    { 27, "Spa Day" },
+                    { 28, "Volunteer" },
+                    { 29, "Cooking Class" },
+                    { 30, "Hackathon / Coding" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventCategories_EventsEid",
+                table: "EventCategories",
+                column: "EventsEid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_OwnerId",
@@ -179,6 +261,9 @@ namespace testforproject.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "EventCategories");
+
+            migrationBuilder.DropTable(
                 name: "EventUser");
 
             migrationBuilder.DropTable(
@@ -186,6 +271,9 @@ namespace testforproject.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserFollows");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Events");

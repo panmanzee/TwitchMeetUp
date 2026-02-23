@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260221183712_AddisEventExpired")]
-    partial class AddisEventExpired
+    [Migration("20260223140433_hack")]
+    partial class hack
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace testforproject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CategoryEvent", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventsEid")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriesId", "EventsEid");
+
+                    b.HasIndex("EventsEid");
+
+                    b.ToTable("EventCategories", (string)null);
+                });
 
             modelBuilder.Entity("EventUser", b =>
                 {
@@ -55,6 +70,175 @@ namespace testforproject.Migrations
                     b.ToTable("UserFollows", (string)null);
                 });
 
+            modelBuilder.Entity("testforproject.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Board Games"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "PC Gaming"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Console Gaming"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Tabletop RPG"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Cafe Hopping"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Movie Night"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Karaoke"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Escape Room"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Theme Park"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Camping"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Hiking"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Cycling"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Football"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Basketball"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Badminton"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Bowling"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Gym & Fitness"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Street Food"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Fine Dining"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Pub Crawl"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "BBQ / Grill"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Concert & Live Music"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Museum / Art Gallery"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "Photography"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Shopping"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "Road Trip"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "Spa Day"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Volunteer"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "Cooking Class"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "Hackathon / Coding"
+                        });
+                });
+
             modelBuilder.Entity("testforproject.Models.Event", b =>
                 {
                     b.Property<int>("Eid")
@@ -63,27 +247,18 @@ namespace testforproject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Eid"));
 
-                    b.PrimitiveCollection<string>("Catagories")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DurationEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DurationStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ExpiredDate")
+                    b.Property<DateTime>("EventStart")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsExpired")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("EventStop")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset>("ExpiredDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -101,6 +276,10 @@ namespace testforproject.Migrations
 
                     b.Property<int>("RequirementsId")
                         .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Eid");
 
@@ -209,6 +388,21 @@ namespace testforproject.Migrations
                     b.HasKey("Uid");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CategoryEvent", b =>
+                {
+                    b.HasOne("testforproject.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("testforproject.Models.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsEid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EventUser", b =>

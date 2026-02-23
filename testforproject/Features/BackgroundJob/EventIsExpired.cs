@@ -33,12 +33,12 @@ public class EventIsExpired : BackgroundService
 
         var expiredEvents = db.Events
             .Where(e => e.ExpiredDate < DateTimeOffset.UtcNow
-                     && e.Status == false)
+                     && e.status == "false")
             .ToList();
 
         foreach (var ev in expiredEvents)
         {
-            ev.Status = true;
+            ev.status = "true";
 
            
             db.Notifications.Add(new Models.Notification

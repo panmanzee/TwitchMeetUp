@@ -1,0 +1,215 @@
+﻿/* =========================================
+   BASE & LAYOUT
+========================================= */
+body {
+    background-color: #0e0e10; /* Deep dark background */
+    color: #efeff1;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.form-container {
+    background-color: #18181b; /* Slightly lighter card background */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #26262c;
+}
+
+h1 {
+    text-align: left;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 30px;
+    border-left: 5px solid #9146FF; /* Purple accent line */
+    padding-left: 15px;
+}
+
+/* =========================================
+   FORM GROUPS & LABELS
+========================================= */
+.group {
+    margin-bottom: 22px;
+}
+
+    .group.relative {
+        position: relative;
+    }
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #adadb8; /* Subdued label color */
+    letter-spacing: 0.5px;
+}
+
+/* =========================================
+   INPUTS & TEXTAREA
+========================================= */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #0e0e10;
+    border: 2px solid #26262c;
+    border-radius: 8px;
+    color: #efeff1;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+    /* Hover & Focus Effects */
+    input:hover, textarea:hover {
+        border-color: #3a3a3d;
+    }
+
+    input:focus, textarea:focus {
+        background-color: #000000;
+        border-color: #9146FF; /* Purple glow */
+        box-shadow: 0 0 0 3px rgba(145, 70, 255, 0.15);
+    }
+
+/* =========================================
+   CUSTOM MULTI-SELECT DROPDOWN
+========================================= */
+.multiple {
+    position: relative;
+    width: 100%;
+}
+
+.multi-select-header {
+    background-color: #0e0e10;
+    border: 2px solid #26262c;
+    border-radius: 8px;
+    color: #efeff1;
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+    .multi-select-header:hover {
+        border-color: #3a3a3d;
+    }
+
+    /* When clicking the header, make it look active */
+    .multi-select-header:active {
+        border-color: #9146FF;
+    }
+
+#select {
+    color: #adadb8; /* Match placeholder color initially */
+}
+
+.arrow {
+    font-size: 0.8rem;
+    color: #adadb8;
+    transition: transform 0.3s ease;
+}
+
+/* The Dropdown Box */
+.drop {
+    position: absolute;
+    top: calc(100% + 8px); /* Add a little gap below the input */
+    left: 0;
+    right: 0;
+    background-color: #18181b;
+    border: 1px solid #26262c;
+    border-radius: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    padding: 8px 0;
+}
+
+    /* Scrollbar styling for the dropdown */
+    .drop::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .drop::-webkit-scrollbar-track {
+        background: #18181b;
+    }
+
+    .drop::-webkit-scrollbar-thumb {
+        background-color: #3a3a3d;
+        border-radius: 4px;
+    }
+
+/* Individual Checkbox Items */
+.category-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: #efeff1;
+    font-size: 0.95rem;
+}
+
+    .category-option:hover {
+        background-color: #26262c;
+    }
+
+    .category-option input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 12px;
+        cursor: pointer;
+        accent-color: #9146FF; /* Makes the checkbox purple when checked */
+    }
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+.btn-submit {
+    width: 100%;
+    background-color: #9146FF;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+    .btn-submit:hover {
+        background-color: #772ce8;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(145, 70, 255, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(145, 70, 255, 0.3);
+    }

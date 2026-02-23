@@ -25,7 +25,7 @@ namespace testforproject.Controllers
         {
 
             var events = _db.Events
-              .Include(e => e.requirements)
+              
               .Include(e => e.Owner)  
               .OrderByDescending(e => e.Eid)
               .Take(4)
