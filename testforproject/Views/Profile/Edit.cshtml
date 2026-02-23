@@ -1,0 +1,88 @@
+﻿@model testforproject.Models.User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EditProfile</title>
+    <link rel="stylesheet" href="~/css/Profile/Edit.css">
+</head>
+<body>
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+
+            <form id="upload">
+                <label>Choose image to upload</label><br>
+                <input type="file" id="image" name="file" accept=".jpg,.jpeg,.png">
+                <br><br>
+                <button type="submit">Upload Image</button>
+            </form>
+
+        </div>
+    </div>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-text">
+                <h2>เกี่ยวกับ @Model.Username</h2>
+                <p class="followers">ผู้ติดตาม 0 คน</p>
+                <p class="desc">เราไม่รู้ว่ามองภาพรวมทั้งหมด แต่เราน่าจะว่า @Model.Username นี่แหละเยี่ยม</p>
+            </div>
+
+            <div class="profile-avatar">
+                @if (Model.ProfilePictureSrc == null)
+                {
+                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
+                }
+                    else
+                    {
+                    <img asp-append-version=" true" src="~/imageProfile/@(Model.Uid + ".jpg") " />
+                    }
+
+                
+            </div>
+        </div>
+
+        
+        <h3 class="section-title">การตั้งค่าโปรไฟล์</h3>
+
+        <div class="form-group-disabled">
+            <label >ชื่อผู้ใช้</label>
+            <input type="text" value="@Model.Username" disabled>
+            <small>คุณสามารถเปลี่ยนชื่อผู้ไม่ใช้ได้</small>
+        </div>
+
+        <div class="form-group">
+            <label>ชื่อที่แสดง</label>
+            <input type="text" id="DisplayName" value="@(Model.DisplayName == null ? Model.Username : Model.DisplayName)">
+            <small>ปรับแต่งการใช้ชื่อที่แตกต่างกันในเนื้อหาของคุณ</small>
+        </div>
+
+        <div class="form-group bio-group">
+            <label>Bio</label>
+            <textarea id="Bio" rows="3"></textarea>
+            <small>คำอธิบายเกี่ยวกับคุณแบบสั้นๆ จำกัดไม่เกิน 300 อักษร</small>
+        </div>
+
+        <div class="bottom-row form-group">
+                <label>age</label>
+                <input type="text" id="Age" value="@Model.Username">
+                <label>gender</label>
+                <select class="dropdown" id="Gender">
+                    <option value="">Select gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>   
+                <button class="save">บันทึกการเปลี่ยนแปลง</button>
+
+        </div>
+        <div id="ageError"></div>
+    </div>
+    <script>
+    const uid = "@Model.Uid";
+</script>
+    <script src="~/js/Profile/Edit.js"></script>
+</body>
+</html>
+

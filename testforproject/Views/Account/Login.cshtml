@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ</title>
+    <link rel="stylesheet" href="~/css/Account/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="close-btn">✕</a>
+
+        <div class="header">
+            <div class="logo">
+                <span class="logo-text">Login</span>
+            </div>
+        </div>
+
+        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Username">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" class="form-input" placeholder="Password">
+                    <button type="button" class="password-toggle"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                </div>
+            </div>
+
+            <div id="errorMessage" style="color:#ef4444; margin-bottom:15px; font-size:14px;"></div>
+
+            <button type="submit" class="submit-btn">Login</button>
+
+            <div class="switch-mode">
+                <span>Not a member yet?</span>
+                <a href="/Account/Register">Register Now</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/js/Account/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="~/css/Account/newregister.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="close-btn">✕</a>
+        
+        <div class="header">
+            <div class="logo">
+                <span class="logo-text">Register</span>
+            </div>
+        </div>
+
+        <<form id="registerForm">
+            
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Username">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" class="form-input" placeholder="Email">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" class="form-input" placeholder="Password">
+                    <button type="button" class="password-toggle"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">ConfirmPassword</label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="ConfirmPassword">
+                    <button type="button" class="password-toggle"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                </div>
+            </div>
+
+            <div id="errorMessage" style="color:red; margin-bottom:10px;"></div>
+            <button type="submit" class="submit-btn">Register</button>
+
+            <div class="switch-mode">
+                <span>Already have an account?</span>
+                <a href="/Account/Login">Log in</a>
+            </div>
+        </form>
+    </div>
+    <script src="~/js/Account/newregister.js"></script>
+    
+</body>
+</html>

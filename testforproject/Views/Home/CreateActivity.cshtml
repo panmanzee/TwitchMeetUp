@@ -1,0 +1,39 @@
+﻿<div style="background-color: #1a1a1a; color: white; padding: 50px; min-height: 100vh; font-family: sans-serif;">
+    <h2 style="color: #ff4d4d;">Create New Activity</h2>
+    <hr style="border: 0.5px solid #333;">
+
+    <form action="/Home/CreateActivity" method="post" style="max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
+        <div>
+            <label>Activity Name:</label><br>
+            <input type="text" name="Name" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: white;">
+        </div>
+
+        <div>
+            <label>Categories (แยกด้วยเครื่องหมาย , เช่น Sports,Game):</label><br>
+            <input type="text" name="Catagories" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: white;">
+        </div>
+         
+        <div>
+            <label>Location:</label><br>
+            <input type="text" name="Location" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: white;">
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <label>Max Participants:</label><br>
+                <input type="number" name="MaxParticitpant" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: white;">
+            </div>
+            <div style="flex: 1;">
+                <label>Duration (e.g. 2 Hours):</label><br>
+                <input type="text" name="Duration" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: white;">
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" style="background: #ff4d4d; color: white; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-weight: bold;">
+                Confirm Create
+            </button>
+            <a href="/Home/Index" style="color: #ccc; text-decoration: none; margin-left: 20px;">Cancel</a>
+        </div>
+    </form>
+</div>

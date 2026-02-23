@@ -1,0 +1,165 @@
+﻿@page
+@model testforproject.Models.Event
+<link rel="stylesheet" href="~/css/Event/createEvent.css" />
+
+<div class="form-container">
+    <form id="eventForm">
+        <div class="step active" id="step1">
+            <h2>ตั้งค่าเบื้องต้น</h2>
+            <div class="input-group">
+                <label>Event Image</label>
+                <input type="file" id="imageInput" accept=".jpg,.jpeg,.png" onchange="previewImage(this)">
+                <br>
+                <img id="imagePreview" src="#" alt="Preview" style="display:none; width:100px; margin-top:10px; border-radius:8px; border:1px solid #2c2c2c;">
+            </div>
+            <div class="input-group">
+                <label>Event Name</label>
+                <input type="text" id="nameInput" placeholder="ตั้งชื่อกลุ่มของคุณ" />
+            </div>
+            <div class="input-group">
+                <label>Location (Google Maps)</label>
+                <input type="text" id="locInput" class="form-control" placeholder="พิมพ์เพื่อค้นหาสถานที่..." autocomplete="off" />
+    
+                <input type="hidden" id="latInput" name="Latitude" />
+                <input type="hidden" id="lngInput" name="Longitude" />
+            </div>
+            <div class="button-group">
+                <span></span>
+                <button type="button" class="btn-next" onclick="nextStep(2)">Next</button>
+            </div>
+        </div>
+
+        <div class="step" id="step2">
+            <h2>รายละเอียดกิจกรรม</h2>
+            <div class="input-group">
+                <label>Category</label>
+                <select id="catInput">
+                    <option>Exercise</option>
+                    <option>Buddhism</option>
+                    <option>Eating & Drinking</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Max Participant</label>
+                <input type="number" id="maxInput" />
+            </div>
+            <div class="input-group">
+                <label>Duration (start - End)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="datetime-local" id="startInput" class="form-control" />
+                <span style="color: #bbb;">ถึง</span>
+                <input type="datetime-local" id="endInput" class="form-control" />
+            </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn-back" onclick="prevStep(1)">Back</button>
+                <button type="button" class="btn-next" onclick="nextStep(3)">Next</button>
+            </div>
+        </div>
+
+        <div class="step" id="step3">
+            <h2>อธิบายกลุ่มของคุณ</h2>
+            <div class="input-group">
+                <textarea id="descInput" rows="5" placeholder="อธิบายกิจกรรมของคุณ..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Expired Date</label>
+                <input type="datetime-local" id="ExpiredInput" />
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
+                <button type="button" class="btn-next" onclick="showSummary()">View Summary</button>
+            </div>
+        </div>
+
+        <div class="step" id="step4">
+            <h2>ตรวจสอบข้อมูลทั้งหมด</h2>
+            <div id="summaryContent">
+                </div>
+            <div class="button-group">
+                <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+                <button type="submit" class="btn-submit">Create Event</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function nextStep(step) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+    }
+
+    function prevStep(step) {
+        nextStep(step);
+    }
+
+    // ตัวแปรสำหรับเก็บไฟล์ภาพ
+    let selectedFile = null;
+
+    // ฟังก์ชันเมื่อเลือกรูป (หน้า 1)
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            selectedFile = input.files[0]; // เก็บไฟล์ไว้ในตัวแปร
+        
+            // แสดงรูปตัวอย่าง (ถ้าต้องการ)
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // แก้ไขฟังก์ชันโชว์ข้อมูลในหน้าสุดท้าย (หน้า 4)
+    function showSummary() {
+        const fileName = selectedFile ? selectedFile.name : "ไม่ได้เลือกรูปภาพ";
+        const summary = `
+            <p><strong>รูปภาพ:</strong> ${fileName}</p>
+            <p><strong>ชื่อ:</strong> ${document.getElementById('nameInput').value}</p>
+            <p><strong>สถานที่:</strong> ${document.getElementById('locInput').value}</p>
+            <p><strong>หมวดหมู่:</strong> ${document.getElementById('catInput').value}</p>
+            <p><strong>จำนวนคน:</strong> ${document.getElementById('maxInput').value}</p>
+            <p><strong>รายละเอียด:</strong> ${document.getElementById('descInput').value}</p>
+        `;
+        document.getElementById('summaryContent').innerHTML = summary;
+        nextStep(4);
+}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
+<script>
+    function initAutocomplete() {
+        // 2. เชื่อม Autocomplete เข้ากับช่อง locInput
+        const input = document.getElementById('locInput');
+        const options = {
+            componentRestrictions: { country: "th" }, // จำกัดแค่ในไทย (ถ้าต้องการ)
+            fields: ["address_components", "geometry", "name"],
+        };
+
+        const autocomplete = new google.maps.places.Autocomplete(input, options);
+
+        // 3. เมื่อผู้ใช้เลือกสถานที่จากรายการ
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry || !place.geometry.location) {
+                alert("ไม่พบข้อมูลสถานที่นี้ โปรดเลือกจากรายการที่ปรากฏ");
+                return;
+            }
+
+            // เก็บค่าพิกัดลงในช่อง Hidden เพื่อรอส่งไปฐานข้อมูล heemhaq
+            document.getElementById('latInput').value = place.geometry.location.lat();
+            document.getElementById('lngInput').value = place.geometry.location.lng();
+            
+            console.log("เลือกสถานที่แล้ว: ", place.name);
+            console.log("พิกัด: ", place.geometry.location.lat(), place.geometry.location.lng());
+        });
+    }
+
+    // เรียกทำงานเมื่อโหลดหน้าเว็บ
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>

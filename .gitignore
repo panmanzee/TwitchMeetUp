@@ -1,0 +1,9 @@
+[Bb]in/
+[Oo]bj/
+*.mdf
+*.ldf
+appsettings.Development.json
+.vs/
+*.user
+.idea/
+node_modules/	

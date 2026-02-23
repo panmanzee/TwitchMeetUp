@@ -1,0 +1,84 @@
+﻿@model testforproject.Models.User
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creator Profile</title>
+    <link rel="stylesheet" href="~/css/Profile/MyProfile.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>My Profile</h2>
+            @if (Model.Username == ViewBag.user)
+            {
+                <button>Edit Profile</button>
+            }
+        </div>
+        <div class="banner"></div>
+        <div class="content">
+            <div class="sidebar">
+                <div class="profile-avatar">
+                    @if (Model.ProfilePictureSrc == null)
+                    {
+                        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
+                    }
+                    else
+                    {
+                        <img asp-append-version="true" src="~/imageProfile/@(Model.Uid + ".jpg")" />
+                    }
+                </div>
+                <h3>@Model.Username</h3>
+                <p class="followers">
+                    <span id="followerCount">@ViewBag.FollowerCount</span> followers
+                </p>
+
+                @if (Model.Username != ViewBag.user)
+                {
+                    @if (ViewBag.user == null)
+                    {
+                        <a href="/" class="follow-btn">Follow</a>
+                    }
+                    else
+                    {
+                        <button id="followBtn"
+                                class="follow-btn @(ViewBag.IsFollowing ? "unfollow" : "")"
+                                data-user-id="@Model.Uid"
+                                data-following="@ViewBag.IsFollowing.ToString().ToLower()">
+                            @(ViewBag.IsFollowing ? "Unfollow" : "Follow")
+                        </button>
+                    }
+                }
+            </div>
+            <div class="main">
+                <div class="bio">
+                    <h3>About Me</h3>
+                    <p>
+                        Hey everyone! I'm goatstreamer226 and I'm on a mission to redefine gaming excellence.
+                        I love experimenting with new ideas and building a strong community.
+                    </p>
+                </div>
+                <div class="section">
+                    <h3>Participated Event</h3>
+                    <div class="cards">
+                        <div class="card">Event A</div>
+                        <div class="card">Event B</div>
+                        <div class="card">Event C</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>My Event</h3>
+                    <div class="cards">
+                        <div class="card">Tournament</div>
+                        <div class="card">Live Stream</div>
+                        <div class="card">Charity Run</div>
+                        <div class="card">Fan Meetup</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/Profile/MyProfile.js"></script>
+</body>
+</html>
