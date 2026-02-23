@@ -1,0 +1,241 @@
+﻿* {
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+.banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .banner img {
+        width: 70%;
+        height: 400px;
+    }
+
+.Container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.devider {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: 200px;
+    align-items: start;
+}
+
+.section-gap {
+    margin-bottom: 50px;
+}
+
+.detail-part {
+    min-width: 0;
+}
+/* Header Section */
+.small-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .small-profile img {
+        border-radius: 99%;
+        height: 30px;
+        width: 30px;
+    }
+
+.Creator-name {
+    text-decoration: none;
+}
+/* ------------------------------------ */
+
+/* Card Section */
+.reserve-card {
+    border: 1px solid rgb(0,0,0,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 100px;
+    width: auto;
+    height: auto;
+    position: sticky;
+    top: 20px;
+}
+
+.in-card {
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0;
+}
+
+.join_btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 99px;
+    border: none;
+    background: black;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.img-part {
+    position: relative;
+    margin-bottom: 16px;
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+.transparent-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(128, 128, 128, 0.3);
+    transform: rotate(5deg);
+    border-radius: 14px;
+    z-index: 0;
+}
+
+.main-img {
+    position: relative;
+    z-index: 1;
+    border: 10px solid white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+    .main-img img {
+        width: 100%;
+        height: 250px;
+        object-position: center;
+        object-fit: cover;
+        display: block;
+    }
+/* ------------------------------------ */
+
+/* Detail Section */
+.detail {
+    line-height: 25px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+    display: box;
+    line-clamp: 10;
+    box-orient: vertical;
+}
+
+#readMoreBtn {
+    border: none;
+    color: blue;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+/* ------------------------------------ */
+
+/* Placeholder NAV */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 60px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+}
+
+    .nav-links a {
+        text-decoration: none;
+        color: black;
+        font-size: 15px;
+    }
+
+.nav-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 99px;
+    object-fit: cover;
+    cursor: pointer;
+}
+/* ------------------------------------ */
+
+/* Photo Section */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 70px 0;
+    color: #aaa;
+}
+
+    .empty-state i {
+        font-size: 40px;
+        margin-bottom: 12px;
+    }
+
+    .empty-state p {
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 12px;
+    transition: transform 0.3s ease;
+    flex: 1;
+    min-width: 0;
+}
+
+    .carousel-track img {
+        width: 220px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
+    }
+
+.arrow {
+    position: absolute;
+    z-index: 2;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 99px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.left-arrow {
+    left: 8px;
+}
+
+.right-arrow {
+    right: 8px;
+}
+/* ------------------------------------ */

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using testforproject.Authen.Services;
 using testforproject.Data;
 
@@ -30,6 +31,19 @@ namespace testforproject.Controllers
                 return Redirect("Home/dashboard");
             }
             return View();
+        }
+        public async Task<IActionResult> EventDetails(int id)
+        {
+            var eventDetail = await _db.Events
+            .Include(e => e.Owner)
+            .FirstOrDefaultAsync(e => e.Eid == id);
+
+            if (eventDetail == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventDetail);
         }
     }
 }

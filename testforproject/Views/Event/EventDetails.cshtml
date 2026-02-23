@@ -1,0 +1,127 @@
+﻿@model testforproject.Models.Event
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EventDetails</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/Event/EventDetails.css">
+</head>
+
+<body>
+
+    <!-- place holder nav -->
+    <nav class="navbar">
+        <div class="nav-logo">EventApp</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Explore</a>
+            <a href="#">My Events</a>
+        </div>
+        <div class="nav-profile">
+            <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg">
+        </div>
+    </nav>
+    <div class="Container">
+        <div class="devider">
+
+            <!-- Left Side -->
+            <div class="detail-part">
+                <section class="section-gap">
+                    <h1>@Model.Name</h1>
+                    <div class="small-profile">
+                        <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg" style="margin-right: 10px;">
+                        Host by &nbsp;<a href="" class="Creator-name">@Model.Owner?.Username</a>
+                    </div>
+                    <!-- <div><i style="margin-right: 10px;" class='fas fa-map-marker-alt'></i>LocationLocation</div>
+                    <div><i style="margin-right: 10px;" class='far fa-calendar-alt'></i>DateTimeDateTime</div>  -->
+                </section>
+                <section class="section-gap">
+                    <h2>Details</h2>
+                    <p class="detail">@Model.Description</p>
+                    <button id="readMoreBtn" onclick="toggleText()">Read More</button>
+                </section>
+                <section class="section-gap">
+                    <!-- When empty -->
+                    <h2>Photos&nbsp;<span class="photo-count" style="color: gray; font-weight: normal; font-size: 18px;">0</span></h2>
+                    <div class="empty-state">
+                        <i class="far fa-image"></i>
+                        <p>No photos for now! You'll see<br>them here once they're added.</p>
+                    </div>
+
+                    <!-- When have a image -->
+                    <div class="carousel-wrapper">
+                        <button class="arrow left-arrow" onclick="slide(-1)">&#8592;</button>
+                        <div class="carousel-track" id="carouselTrack"></div>
+                        <button class="arrow right-arrow" onclick="slide(1)">&#8594;</button>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Right Side -->
+            <div class="right-part">
+
+                <div class="img-part">
+                    <div class="transparent-img"></div>
+                    <div class="main-img">
+                        <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg">
+                    </div>
+                </div>
+                <div class="reserve-card">
+                    <!-- <div style="cursor: pointer;"><i class="fa fa-heart"></i><i class="fa fa-paper-plane"></i></div> -->
+
+                    <div class="in-card">
+                        <span><i style="font-size: 30px;" class='far fa-calendar-alt'></i></span>
+                        <div>
+                            <div style="font-weight: bold;">@Model.EventStart.ToString("dddd, MMM dd · hh:mm tt")</div>
+                            <div style="font-size: 13px; color: gray;">Duration: @(Model.EventStart-Model.EventStop)</div>
+                        </div>
+                    </div>
+                    <hr style="width: 90%; opacity: 0.5;">
+                    <div class="in-card">
+                        <span><i style="font-size: 30px;" class='far fa-clock'></i></span>
+                        <div>
+                            <div style="font-weight: bold;">Register by @Model.ExpiredDate.ToString("MMM dd, yyyy · hh:mm tt")</div>
+                            <div style="font-size: 13px; color: gray;" id="remainTime"></div>
+                        </div>
+                    </div>
+                    <hr style="width: 90%; opacity: 0.5;">
+                    <div class="in-card">
+                        <span><i style="font-size: 30px;" class='fas fa-map-marker-alt'></i></span>
+                        <div>
+                            <div style="font-weight: bold; margin-bottom: 10px;">@Model.Location</div>
+                        </div>
+                    </div>
+                    <hr style="width: 90%; opacity: 0.5;">
+                    <div class="in-card">
+                        <span><i style="font-size: 30px;" class="fas fa-users"></i></span>
+                        <div>
+                            <div style="font-weight: bold;">@Model.Participants.Count / @Model.MaxParticitpant Participants</div>
+                            <div style="font-size: 13px; color: gray;">@(Model.MaxParticitpant - Model.Participants.Count) spots remaining</div>
+                        </div>
+                    </div>
+                    <button class="join_btn">Join Event</button>
+                </div>
+                <div style="height: 10000px;"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="~/js/Event/EventDetails.js"></script>
+</body>
+</html>
+
+
+<!--
+    1.event name
+    2.status
+    3.categories
+    4.description
+    5.start/close time
+    6.duration
+    7.location
+    8.max participant (do a progression bar)
+    9.owner profile + name
+    10.requirement
+-->
