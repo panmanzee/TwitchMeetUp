@@ -1,0 +1,106 @@
+﻿@model IEnumerable<testforproject.Models.Event>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<link rel="stylesheet" href="~/css/Dashboard2.css">
+<div class="container">
+    <div class="head">
+        <div class="search">
+            <div class="hamburger">☰</div>
+            <div class="search-container-bar">
+                <input type="text" id="search-group" placeholder="search-group" />
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <a href="@Url.Action("Create", "CreateActivity")" style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">+ Create Activity</a>
+            <a href="#">Login</a>
+        </div>
+    </div>
+
+
+    <div class="category">
+        <button class="slide" onclick="slide('left')">&#10094;</button>
+        <div class="category-slide" id="categorylist">
+            <div class="option active">All Activities</div>
+            @if(ViewBag.Categories != null)
+            {
+                @foreach(var cat in ViewBag.Categories)
+                {
+                    <div class="option">@cat.Name</div>
+                }
+            }
+        </div>
+        <button class="slide" onclick="slide('right')">&#10095;</button>
+
+    </div>
+    <div class="navi">
+        <div class="navigaor">Recommend</div>
+        <div class="navigaor">Participant</div>
+        <div class="navigaor">Recent</div>
+    </div>
+    <div class="scroll-container">
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+        <div class="activity">recommend Activity</div>
+    </div>
+
+    <section class="event-grid" id="eventGrid">
+        @if(Model != null)
+        {
+            @foreach(var i in Model)
+            {
+                <div class="event-card" id="event-card-@i.Eid">
+                    <div class="image">Image Placeholder</div>
+                    <div class="card">
+                        <h4>@i.Name</h4>
+                        <p>👤 Owner: @i.Owner</p>
+                        <p>📍 Location: @i.Location</p>
+                        <p>Max Participant: @i.MaxParticitpant</p>
+                        <p>Duration: @i.Duration</p>
+                        <p>Open: @i.StartTime </p>
+                        <p>close: @i.CloseTime</p>
+                        <p>Status: @i.status</p>
+                        <div class="card-footer">
+                            <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <button class="join">Join</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+    </section>
+    <div class="loadmore" id="viewMore">
+        <button class="btn-view-more" onclick="loadMore()">View More</button>
+    </div>
+    <script src="~/js/dashboard/loadmore.js"></script>
+</div>
+<script>
+    async function slide(direction) {
+        const container = document.getElementById("categorylist");
+
+        
+        const widthToScroll = container.clientWidth;
+
+        if (direction === 'right') {
+            container.scrollBy({
+                left: widthToScroll,
+                behavior: 'smooth'
+            });
+        } else {
+            container.scrollBy({
+                left: -widthToScroll,
+                behavior: 'smooth'
+            });
+        }
+    }
+</script>

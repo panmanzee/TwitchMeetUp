@@ -26,7 +26,22 @@ namespace testforproject.Models
         public DateTimeOffset ExpiredDate { get; set; }
         public bool Status { get; set; }
         public string Discription { get; set; }
+        public Requirements requirements { get; set; }
+
+        // gu เพิ่มเอง 
+        [Required]
+        public DateTime EventStart { get; set; }
+
+        [Required]
+        public DateTime EventStop { get; set; }
         
+        
+
+        [Required]
+        public string status { get; set; } = "open";
+
+        [Required]
+        public string Decription { get; set; }
         public int OwnerId { get; set; }
 
         public User Owner { get; set; }
