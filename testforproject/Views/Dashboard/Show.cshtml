@@ -13,8 +13,20 @@
             </div>
         </div>
         <div class="auth-buttons">
-            <a href="@Url.Action("Create", "CreateActivity")" style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">+ Create Activity</a>
-            <a href="#">Login</a>
+            @if (ViewBag.IsLoggedIn == true)
+            {
+                <a href="@Url.Action("Create", "CreateActivity")"
+                   style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">
+                    + Create Activity
+                </a>
+
+                <a href="#" onclick="logout()">Logout</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Register", "Account")">Register</a>
+                <a href="@Url.Action("Login", "Account")">Login</a>
+            }
         </div>
     </div>
 
@@ -56,25 +68,29 @@
         {
             @foreach(var i in Model)
             {
-                <div class="event-card" id="event-card-@i.Eid">
-                    <div class="image">Image Placeholder</div>
-                    <div class="card">
-                        <h4>@i.Name</h4>
-                        <p>👤 Owner: @i.Owner</p>
-                        <p>📍 Location: @i.Location</p>
-                        <p>Max Participant: @i.MaxParticitpant</p>
-                        <p>ExpiredDate: @i.ExpiredDate</p>
-                        <p>Open: @i.EventStart </p>
-                        <p>close: @i.EventStop</p>
-                        <p>Status: @i.status</p>
-                        <div class="card-footer">
-                            <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <button class="join">Join</button>
+                <a href='/Event/EventDetails/@i.Eid'
+                   class="event-link" 
+                   style="text-decoration: none; color: inherit;">
+                    <div class="event-card" id="event-card-@i.Eid">
+                        <div class="image">Image Placeholder</div>
+                        <div class="card">
+                            <h4>@i.Name</h4>
+                            <p>👤 Owner: @i.Owner</p>
+                            <p>📍 Location: @i.Location</p>
+                            <p>Max Participant: @i.MaxParticitpant</p>
+                            <p>ExpiredDate: @i.ExpiredDate</p>
+                            <p>Open: @i.EventStart </p>
+                            <p>close: @i.EventStop</p>
+                            <p>Status: @i.status</p>
+                            <div class="card-footer">
+                                <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
+                                @* <div style="display: flex; gap: 8px; align-items: center;">
+                                    <button class="join" onclick="location.href='/Event/EventDetails/@i.Eid'">Join</button>
+                                </div> *@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
             }
         }
@@ -82,7 +98,7 @@
     <div class="loadmore" id="viewMore">
         <button class="btn-view-more" onclick="loadMore()">View More</button>
     </div>
-    <script src="~/js/dashboard/loadmore.js"></script>
+    <script src="~/js/Home/loadmore.js"></script>
 </div>
 <script>
     async function slide(direction) {

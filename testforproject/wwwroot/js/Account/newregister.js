@@ -46,15 +46,11 @@ document.getElementById("registerForm")
     });
 document.querySelectorAll('.password-toggle').forEach(button => {
     button.addEventListener('click', function () {
-        console.log("Hello")
         const input = this.previousElementSibling;
-        console.log(input)
         if (input.type === 'password') {
-            console.log("Hello1")
             input.type = 'text';
             this.innerHTML = '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
         } else {
-            console.log("Hello2")
             input.type = 'password';
             this.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
         }

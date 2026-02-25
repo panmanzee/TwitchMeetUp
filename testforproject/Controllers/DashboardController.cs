@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 
@@ -8,11 +9,12 @@ namespace testforproject.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IJwtService _jwtService;
 
-        
-        public DashboardController(ApplicationDbContext db)
+        public DashboardController(ApplicationDbContext db, IJwtService jwtService)
         {
             _db = db;
+            _jwtService = jwtService;
         }
 
         
@@ -26,6 +28,7 @@ namespace testforproject.Controllers
                             .ToList();
 
             ViewBag.Categories = _db.Categories.ToList();
+            ViewBag.IsLoggedIn = _jwtService.UserId != null;
             return View(events);
         }
 

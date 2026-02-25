@@ -101,7 +101,7 @@
                             <div style="font-size: 13px; color: gray;">@(Model.MaxParticitpant - Model.Participants.Count) spots remaining</div>
                         </div>
                     </div>
-                    <button class="join_btn">Join Event</button>
+                    <button class="join_btn" onclick="joinEvent(@Model.Eid)">Join Event</button>
                 </div>
                 <div style="height: 10000px;"></div>
             </div>

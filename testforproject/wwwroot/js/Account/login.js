@@ -39,7 +39,7 @@ async function login() {
             return;
         }
 
-        window.location.href = "/";
+        window.location.href = "/Dashboard/show";
     } catch (error) {
         errorMessage.innerText = "An unexpected error occured";
         console.error("Login error:", error);

@@ -1,5 +1,14 @@
 ﻿let currentSkip = 4;
 
+async function logout() {
+    await fetch('/api/AccountApi/logout', {
+        method: 'POST',
+        credentials: 'include'
+    });
+
+    location.reload();
+}
+
 function loadMore() {
     const btn = document.querySelector('.btn-view-more');
     btn.innerText = "Loading...";

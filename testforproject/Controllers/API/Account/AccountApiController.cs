@@ -92,7 +92,8 @@ namespace testforproject.Controllers.API.Account
         {
             var token = Request.Cookies["jwt"];
 
-           
+            Response.Cookies.Delete("jwt");
+
             return Ok(new {message = "Logged out"});
         }
 

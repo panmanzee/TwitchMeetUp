@@ -45,5 +45,7 @@ namespace testforproject.Controllers
 
             return View(eventDetail);
         }
+
+
     }
 }

@@ -98,10 +98,30 @@ readmoreBtn.addEventListener("click", function () {
 });
 
 
+async function joinEvent(eventId) {
+    const response = await fetch('/api/EventApi/join', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ eventId: eventId })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        alert(data.message);
+        location.reload();
+    } else {
+        alert(data.message);
+    }
+}
+
 
 window.onload = () => {
     updateRemainTime();
-    setInterval(updateRemainTime, 60000); // อัพเดตทุก 1 นาที
+    setInterval(updateRemainTime, 60000);
 
     renderPhotos();
     document.querySelector('.left-arrow').style.opacity = '0';
