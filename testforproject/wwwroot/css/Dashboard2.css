@@ -6,7 +6,33 @@ body {
     margin: 0;
     padding: 20px;
 }
+/* --- Sort Dropdown Menu --- */
+.sort-dropdown {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
 
+.sort-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #efeff1;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+    .sort-option:hover {
+        background: #303032;
+        color: #9146FF;
+    }
+
+    /* Highlight the currently selected sort option */
+    .sort-option.active {
+        background: #23153c; /* Dark purple */
+        color: #9146FF;
+        font-weight: bold;
+        border-left: 3px solid #9146FF;
+    }
 .container {
     max-width: 95%;
     margin: 0 auto;
@@ -51,15 +77,15 @@ body {
             transform: translateY(-2px);
         }
 
-/* --- Search Section --- */
+
 .search {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 30px;
-    justify-content: center; /* ✅ centers the content */
+    justify-content: center; 
     flex: 1;
-    margin-left: 200px; /* 👈 adjust this number to taste */
+    margin-left: 200px; 
 }
 
     .search .option {
@@ -78,7 +104,7 @@ body {
     padding: 20px 30px;
     justify-content: center ;/* was 10px 20px → bigger */
     border-radius: 12px;
-    width: 600px; /* was 300px → much wider */
+    width: 900px; /* was 300px → much wider */
     outline: none;
     font-size: 20px; /* ✅ bigger text inside */
     transition: border-color 0.2s;
@@ -118,20 +144,23 @@ body {
         display: none;
     }
 
+/* --- Category Cards (Updated for Pictures) --- */
 .option {
     background-color: #18181b;
     color: #efeff1;
-    /* Change these two lines to make a big square */
     width: 200px;
     height: 400px;
-    
-    flex: 0 0 calc((100% / 3) - 15px); /* บังคับให้แสดงทีละ 3 อันพอดี */
+    flex: 0 0 calc((100% / 3) - 15px);
+    /* 1. Change display to stack image above text */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 20px; /* Space between the picture and the text */
+
     border-radius: 20px;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 22px; /* Slightly smaller text so it fits nicely */
     cursor: pointer;
     border: 1px solid transparent;
     transition: all 0.2s ease;
@@ -140,7 +169,7 @@ body {
 
     .option:hover {
         background-color: #303032;
-        transform: translateY(-2px);
+        transform: translateY(-4px);
     }
 
     /* Glowing active category */
@@ -150,6 +179,24 @@ body {
         border-color: #9146FF;
         box-shadow: 0 4px 20px rgba(145, 70, 255, 0.4);
     }
+
+/* --- NEW: Style for the Category Picture --- */
+.cat-img {
+    width: 120px; /* Size of the image */
+    height: 120px;
+    border-radius: 50%; /* Makes the image a perfect circle */
+    object-fit: cover; /* Prevents the image from stretching/distorting */
+    border: 3px solid #303032; /* Dark border by default */
+    transition: all 0.3s ease; /* Smooth animation */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* When hovering over the whole card, make the picture react! */
+.option:hover .cat-img {
+    border-color: #9146FF; /* Circle glows Twitch Purple */
+    transform: scale(1.1); /* Picture zooms in slightly */
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.6); /* Purple glow effect */
+}
 
 .slide {
     background-color: #18181b;
@@ -227,8 +274,8 @@ body {
 .activity {
     flex-shrink: 0;
     /* Make this a square, but smaller than 250px */
-    width: 400px;
-    height: 200px;
+    width: 450px;
+    height: 450px;
     background-color: #18181b;
     color: #efeff1;
     border-radius: 10px;
@@ -252,14 +299,17 @@ body {
 /* --------------------------------------------------- */
 
 .event-grid {
-    display: grid;
-    /* จัดการ์ดให้เรียงอัตโนมัติ ขนาดขั้นต่ำ 280px */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    display: flex; /* 1. Change grid to flex */
+    overflow-x: auto; /* 2. Add horizontal scroll */
+    gap: 40px;
     margin-top: 30px;
+    padding-bottom: 20px; /* Space for scrollbar */
 }
 
+/* Also update the event-card to stop it from shrinking */
 .event-card {
+    flex: 0 0 500px; /* 3. Force the card to stay 500px wide */
+
     background-color: #18181b;
     border-radius: 12px;
     overflow: hidden;

@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260223140538_hack2")]
-    partial class hack2
+    [Migration("20260224041627_newdatabase")]
+    partial class newdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

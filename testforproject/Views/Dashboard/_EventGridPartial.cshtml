@@ -1,0 +1,30 @@
+﻿@model IEnumerable<testforproject.Models.Event>
+<link rel="stylesheet" href="~/css/Dashboard2.css">
+<section class="event-grid" id="eventGrid">
+    @if (Model != null)
+    {
+        @foreach (var i in Model)
+        {
+            <div class="event-card" id="event-card-@i.Eid">
+                <div class="image">Image Placeholder</div>
+                <div class="card">
+                    <h4>@i.Name</h4>
+                    <p>👤 Owner: @i.Owner</p>
+                    <p>📍 Location: @i.Location</p>
+                    <p>Max Participant: @i.MaxParticitpant</p>
+                    <p>ExpiredDate: @i.ExpiredDate</p>
+                    <p>Open: @i.EventStart </p>
+                    <p>close: @i.EventStop</p>
+                    <p>Status: @i.status</p>
+                    <div class="card-footer">
+                        <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="join">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+</section>

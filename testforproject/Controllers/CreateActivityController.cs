@@ -36,7 +36,25 @@ namespace testforproject.Controllers
             if (string.IsNullOrEmpty(userIdString)) return RedirectToAction("Login", "Account");
             int currentUserId = int.Parse(userIdString);
 
-            
+            if (closetime <= StartTime)
+            {
+                ModelState.AddModelError("closetime", "Event Stop must be later than Event Start.");
+            }
+            if (Expired_Date <= closetime)
+            {
+                ModelState.AddModelError("Expired_Date", "Expired Date must be after Event Stop.");
+            }
+            if (MaxParticitpant < 1)
+            {
+                ModelState.AddModelError("MaxParticitpant", "Max Participants must be at least 1.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ExistingCategories = _db.Categories.ToList();
+                return View(); // return form with errors
+            }
+
             var defaultReq = new Requirements
             {
                 Gender = "Any",
@@ -55,7 +73,7 @@ namespace testforproject.Controllers
                 OwnerId = currentUserId, 
                 ExpiredDate = Expired_Date,
                 EventStart = StartTime == default ? DateTime.Now : StartTime,
-                EventStop = closetime == default ? closetime : closetime,
+                EventStop = closetime ,
                 status = "open",
                 Description = Decription ?? "",
                 

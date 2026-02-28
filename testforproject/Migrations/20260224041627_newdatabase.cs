@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class hack : Migration
+    public partial class newdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,7 +73,6 @@ namespace testforproject.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaxParticitpant = table.Column<int>(type: "int", nullable: false),
                     ExpiredDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    RequirementsId = table.Column<int>(type: "int", nullable: false),
                     EventStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventStop = table.Column<DateTime>(type: "datetime2", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -83,12 +82,6 @@ namespace testforproject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Eid);
-                    table.ForeignKey(
-                        name: "FK_Events_Requirements_RequirementsId",
-                        column: x => x.RequirementsId,
-                        principalTable: "Requirements",
-                        principalColumn: "RequirementsId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Events_Users_OwnerId",
                         column: x => x.OwnerId,
@@ -237,11 +230,6 @@ namespace testforproject.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_RequirementsId",
-                table: "Events",
-                column: "RequirementsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EventUser_ParticitpantUid",
                 table: "EventUser",
                 column: "ParticitpantUid");
@@ -270,6 +258,9 @@ namespace testforproject.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
+                name: "Requirements");
+
+            migrationBuilder.DropTable(
                 name: "UserFollows");
 
             migrationBuilder.DropTable(
@@ -277,9 +268,6 @@ namespace testforproject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Events");
-
-            migrationBuilder.DropTable(
-                name: "Requirements");
 
             migrationBuilder.DropTable(
                 name: "Users");

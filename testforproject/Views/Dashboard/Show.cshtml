@@ -7,9 +7,23 @@
 <div class="container">
     <div class="head">
         <div class="search">
-            <div class="hamburger">☰</div>
+            <div style="position: relative;">
+                <div class="hamburger" onclick="toggleSortMenu()">☰</div>
+
+                <div id="sortMenu" class="sort-dropdown" style="display: none; position: absolute; top: 100%; left: 0; background: #18181b; border: 1px solid #303032; border-radius: 8px; z-index: 100; padding: 10px; min-width: 180px; margin-top: 15px;">
+                    <p style="margin: 0 0 10px 0; font-size: 12px; color: #adadb8;">SORT BY</p>
+                    <div class="sort-option @(ViewBag.SortOrder == "" ? "active" : "")" onclick="applySort('')">Newest First</div>
+                    <div class="sort-option @(ViewBag.SortOrder == "name_asc" ? "active" : "")" onclick="applySort('name_asc')">Name (A-Z)</div>
+                    <div class="sort-option @(ViewBag.SortOrder == "name_desc" ? "active" : "")" onclick="applySort('name_desc')">Name (Z-A)</div>
+                </div>
+            </div>
+
             <div class="search-container-bar">
-                <input type="text" id="search-group" placeholder="search-group" />
+                <form id="searchForm" method="get" action="/Dashboard/Show" style="display: flex;">
+                    <input type="text" id="search-group" name="searchQuery" value="@ViewBag.SearchQuery" placeholder="Search activities or categories..." />
+                    <input type="hidden" id="sortOrderInput" name="sortorder" value="@ViewBag.SortOrder" />
+                    <button type="submit" style="display: none;">Search</button>
+                </form>
             </div>
         </div>
         <div class="auth-buttons">
@@ -27,7 +41,10 @@
             {
                 @foreach(var cat in ViewBag.Categories)
                 {
-                    <div class="option">@cat.Name</div>
+                    <div class="option">
+                        <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name">
+                        <span>@cat.Name</span>
+                    </div>
                 }
             }
         </div>
@@ -51,33 +68,8 @@
         <div class="activity">recommend Activity</div>
     </div>
 
-    <section class="event-grid" id="eventGrid">
-        @if(Model != null)
-        {
-            @foreach(var i in Model)
-            {
-                <div class="event-card" id="event-card-@i.Eid">
-                    <div class="image">Image Placeholder</div>
-                    <div class="card">
-                        <h4>@i.Name</h4>
-                        <p>👤 Owner: @i.Owner</p>
-                        <p>📍 Location: @i.Location</p>
-                        <p>Max Participant: @i.MaxParticitpant</p>
-                        <p>ExpiredDate: @i.ExpiredDate</p>
-                        <p>Open: @i.EventStart </p>
-                        <p>close: @i.EventStop</p>
-                        <p>Status: @i.status</p>
-                        <div class="card-footer">
-                            <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <button class="join">Join</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            }
-        }
+    <section class="event-grid" id="eventGridContainer">
+        <partial name="_EventGridPartial" model="Model" />
     </section>
     <div class="loadmore" id="viewMore">
         <button class="btn-view-more" onclick="loadMore()">View More</button>
@@ -103,4 +95,57 @@
             });
         }
     }
+   
+        function toggleSortMenu() {
+            var menu = document.getElementById("sortMenu");
+            if (menu.style.display === "none" || menu.style.display === "") {
+                menu.style.display = "block";
+            } else {
+                menu.style.display = "none";
+            }
+        }
+
+         
+
+        
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            fetchAjaxData();        
+        });
+
+        
+        function applySort(orderValue) {
+            document.getElementById("sortOrderInput").value = orderValue;
+
+            
+            document.getElementById("sortMenu").style.display = "none";
+
+            
+            fetchAjaxData();
+        }
+
+        
+        function fetchAjaxData() {
+            
+            var query = document.getElementById("search-group").value;
+            var sort = document.getElementById("sortOrderInput").value;
+
+            
+            fetch(`/Dashboard/SearchEventsAJAX?searchQuery=${encodeURIComponent(query)}&sortorder=${encodeURIComponent(sort)}`)
+                .then(response => response.text()) 
+                .then(html => {
+                    
+                    document.getElementById("eventGridContainer").innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.hamburger') && !event.target.closest('#sortMenu')) {
+                var menu = document.getElementById("sortMenu");
+                if (menu && menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
 </script>

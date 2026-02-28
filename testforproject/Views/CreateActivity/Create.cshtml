@@ -4,9 +4,20 @@
 @{
     Layout = null;
 }
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div style="background:#2a0a0a; border:1px solid #ff4d4d; border-radius:8px; padding:15px; margin-bottom:20px;">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p style="color:#ff4d4d; margin:4px 0;">⚠️ @error.ErrorMessage</p>
+        }
+    </div>
+}
+
 <div class="form-container">
     <h1>Create New Activity</h1>
-
+    <div id="clientErrors"></div>
     <form action="/CreateActivity/Create" method="post">
         <div class="group">
             <label for="name">Activity Title</label>
@@ -151,6 +162,36 @@
             setTimeout(function(){ map.invalidateSize(); }, 100);
         } else {
             mapContainer.style.display = 'none';
+        }
+    });
+
+    // --- Form Validation Logic ---
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const start = new Date(document.getElementById("StartTime").value);
+        const stop = new Date(document.getElementById("closetime").value);
+        const expired = new Date(document.getElementById("Expired-Date").value);
+        const max = parseInt(document.getElementById("max").value);
+        let errors = [];
+
+        // Check for missing dates so it doesn't crash
+        if (isNaN(start.getTime())) errors.push("Please select an Event Start time.");
+        if (isNaN(stop.getTime())) errors.push("Please select an Event Stop time.");
+
+        // Validation rules
+        if (stop <= start)   errors.push("Event Stop must be later than Event Start.");
+        if (expired <= stop) errors.push("Expired Date must be after Event Stop.");
+        if (max < 1 || isNaN(max)) errors.push("Max Participants must be at least 1.");
+
+        if (errors.length > 0) {
+            e.preventDefault(); // Stops the form from sending to C#
+
+            const box = document.getElementById("clientErrors");
+            
+            box.innerHTML = errors.map(err => `<p style="margin:4px 0;">⚠️ ${err}</p>`).join('');
+            box.style.display = "block"; // Shows the hidden error box
+
+            // Scroll to the top so the user sees the error
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
 </script>

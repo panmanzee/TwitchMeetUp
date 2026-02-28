@@ -9,7 +9,7 @@ namespace testforproject.Models
         [Required]
         public string Name { get; set; }
 
-        
+        public string? ImageUrl { get; set; }
         public ICollection<Event> Events { get; set; } = new List<Event>();
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using testforproject.Data;
 
@@ -11,9 +12,11 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228122729_AddCategoryImages")]
+    partial class AddCategoryImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,187 +93,162 @@ namespace testforproject.Migrations
                         new
                         {
                             Id = 1,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfY6dGXDvuNyxepwwRCDD4aI8MmrroG4Xj8g&s",
                             Name = "Sports & Fitness"
                         },
                         new
                         {
                             Id = 2,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxoudo-kmIpvw6ATdSFlKh03M2tIMw1P6Jbw&s",
+                            ImageUrl = "https://www.google.com/imgres?q=Gaming%20%26%20eSports&imgurl=https%3A%2F%2Fluhisummercamps.org%2Fwp-content%2Fuploads%2F2023%2F07%2Fheader-esports.jpg&imgrefurl=https%3A%2F%2Fluhisummercamps.org%2Fthe-benefits-of-competitive-gaming-and-esports%2F&docid=Wpg71i9teQo2KM&tbnid=MnZ1L84ExUZNGM&vet=12ahUKEwj4q-PxlvySAxV_iKgCHRQzA3AQnPAOegQIGRAB..i&w=1400&h=933&hcb=2&ved=2ahUKEwj4q-PxlvySAxV_iKgCHRQzA3AQnPAOegQIGRAB",
                             Name = "Gaming & eSports"
                         },
                         new
                         {
+                            Id = 3,
+                            Name = "Finance & Investing"
+                        },
+                        new
+                        {
                             Id = 4,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUXSwrWPMPioZYdGqVU1dBR75K0bNYuixisQ&s",
                             Name = "Technology & Coding"
                         },
                         new
                         {
                             Id = 5,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB_3U8P0eFjlVTUUZtAx2Be8ob_2HiFtH68Q&s",
                             Name = "Education & Learning"
                         },
                         new
                         {
                             Id = 6,
-                            ImageUrl = "https://voca-land.sgp1.cdn.digitaloceanspaces.com/43844/1723178338611/a55b073aef1b83a4ccf3a83be979de70.jpg",
                             Name = "Arts & Crafts"
                         },
                         new
                         {
                             Id = 7,
-                            ImageUrl = "https://i.shgcdn.com/3889bf5d-9000-4cbc-a021-cd6051095102/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
                             Name = "Food & Drink"
                         },
                         new
                         {
                             Id = 8,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWlwvLgv80oIsBgM73ux9uS1qWkrduUPplnQ&s",
                             Name = "Travel & Outdoors"
                         },
                         new
                         {
                             Id = 9,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbWVzCwBNaRL8UYHtc_4_MOL6ZBeRmdH2S3g&s",
                             Name = "Health & Wellness"
                         },
                         new
                         {
                             Id = 10,
-                            ImageUrl = "https://www.abundance.global/wp-content/uploads/2024/06/business-networking-1080x675-1.jpeg",
                             Name = "Networking & Business"
                         },
                         new
                         {
                             Id = 11,
-                            ImageUrl = "https://img.jakpost.net/c/2019/06/12/2019_06_12_74202_1560308728._large.jpg",
                             Name = "Music & Concerts"
                         },
                         new
                         {
                             Id = 12,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAFJZdr-RTJ5_Sa_unf88P4OIW0dXyYcDcFQ&s",
                             Name = "Movies & Theater"
                         },
                         new
                         {
                             Id = 13,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdrWNEbhPUO60Zaz7LUDmVBbUmBLEWFX38JA&s",
                             Name = "Photography & Video"
                         },
                         new
                         {
                             Id = 14,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRJ88He6SLg3xF2KS-CfXE7pZJBo1r4PaHTA&s",
                             Name = "Books & Writing"
                         },
                         new
                         {
                             Id = 15,
-                            ImageUrl = "https://carollaguirre.wordpress.com/wp-content/uploads/2013/11/tumblr_inline_mm0kys229c1qz4rgp.jpg",
                             Name = "Language & Culture"
                         },
                         new
                         {
                             Id = 16,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV7uM9mwm9yq3LKp00n1qd0i96m9gpJ-2EUQ&s",
                             Name = "Volunteering & Charity"
                         },
                         new
                         {
                             Id = 17,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEKp_2e5feC9OmHADhkiPoniNzMpVSE6b7KA&s",
                             Name = "Pets & Animals"
                         },
                         new
                         {
                             Id = 18,
-                            ImageUrl = "https://mpics.mgronline.com/pics/Images/566000002659701.JPEG",
                             Name = "Fashion & Beauty"
                         },
                         new
                         {
                             Id = 19,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLSugPQ0OSBDuPK25QJu8BplFKJwDn1zC3vQ&s",
                             Name = "Science & Research"
                         },
                         new
                         {
                             Id = 20,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5j3y16Pum3NPZThK9FERKVdBzv0jey5-hJA&s",
                             Name = "History & Philosophy"
                         },
                         new
                         {
                             Id = 21,
-                            ImageUrl = "https://www.focusonthefamily.com/wp-content/uploads/2019/07/D119D43F1A57459B858B9A11EC84408A-1024x575.jpeg",
                             Name = "Parenting & Family"
                         },
                         new
                         {
                             Id = 22,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsdqbWrGfqPZuuSRdAcknqiofR2ibJoYBWPQ&s",
                             Name = "Spirituality & Beliefs"
                         },
                         new
                         {
                             Id = 23,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_kqEOFllhUa_JYjPsbvtdpKzPY6xPrkOgA&s",
                             Name = "Cars & Motorcycles"
                         },
                         new
                         {
                             Id = 24,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE_Cbgok89HHW9w9ub5PlE9A0bEoJSVzWMZQ&s",
                             Name = "Real Estate"
                         },
                         new
                         {
                             Id = 25,
-                            ImageUrl = "https://capital-placement.com/wp-content/uploads/2020/12/career-development.png",
                             Name = "Career Development"
                         },
                         new
                         {
                             Id = 26,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3WKQeAR7thwxBTzYxQQsSRUBJCUSrXleCyQ&s",
                             Name = "Politics & Society"
                         },
                         new
                         {
                             Id = 27,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbY_kY6LSxZq4oEs_EXUpzua16XDf6QJWqJw&s",
                             Name = "Dancing & Performing"
                         },
                         new
                         {
                             Id = 28,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvK_JEMhb7owBgmSSTO4P_Z1lvxf36WFp7WQ&s",
                             Name = "Board Games & Tabletop"
                         },
                         new
                         {
                             Id = 29,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ9KrCcuANQ3OoN5Ju7OmUCBlI7Tyw8K_Neg&s",
                             Name = "DIY & Home Improvement"
                         },
                         new
                         {
                             Id = 30,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTakHVTgT0jryCuvRX410HBBwTTghRYhXOVYg&s",
                             Name = "Comedy & Improv"
                         },
                         new
                         {
                             Id = 31,
-                            ImageUrl = "https://earth.org/wp-content/uploads/2023/03/Untitled-683-%C3%97-1024px-1024-%C3%97-683px-73.jpg",
                             Name = "Environment & Nature"
                         },
                         new
                         {
                             Id = 32,
-                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcdLgyLqF6dX_21oeEwpkjpCOT83E-gnL3Iw&s",
                             Name = "Dating & Singles"
                         });
                 });
