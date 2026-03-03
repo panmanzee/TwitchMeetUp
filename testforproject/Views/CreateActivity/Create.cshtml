@@ -18,10 +18,16 @@
 <div class="form-container">
     <h1>Create New Activity</h1>
     <div id="clientErrors"></div>
-    <form action="/CreateActivity/Create" method="post">
+    <form action="/CreateActivity/Create" method="post" enctype="multipart/form-data">
+        
         <div class="group">
             <label for="name">Activity Title</label>
             <input type="text" id="name" name="Name" placeholder="Enter your Activity"/>
+        </div>
+
+        <div class="group">
+            <label for="image">Upload Image</label>
+            <input type="file" id="image" name="ImageFile" accept="image/*" />
         </div>
 
         <div class="group relative">

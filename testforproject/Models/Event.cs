@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace testforproject.Models
 {
     public class Event : IValidatableObject
@@ -61,8 +62,12 @@ namespace testforproject.Models
         public int OwnerId { get; set; }
 
         public User Owner { get; set; }
-        
 
+       
+        public string? ImageUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
     }
 
 }

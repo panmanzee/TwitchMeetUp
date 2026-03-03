@@ -16,7 +16,7 @@ namespace testforproject.Controllers
         }
 
         
-public IActionResult Show(string searchQuery,string sortorder)
+public IActionResult Show(string searchQuery,string sortorder,string categoryFilter)
         {
         
             var query = _db.Events
@@ -24,7 +24,11 @@ public IActionResult Show(string searchQuery,string sortorder)
                            .Include(e => e.Categories) 
                            .AsQueryable();
 
-            
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(e => 
@@ -58,14 +62,18 @@ public IActionResult Show(string searchQuery,string sortorder)
             return View(events);
         }
         [HttpGet]
-        public IActionResult SearchEventsAJAX(string searchQuery, string sortorder)
+        public IActionResult SearchEventsAJAX(string searchQuery, string sortorder,string categoryFilter)
         {
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
                            .AsQueryable();
-
             
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(e =>
@@ -96,11 +104,15 @@ public IActionResult Show(string searchQuery,string sortorder)
         }
 
         [HttpGet]
-        public IActionResult LoadMoreEvents(int skip, string searchQuery)
+        public IActionResult LoadMoreEvents(int skip, string searchQuery,string categoryFilter)
         {
             var query = _db.Events.Include(e => e.Owner).Include(e => e.Categories).AsQueryable();
 
-            
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(e =>
@@ -120,7 +132,8 @@ public IActionResult Show(string searchQuery,string sortorder)
                                 location = x.Location,
                                 Expire = x.ExpiredDate,
                                 maxParticitpant = x.MaxParticitpant,
-                                particitpant = x.Participants
+                                particitpant = x.Participants,
+                                imageUrl = x.ImageUrl
                             })
                             .ToList();
 

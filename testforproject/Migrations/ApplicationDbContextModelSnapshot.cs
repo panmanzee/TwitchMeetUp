@@ -296,6 +296,9 @@ namespace testforproject.Migrations
                     b.Property<DateTimeOffset>("ExpiredDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dashboard";
 }
 <link rel="stylesheet" href="~/css/Dashboard2.css">
+
 <div class="container">
     <div class="head">
         <div class="search">
@@ -19,9 +20,10 @@
             </div>
 
             <div class="search-container-bar">
-                <form id="searchForm" method="get" action="/Dashboard/Show" style="display: flex;">
+                <form id="searchForm" method="get" asp-controller="Dashboard" asp-action="Show" style="display: flex;">
                     <input type="text" id="search-group" name="searchQuery" value="@ViewBag.SearchQuery" placeholder="Search activities or categories..." />
                     <input type="hidden" id="sortOrderInput" name="sortorder" value="@ViewBag.SortOrder" />
+                    <input type="hidden" id="categoryInput" name="CategoryFilter" value="@ViewBag.CategoryFilter" />
                     <button type="submit" style="display: none;">Search</button>
                 </form>
             </div>
@@ -36,15 +38,55 @@
     <div class="category">
         <button class="slide" onclick="slide('left')">&#10094;</button>
         <div class="category-slide" id="categorylist">
-            <div class="option active">All Activities</div>
-            @if(ViewBag.Categories != null)
-            {
-                @foreach(var cat in ViewBag.Categories)
+            @{
+                bool isActiveAll = false;
+
+                if (string.IsNullOrEmpty(ViewBag.CategoryFilter))
                 {
-                    <div class="option">
-                        <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name">
-                        <span>@cat.Name</span>
-                    </div>
+                    isActiveAll = true;
+                }
+            }
+
+            @if (isActiveAll)
+            {
+                <div class="option active" onclick="selectCategory('', this)">
+                    <span>All Activities</span>
+                </div>
+            }
+            else
+            {
+                <div class="option" onclick="selectCategory('', this)">
+                    <span>All Activities</span>
+                </div>
+            }
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var cat in ViewBag.Categories)
+                {
+                    bool isActive = false;
+
+                    if (ViewBag.CategoryFilter != null)
+                    {
+                        if (ViewBag.CategoryFilter.ToString() == cat.Name.ToString())
+                        {
+                            isActive = true;
+                        }
+                    }
+
+                    if (isActive)
+                    {
+                        <div class="option active" onclick="selectCategory('@cat.Name', this)">
+                            <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name" />
+                            <span>@cat.Name</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="option" onclick="selectCategory('@cat.Name', this)">
+                            <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name" />
+                            <span>@cat.Name</span>
+                        </div>
+                    }
                 }
             }
         </div>
@@ -74,78 +116,6 @@
     <div class="loadmore" id="viewMore">
         <button class="btn-view-more" onclick="loadMore()">View More</button>
     </div>
-    <script src="~/js/dashboard/loadmore.js"></script>
+    <script src="~/js/Home/loadmore.js"></script>
+    <script src="~/js/Home/dashboard.js"></script>
 </div>
-<script>
-    async function slide(direction) {
-        const container = document.getElementById("categorylist");
-
-        
-        const widthToScroll = container.clientWidth;
-
-        if (direction === 'right') {
-            container.scrollBy({
-                left: widthToScroll,
-                behavior: 'smooth'
-            });
-        } else {
-            container.scrollBy({
-                left: -widthToScroll,
-                behavior: 'smooth'
-            });
-        }
-    }
-   
-        function toggleSortMenu() {
-            var menu = document.getElementById("sortMenu");
-            if (menu.style.display === "none" || menu.style.display === "") {
-                menu.style.display = "block";
-            } else {
-                menu.style.display = "none";
-            }
-        }
-
-         
-
-        
-        document.getElementById("searchForm").addEventListener("submit", function(event) {
-            event.preventDefault(); 
-            fetchAjaxData();        
-        });
-
-        
-        function applySort(orderValue) {
-            document.getElementById("sortOrderInput").value = orderValue;
-
-            
-            document.getElementById("sortMenu").style.display = "none";
-
-            
-            fetchAjaxData();
-        }
-
-        
-        function fetchAjaxData() {
-            
-            var query = document.getElementById("search-group").value;
-            var sort = document.getElementById("sortOrderInput").value;
-
-            
-            fetch(`/Dashboard/SearchEventsAJAX?searchQuery=${encodeURIComponent(query)}&sortorder=${encodeURIComponent(sort)}`)
-                .then(response => response.text()) 
-                .then(html => {
-                    
-                    document.getElementById("eventGridContainer").innerHTML = html;
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.matches('.hamburger') && !event.target.closest('#sortMenu')) {
-                var menu = document.getElementById("sortMenu");
-                if (menu && menu.style.display === "block") {
-                    menu.style.display = "none";
-                }
-            }
-        }
-</script>

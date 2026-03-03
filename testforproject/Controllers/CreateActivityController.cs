@@ -12,9 +12,11 @@ namespace testforproject.Controllers
     {
         private readonly ApplicationDbContext _db;
 
-        public CreateActivityController(ApplicationDbContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public CreateActivityController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -29,7 +31,7 @@ namespace testforproject.Controllers
         public async Task<IActionResult> Create(
             string Name, string Location, int MaxParticitpant,
             List<int> SelectedCategoryIds, DateTime Expired_Date,
-            string Decription, DateTime StartTime, DateTime closetime)
+            string Decription, DateTime StartTime, DateTime closetime, IFormFile? ImageFile)
         {
             
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -62,9 +64,38 @@ namespace testforproject.Controllers
                 ParticipantScore = 0
             };
             _db.Requirements.Add(defaultReq);
-            await _db.SaveChangesAsync(); 
+            await _db.SaveChangesAsync();
 
-            
+            // 3. Image Upload Logic Start
+            string savedImageUrl = null;
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                // Find the wwwroot/images/events folder path
+                string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "events");
+
+                // Create the folder if it doesn't exist yet
+                if (!Directory.Exists(uploadFolder))
+                {
+                    Directory.CreateDirectory(uploadFolder);
+                }
+
+                // Generate a unique file name so old pictures don't get overwritten
+                string safeFileName = Path.GetFileName(ImageFile.FileName)
+                                          .Replace(" ", "_"); // replace spaces with underscores
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + safeFileName;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                // Copy the uploaded file to the server folder
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(fileStream);
+                }
+
+                // Set the URL path that will be saved in the database
+                savedImageUrl = "/images/events/" + uniqueFileName;
+            }
             var newEvent = new Event
             {
                 Name = Name,
@@ -76,8 +107,8 @@ namespace testforproject.Controllers
                 EventStop = closetime ,
                 status = "open",
                 Description = Decription ?? "",
-                
-                
+
+                ImageUrl = savedImageUrl
             };
 
            
@@ -96,7 +127,7 @@ namespace testforproject.Controllers
             _db.Events.Add(newEvent);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Show", "Dashboard");
         }
     }
 }

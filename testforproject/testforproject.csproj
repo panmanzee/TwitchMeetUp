@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\imageProfile\" />
+    <Folder Include="wwwroot\js\NewFolder\" />
+    <Folder Include="wwwroot\imageActivity\" />
   </ItemGroup>
 
   <ItemGroup>

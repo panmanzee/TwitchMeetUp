@@ -1,30 +1,38 @@
 ﻿@model IEnumerable<testforproject.Models.Event>
-<link rel="stylesheet" href="~/css/Dashboard2.css">
-<section class="event-grid" id="eventGrid">
-    @if (Model != null)
+
+@if(Model != null)
+{
+    @foreach(var i in Model)
     {
-        @foreach (var i in Model)
-        {
-            <div class="event-card" id="event-card-@i.Eid">
-                <div class="image">Image Placeholder</div>
-                <div class="card">
-                    <h4>@i.Name</h4>
-                    <p>👤 Owner: @i.Owner</p>
-                    <p>📍 Location: @i.Location</p>
-                    <p>Max Participant: @i.MaxParticitpant</p>
-                    <p>ExpiredDate: @i.ExpiredDate</p>
-                    <p>Open: @i.EventStart </p>
-                    <p>close: @i.EventStop</p>
-                    <p>Status: @i.status</p>
-                    <div class="card-footer">
-                        <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <button class="join">Join</button>
-                        </div>
+        <div class="event-card" id="event-card-@i.Eid">
+            
+            <div class="image" style="padding: 0; overflow: hidden;">
+                @if (!string.IsNullOrEmpty(i.ImageUrl))
+                {
+                    <img src="@i.ImageUrl" alt="@i.Name" style="width: 100%; height: 100%; object-fit: cover;" />
+                }
+                else
+                {
+                    <span style="color: #adadb8;">No Image</span>
+                }
+            </div>
+            <div class="card">
+                <h4>@i.Name</h4>
+                <p>👤 Owner: @(i.Owner != null ? i.Owner.Username : "Unknown")</p>
+                <p>📍 Location: @i.Location</p>
+                <p>Max Participant: @i.MaxParticitpant</p>
+                <p>ExpiredDate: @i.ExpiredDate.ToString("dd/MM/yyyy")</p>
+                <p>Open: @i.EventStart.ToString("dd/MM/yyyy HH:mm")</p>
+                <p>Close: @i.EventStop.ToString("dd/MM/yyyy HH:mm")</p>
+                <p>Status: @i.status</p>
+                
+                <div class="card-footer">
+                    <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button class="join">Join</button>
                     </div>
                 </div>
             </div>
-
-        }
+        </div>
     }
-</section>
+}
