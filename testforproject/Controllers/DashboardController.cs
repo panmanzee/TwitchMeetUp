@@ -26,6 +26,19 @@ namespace testforproject.Controllers
         {
             // --- Phase 5: Fetch Recommendations ---
             var userId = _jwtService.UserId; // this is likely int?
+            ViewBag.IsLoggedIn = (userId != null && userId.Value != 0);
+
+            if (ViewBag.IsLoggedIn)
+            {
+                var user = _db.Users.FirstOrDefault(u => u.Uid == userId!.Value);
+                if (user != null)
+                {
+                    ViewBag.Username = user.Username;
+                    ViewBag.ProfilePic = user.ProfilePictureSrc;
+                    ViewBag.Uid = user.Uid;
+                }
+            }
+
             List<RecommendationScoreResult> recommendedEvents = new List<RecommendationScoreResult>();
 
             if (userId != null && userId.Value != 0) // if logged in

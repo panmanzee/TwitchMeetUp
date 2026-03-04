@@ -78,4 +78,11 @@ window.onclick = function (event) {
             menu.style.display = "none";
         }
     }
+
+    if (!event.target.closest('#profileDropdownBtn') && !event.target.closest('#profileDropdown')) {
+        var profileMenu = document.getElementById("profileDropdown");
+        if (profileMenu && profileMenu.style.display === "block") {
+            profileMenu.style.display = "none";
+        }
+    }
 }

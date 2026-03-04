@@ -73,18 +73,7 @@ body {
     font-weight: 500;
 }
 
-.auth-buttons a:first-child {
-    background: linear-gradient(135deg, #9146FF, #6a1fc2) !important;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3);
-}
 
-.auth-buttons a:first-child:hover {
-    box-shadow: 0 4px 20px rgba(145, 70, 255, 0.6);
-    transform: translateY(-2px);
-}
 
 
 .search {

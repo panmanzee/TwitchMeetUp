@@ -5,8 +5,8 @@
 }
 
 body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background-color: #ffffff;
+	font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #0e0e10;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -43,9 +43,9 @@ body {
 	text-decoration: none;
 }
 
-	.close-btn:hover {
-		background: rgba(255, 255, 255, 0.1);
-	}
+.close-btn:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
 
 .header {
 	text-align: center;
@@ -95,10 +95,10 @@ body {
 	outline: none;
 }
 
-	.form-input:focus {
-		border-color: #9147ff;
-		background: #000000;
-	}
+.form-input:focus {
+	border-color: #9147ff;
+	background: #000000;
+}
 
 .password-toggle {
 	position: absolute;
@@ -113,9 +113,9 @@ body {
 	font-size: 18px;
 }
 
-	.password-toggle:hover {
-		color: #efeff1;
-	}
+.password-toggle:hover {
+	color: #efeff1;
+}
 
 .submit-btn {
 	width: 100%;
@@ -132,9 +132,9 @@ body {
 	letter-spacing: 0.5px;
 }
 
-	.submit-btn:hover {
-		background: #772ce8;
-	}
+.submit-btn:hover {
+	background: #772ce8;
+}
 
 .switch-mode {
 	text-align: center;
@@ -143,14 +143,14 @@ body {
 	font-size: 13px;
 }
 
-	.switch-mode a {
-		color: #a970ff;
-		text-decoration: none;
-		font-weight: 600;
-		cursor: pointer;
-		transition: color 0.2s;
-	}
+.switch-mode a {
+	color: #a970ff;
+	text-decoration: none;
+	font-weight: 600;
+	cursor: pointer;
+	transition: color 0.2s;
+}
 
-		.switch-mode a:hover {
-			color: #bf94ff;
-		}
+.switch-mode a:hover {
+	color: #bf94ff;
+}

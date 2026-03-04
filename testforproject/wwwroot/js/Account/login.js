@@ -22,7 +22,7 @@ async function login() {
         return;
     }
 
-    const data = {username, password};
+    const data = { username, password };
 
     try {
         const res = await fetch("/api/AccountApi/login", {
@@ -39,7 +39,7 @@ async function login() {
             return;
         }
 
-        window.location.href = "/";
+        window.location.href = "/Dashboard/Show";
     } catch (error) {
         errorMessage.innerText = "An unexpected error occured";
         console.error("Login error:", error);

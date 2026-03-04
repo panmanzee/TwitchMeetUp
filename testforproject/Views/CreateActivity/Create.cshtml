@@ -15,7 +15,8 @@
     </div>
 }
 
-<div class="form-container">
+<div class="form-container" style="position: relative; padding-top: 40px;">
+    <a href="@Url.Action("Show", "Dashboard")" style="position: absolute; left: 30px; top: 20px; color: #9146FF; text-decoration: none; font-weight: bold;">&larr; Back to Dashboard</a>
     <h1>Create New Activity</h1>
     <div id="clientErrors"></div>
     <form action="/CreateActivity/Create" method="post" enctype="multipart/form-data">

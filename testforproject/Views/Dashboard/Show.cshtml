@@ -7,12 +7,8 @@
 
 <div class="container">
     <div class="head">
-        <!-- New Button: Edit Preferences -->
-        <a href="@Url.Action("Onboarding", "Account")" class="edit-pref-btn" style="background:#18181b; border:2px solid #303032; color:#efeff1; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:8px; transition:all 0.2s;" onmouseover="this.style.borderColor='#9146FF'; this.style.boxShadow='0 0 10px rgba(145, 70, 255, 0.4)';" onmouseout="this.style.borderColor='#303032'; this.style.boxShadow='none';">
-            <span style="font-size:18px;">✨</span> Edit Preferences
-        </a>
-        
-        <div class="search">
+        <!-- Kept the hamburger and search bar -->
+        <div class="search" style="margin-left: 0;">
             <div style="position: relative;">
                 <div class="hamburger" onclick="toggleSortMenu()">☰</div>
 
@@ -33,9 +29,50 @@
                 </form>
             </div>
         </div>
-        <div class="auth-buttons">
-            <a href="@Url.Action("Create", "CreateActivity")" style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">+ Create Activity</a>
-            <a href="#">Login</a>
+        
+        <div class="auth-buttons" style="display: flex; align-items: center; gap: 10px;">
+            @if (ViewBag.IsLoggedIn == true)
+            {
+                <!-- Profile Dropdown -->
+                <div class="profile-btn-container" style="position: relative; display: inline-block;">
+                    <button id="profileDropdownBtn" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'block' ? 'none' : 'block';" style="width: 40px; height: 40px; background: #9146FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; color: white; border: 2px solid #303032; padding: 0; overflow: hidden; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#9146FF';" onmouseout="this.style.borderColor='#303032';">
+                        @if (ViewBag.ProfilePic != null)
+                        {
+                            <img src="~/imageProfile/@(ViewBag.Uid + ".jpg")" style="width: 100%; height: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            @(((string)ViewBag.Username ?? "U").Substring(0, 1).ToUpper())
+                        }
+                    </button>
+                    
+                    <div id="profileDropdown" class="profile-dropdown-content" style="display: none; position: absolute; right: 0; top: 55px; background: #18181b; border: 1px solid #303032; border-radius: 12px; width: 250px; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.8); overflow: hidden;">
+                        <div style="padding: 10px 0;">
+                            <a href="@Url.Action("Index", "Profile")" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #efeff1; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#303032';" onmouseout="this.style.background='transparent';">
+                                <span style="font-size: 18px;">👤</span> My Profile
+                            </a>
+                            <a href="@Url.Action("Create", "CreateActivity")" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #efeff1; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#303032';" onmouseout="this.style.background='transparent';">
+                                <span style="font-size: 18px;">➕</span> Create Event
+                            </a>
+                            <a href="@Url.Action("Index", "Notification")" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #efeff1; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#303032';" onmouseout="this.style.background='transparent';">
+                                <span style="font-size: 18px;">🔔</span> Notification
+                            </a>
+                            <a href="@Url.Action("Onboarding", "Account")" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #efeff1; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#303032';" onmouseout="this.style.background='transparent';">
+                                <span style="font-size: 18px;">✨</span> Edit Preference
+                            </a>
+                            <hr style="border: 0; border-top: 1px solid #303032; margin: 5px 0;" />
+                            <a href="@Url.Action("Logout", "Account")" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #ff4d4d; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#303032';" onmouseout="this.style.background='transparent';">
+                                <span style="font-size: 18px;">🚪</span> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action("Login", "Account")" style="background: transparent; border: 1px solid #9146FF; padding: 10px 20px; border-radius: 20px; color: #efeff1; text-decoration: none;">Login</a>
+                <a href="@Url.Action("Register", "Account")" style="background: #303032; padding: 10px 20px; border-radius: 20px; color: #efeff1; text-decoration: none;">Register</a>
+            }
         </div>
     </div>
 

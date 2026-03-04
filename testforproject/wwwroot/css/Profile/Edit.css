@@ -4,16 +4,17 @@
 }
 
 body {
-    background-color: #121212;
-    color: #fff;
+    background-color: #0e0e10;
+    color: #efeff1;
     margin: 0;
     padding: 20px;
 }
 
 .profile-container {
-    background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
-    border-radius: 8px;
+    background: #18181b;
+    border-radius: 12px;
     padding: 20px;
+    border: 1px solid #303032;
 }
 
 
@@ -53,42 +54,46 @@ body {
 .form-group {
     margin-top: 20px;
 }
+
 .form-group-disabled {
     margin-top: 20px;
 }
-    .form-group-disabled input,
-    .form-group-disabled textarea {
-        width: 100%;
-        background-color: #222;
-        border: 1px solid #555;
-        border-radius: 4px;
-        padding: 8px;
-        color: #555;
-    }
-    .form-group-disabled small {
-        color:#ff4444;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 6px;
-    }
 
-    .form-group input,
-    .form-group textarea {
-        width: 100%;
-        background-color: #222;
-        border: 1px solid #444;
-        border-radius: 4px;
-        padding: 8px;
-        color: white;
-    }
+.form-group-disabled input,
+.form-group-disabled textarea {
+    width: 100%;
+    background-color: #0e0e10;
+    border: 1px solid #26262c;
+    border-radius: 4px;
+    padding: 8px;
+    color: #adadb8;
+}
 
-    .form-group small {
-        display: block;
-        margin-top: 4px;
-        font-size: 12px;
-        color: #aaa;
-    }
+.form-group-disabled small {
+    color: #ff4444;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    background-color: #0e0e10;
+    border: 1px solid #26262c;
+    border-radius: 4px;
+    padding: 8px;
+    color: #efeff1;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #aaa;
+}
 
 .bio-group textarea {
     resize: none;
@@ -96,26 +101,26 @@ body {
 
 
 .bottom-row {
-    
+
     margin-top: 25px;
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-    .bottom-row button {
-        
-        background-color: #444;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+.bottom-row button {
+    background-color: #9146FF;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
-        .bottom-row button:hover {
-            background-color: #666;
-        }
+.bottom-row button:hover {
+    background-color: #666;
+}
 
 .dropdown {
     width: 200px;
@@ -125,10 +130,12 @@ body {
     border: 1px solid #555;
     border-radius: 4px;
 }
+
 @media (max-width: 700px) {
     .dropdown {
-        width:100%;
+        width: 100%;
     }
+
     .profile-header {
         flex-direction: column;
         align-items: flex-start;
@@ -144,9 +151,9 @@ body {
         align-items: stretch;
     }
 
-        .bottom-row button {
-            width: 100%;
-        }
+    .bottom-row button {
+        width: 100%;
+    }
 }
 
 body {
@@ -164,15 +171,15 @@ body {
     cursor: pointer;
 }
 
-    .open-btn:hover {
-        background: #3a3a3a;
-    }
+.open-btn:hover {
+    background: #3a3a3a;
+}
 
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     z-index: 1000;
 }
@@ -183,13 +190,13 @@ body {
     width: 360px;
     padding: 20px;
     border-radius: 14px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     border: 1px solid #2a2a2a;
 }
 
-    .modal-content h2 {
-        margin-bottom: 15px;
-    }
+.modal-content h2 {
+    margin-bottom: 15px;
+}
 
 input[type="file"] {
     width: 100%;
@@ -211,9 +218,9 @@ input[type="file"] {
     cursor: pointer;
 }
 
-    .submit-btn:hover {
-        background: #4a4a4a;
-    }
+.submit-btn:hover {
+    background: #4a4a4a;
+}
 
 .close {
     float: right;
@@ -222,6 +229,6 @@ input[type="file"] {
     color: #aaa;
 }
 
-    .close:hover {
-        color: white;
-    }
+.close:hover {
+    color: white;
+}

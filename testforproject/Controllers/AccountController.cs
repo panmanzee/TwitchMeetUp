@@ -31,7 +31,7 @@ public class AccountController : Controller
     {
         if (_jwtService.UserId != null)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Dashboard");
         }
         return View();
     }
@@ -40,8 +40,15 @@ public class AccountController : Controller
     {
         if (_jwtService.UserId != null)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Dashboard");
         }
         return View();
+    }
+
+    [HttpGet]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return RedirectToAction("Show", "Dashboard");
     }
 }

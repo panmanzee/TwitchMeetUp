@@ -20,13 +20,19 @@ namespace testforproject.Controllers
             _jwtService = jwtService;
         }
 
-        
+
+        // Handle Root / Default Route
+        public IActionResult Index()
+        {
+            return RedirectToAction("Show", "Dashboard");
+        }
+
         public IActionResult Dashboard()
         {
 
             var events = _db.Events
-              
-              .Include(e => e.Owner)  
+
+              .Include(e => e.Owner)
               .OrderByDescending(e => e.Eid)
               .Take(4)
               .ToList();
@@ -57,7 +63,7 @@ namespace testforproject.Controllers
             return View();
         }
 
-       
+
         //[HttpPost]
         //public async Task<IActionResult> CreateActivity(string Name, string Location, int MaxParticitpant, string Catagories, string Duration)
         //{
@@ -89,6 +95,6 @@ namespace testforproject.Controllers
         //    return RedirectToAction("Dashboard"); 
         //}
 
-        
+
     }
 }

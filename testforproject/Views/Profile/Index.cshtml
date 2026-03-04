@@ -8,11 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header" style="position: relative;">
+            <a href="@Url.Action("Show", "Dashboard")" style="position: absolute; left: 0; top: 0; color: #9146FF; text-decoration: none; font-weight: bold;">&larr; Back to Dashboard</a>
             <h2>My Profile</h2>
             @if (Model.Username == ViewBag.user)
             {
-                <button>Edit Profile</button>
+                <a href="@Url.Action("edit", "profile")" style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">Edit Profile</a>
             }
         </div>
         <div class="banner"></div>
