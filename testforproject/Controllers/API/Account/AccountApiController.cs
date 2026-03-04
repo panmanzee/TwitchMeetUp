@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using testforproject.Authen;
@@ -14,8 +15,8 @@ namespace testforproject.Controllers.API.Account
     {
         private readonly ApplicationDbContext _db;
         private readonly TokenProvider _tokenProvider;
-        private readonly IJwtService  _jwtService;
-        public AccountApiController(ApplicationDbContext db, TokenProvider tokenProvider,IJwtService jwtService)
+        private readonly IJwtService _jwtService;
+        public AccountApiController(ApplicationDbContext db, TokenProvider tokenProvider, IJwtService jwtService)
         {
             _db = db;
             _tokenProvider = tokenProvider;
@@ -44,9 +45,9 @@ namespace testforproject.Controllers.API.Account
 
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
-                HttpOnly = true ,
-                SameSite = SameSiteMode.None ,
-                Secure = true ,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
             return Ok(new { message = " Registered successfully", loggedIn = true });
@@ -66,7 +67,8 @@ namespace testforproject.Controllers.API.Account
             }
             string token = _tokenProvider.Create(user);
 
-            Response.Cookies.Append("jwt", token, new CookieOptions {
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
                 HttpOnly = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
@@ -84,7 +86,7 @@ namespace testforproject.Controllers.API.Account
             {
                 return Unauthorized();
             }
-            return Ok(new { loggedIn = true }); 
+            return Ok(new { loggedIn = true });
         }
 
         [HttpPost("logout")]
@@ -94,7 +96,58 @@ namespace testforproject.Controllers.API.Account
 
             Response.Cookies.Delete("jwt");
 
-            return Ok(new {message = "Logged out"});
+            return Ok(new { message = "Logged out" });
+        }
+
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleTokenDto dto)
+        {
+            try
+            {
+                var settings = new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new[] { "381740202292-rtg3q475g4njabu97cei3pdk4cnurcd3.apps.googleusercontent.com" }
+                };
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(dto.Token, settings);
+
+                var user = _db.Users.FirstOrDefault(u => u.Email == payload.Email);
+
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Username = payload.Name,   
+                        Email = payload.Email,    
+                        DisplayName = payload.Name, 
+                        Password = Guid.NewGuid().ToString(),
+                        ProfilePictureSrc = payload.Picture,
+                        HostScore = 0,
+                        ParticipateScore = 0
+                    };
+                    _db.Users.Add(user);
+                    await _db.SaveChangesAsync();
+                }
+
+                user.Email ??= payload.Email;
+                user.Username ??= payload.Name;
+
+                string token = _tokenProvider.Create(user);
+
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                });
+
+                return Ok(new { message = "Login with Google Successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { message = "Google token invalid", error = ex.Message });
+            }
         }
 
     }

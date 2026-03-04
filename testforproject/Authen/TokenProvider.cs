@@ -18,7 +18,7 @@ using testforproject.Models;
             Subject = new ClaimsIdentity(
                 [
                     new Claim(JwtRegisteredClaimNames.Sub, user.Uid.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email ?? "")
                 ]),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:Expired")),
             SigningCredentials = credentials,
