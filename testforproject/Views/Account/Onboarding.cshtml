@@ -1,0 +1,35 @@
+@model IEnumerable<testforproject.Models.Category>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Interests - Onboarding</title>
+    <link rel="stylesheet" href="~/css/Account/onboarding.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="logo-text">What do you like?</span>
+            <p>Please select your top 5 favorite categories.</p>
+        </div>
+
+        <form id="onboardingForm">
+            <div class="categories-grid">
+                @foreach(var cat in Model)
+                {
+                    <div class="category-item">
+                        <input type="checkbox" id="cat_@cat.Id" class="cat-checkbox" value="@cat.Id">
+                        <label for="cat_@cat.Id">@cat.Name</label>
+                    </div>
+                }
+            </div>
+
+            <div id="errorMessage" style="color:red; margin-top:10px;"></div>
+            <p id="selectionCount">0 / 5 selected</p>
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>Complete Setup</button>
+        </form>
+    </div>
+    <script src="~/js/Account/onboarding.js"></script>
+</body>
+</html>

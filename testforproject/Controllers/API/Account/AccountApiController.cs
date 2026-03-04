@@ -5,7 +5,7 @@ using testforproject.Authen;
 using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
-
+using Microsoft.EntityFrameworkCore;
 namespace testforproject.Controllers.API.Account
 {
     [ApiController]
@@ -14,8 +14,8 @@ namespace testforproject.Controllers.API.Account
     {
         private readonly ApplicationDbContext _db;
         private readonly TokenProvider _tokenProvider;
-        private readonly IJwtService  _jwtService;
-        public AccountApiController(ApplicationDbContext db, TokenProvider tokenProvider,IJwtService jwtService)
+        private readonly IJwtService _jwtService;
+        public AccountApiController(ApplicationDbContext db, TokenProvider tokenProvider, IJwtService jwtService)
         {
             _db = db;
             _tokenProvider = tokenProvider;
@@ -44,9 +44,9 @@ namespace testforproject.Controllers.API.Account
 
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
-                HttpOnly = true ,
-                SameSite = SameSiteMode.None ,
-                Secure = true ,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
             return Ok(new { message = " Registered successfully", loggedIn = true });
@@ -66,7 +66,8 @@ namespace testforproject.Controllers.API.Account
             }
             string token = _tokenProvider.Create(user);
 
-            Response.Cookies.Append("jwt", token, new CookieOptions {
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
                 HttpOnly = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
@@ -84,16 +85,48 @@ namespace testforproject.Controllers.API.Account
             {
                 return Unauthorized();
             }
-            return Ok(new { loggedIn = true }); 
+            return Ok(new { loggedIn = true });
         }
 
         [HttpPost("logout")]
         public IActionResult Logout()
         {
             var token = Request.Cookies["jwt"];
+            return Ok(new { message = "Logged out" });
+        }
 
-           
-            return Ok(new {message = "Logged out"});
+        [HttpPost("onboarding")]
+        public IActionResult Onboarding([FromBody] List<int> categoryIds)
+        {
+            var userId = _jwtService.UserId;
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "You must be logged in to complete onboarding." });
+            }
+
+            if (categoryIds == null || categoryIds.Count != 5)
+            {
+                return BadRequest(new { message = "Please select exactly 5 categories." });
+            }
+
+            var user = _db.Users.Include(u => u.PreferredCategories).FirstOrDefault(u => u.Uid == userId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            // Fetch selected categories from DB
+            var selectedCategories = _db.Categories.Where(c => categoryIds.Contains(c.Id)).ToList();
+
+            user.PreferredCategories?.Clear();
+            foreach (var cat in selectedCategories)
+            {
+                user.PreferredCategories?.Add(cat);
+            }
+
+            _db.SaveChanges();
+
+            return Ok(new { message = "Onboarding completed successfully" });
         }
 
     }

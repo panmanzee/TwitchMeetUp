@@ -99,15 +99,30 @@
         <div class="navigaor">Recent</div>
     </div>
     <div class="scroll-container">
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
-        <div class="activity">recommend Activity</div>
+        @if (ViewBag.RecommendedEvents != null)
+        {
+            foreach (var rec in (List<testforproject.Services.RecommendationScoreResult>)ViewBag.RecommendedEvents)
+            {
+                <div class="activity" style="display:flex; flex-direction:column; padding:15px; box-sizing:border-box; cursor:pointer;" onclick="window.location.href='/Activity/Summary?id=@rec.Event.Eid'">
+                    @if (!string.IsNullOrEmpty(rec.Event.ImageUrl))
+                    {
+                        <img src="@rec.Event.ImageUrl" alt="@rec.Event.Name" style="width:100%; height:320px; object-fit:cover; border-radius:12px; margin-bottom:15px;" />
+                    }
+                    else
+                    {
+                        <div style="width:100%; height:320px; background:#303032; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; color:#adadb8; font-size:16px;">No Image</div>
+                    }
+                    <div style="display:flex; flex-direction:column; flex-grow:1; justify-content:center; width:100%; text-align:left;">
+                        <h4 style="margin:0; font-size:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:white;">@rec.Event.Name</h4>
+                        <p style="margin:10px 0 0 0; font-size:16px; color:#ff4d4d; font-weight:bold;">✨ AI Match: @(Math.Round(rec.CategoryMatchScore * 100))%</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="activity">No activities found.</div>
+        }
     </div>
 
     <section class="event-grid" id="eventGridContainer">

@@ -8,10 +8,24 @@ public class AccountController : Controller
 
 {
     private readonly IJwtService _jwtService;
-    public AccountController(IJwtService jwtService) {
+    private readonly ApplicationDbContext _db;
+    public AccountController(IJwtService jwtService, ApplicationDbContext db)
+    {
         _jwtService = jwtService;
+        _db = db;
     }
-    
+
+    [HttpGet]
+    public IActionResult Onboarding()
+    {
+        if (_jwtService.UserId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        var categories = _db.Categories.ToList();
+        return View(categories);
+    }
+
     [HttpGet]
     public IActionResult Register()
     {
@@ -19,7 +33,7 @@ public class AccountController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
-        return View(); 
+        return View();
     }
     [HttpGet]
     public IActionResult Login()

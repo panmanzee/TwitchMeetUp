@@ -20,6 +20,9 @@ builder.Services.AddSingleton<TokenProvider>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INotification, NotificationService>();
+// Added for Recommendation Engine Math
+builder.Services.AddScoped<testforproject.Services.VectorCalculator>();
+builder.Services.AddScoped<testforproject.Services.RecommendationService>();
 builder.Services.AddOpenApi();
 //builder.Services.AddHostedService<EventIsExpired>();
 builder.Services.AddCors(options =>
@@ -46,24 +49,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
-            ClockSkew = TimeSpan.Zero 
+            ClockSkew = TimeSpan.Zero
         };
 
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
-               
+
                 if (context.Request.Cookies.ContainsKey("jwt"))
                 {
                     context.Token = context.Request.Cookies["jwt"];
                 }
-                
+
                 return Task.CompletedTask;
             },
             OnAuthenticationFailed = context =>
             {
-                
+
                 Console.WriteLine($"Authentication failed: {context.Exception.Message}");
                 return Task.CompletedTask;
             }

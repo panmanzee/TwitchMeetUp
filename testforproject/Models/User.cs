@@ -22,6 +22,10 @@ namespace testforproject.Models
         public int? HostScore { get; set; }
         public int? ParticipateScore { get; set; }
 
+        // Added for Recommendation Engine
+        public double? PopularityScore { get; set; } = 0.0;
+        public virtual ICollection<Category>? PreferredCategories { get; set; } = new List<Category>();
+
         public ICollection<Event>? OwningEvent { get; set; }
 
         public ICollection<Event>? ParticipatedEvent { get; set; }

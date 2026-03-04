@@ -38,7 +38,7 @@ document.getElementById("registerForm")
                 return;
             }
 
-            window.location.href = "/";
+            window.location.href = "/Account/Onboarding";
         } catch (error) {
             errorMessage.innerText = "An unexpected error occured";
             console.error("Login error:", error);
