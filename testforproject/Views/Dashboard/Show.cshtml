@@ -7,6 +7,11 @@
 
 <div class="container">
     <div class="head">
+        <!-- New Button: Edit Preferences -->
+        <a href="@Url.Action("Onboarding", "Account")" class="edit-pref-btn" style="background:#18181b; border:2px solid #303032; color:#efeff1; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:8px; transition:all 0.2s;" onmouseover="this.style.borderColor='#9146FF'; this.style.boxShadow='0 0 10px rgba(145, 70, 255, 0.4)';" onmouseout="this.style.borderColor='#303032'; this.style.boxShadow='none';">
+            <span style="font-size:18px;">✨</span> Edit Preferences
+        </a>
+        
         <div class="search">
             <div style="position: relative;">
                 <div class="hamburger" onclick="toggleSortMenu()">☰</div>
@@ -114,7 +119,6 @@
                     }
                     <div style="display:flex; flex-direction:column; flex-grow:1; justify-content:center; width:100%; text-align:left;">
                         <h4 style="margin:0; font-size:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:white;">@rec.Event.Name</h4>
-                        <p style="margin:10px 0 0 0; font-size:16px; color:#ff4d4d; font-weight:bold;">✨ AI Match: @(Math.Round(rec.CategoryMatchScore * 100))%</p>
                     </div>
                 </div>
             }

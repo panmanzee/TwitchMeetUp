@@ -35,7 +35,7 @@ namespace testforproject.Services
         }
 
         // Main entry point for recommendations
-        public List<RecommendationScoreResult> GetRecommendationsForUser(int userId, int limit = 10)
+        public List<RecommendationScoreResult> GetRecommendationsForUser(int userId, int limit = 50)
         {
             var user = _db.Users
                 .Include(u => u.PreferredCategories)
