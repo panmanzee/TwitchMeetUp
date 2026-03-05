@@ -213,3 +213,60 @@ textarea {
         transform: translateY(0);
         box-shadow: 0 4px 10px rgba(145, 70, 255, 0.3);
     }
+
+
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+========================================= */
+
+/* สำหรับแท็บเล็ตและจอมือถือแนวนอน (จอเล็กกว่า 768px) */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 25px; /* ลดขอบด้านในลง เพื่อให้ช่องกรอกข้อความกว้างขึ้น */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* ลดย่อขนาดหัวข้อลงนิดหน่อย */
+        margin-bottom: 25px;
+    }
+
+    .group {
+        margin-bottom: 18px; /* บีบระยะห่างระหว่างช่องให้กระชับขึ้น */
+    }
+}
+
+/* สำหรับจอมือถือทั่วไป (จอเล็กกว่า 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+        align-items: flex-start; /* ดันฟอร์มขึ้นไปด้านบน (ไม่ให้อยู่ตรงกลางจอ) เพื่อเผื่อพื้นที่ให้คีย์บอร์ดมือถือเด้งขึ้นมา */
+        padding-top: 30px;
+    }
+
+    .form-container {
+        padding: 25px 15px; /* ใช้พื้นที่จอให้คุ้มค่าที่สุด */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* ลดความฟุ้งของเงาลงไม่ให้ดูหนักเกินไป */
+    }
+
+    h1 {
+        font-size: 1.35rem;
+        margin-bottom: 20px;
+        padding-left: 12px;
+        border-left-width: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="datetime-local"],
+    textarea,
+    .multi-select-header {
+        padding: 10px 12px; /* ลดความหนาของกล่องพิมพ์ลง */
+        font-size: 16px; /* 💡 สำคัญมาก: บังคับให้เป็น 16px เพื่อป้องกันปัญหา iPhone (iOS) ซูมหน้าจออัตโนมัติเวลากดพิมพ์ */
+    }
+
+    .btn-submit {
+        padding: 12px;
+        font-size: 1rem;
+        margin-top: 5px;
+    }
+}

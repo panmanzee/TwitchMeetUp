@@ -35,16 +35,19 @@ namespace testforproject.Controllers
         {
             
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdString)) return RedirectToAction("Login", "Account");
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             int currentUserId = int.Parse(userIdString);
 
             if (closetime <= StartTime)
             {
                 ModelState.AddModelError("closetime", "Event Stop must be later than Event Start.");
             }
-            if (Expired_Date <= closetime)
+            if (Expired_Date > StartTime)
             {
-                ModelState.AddModelError("Expired_Date", "Expired Date must be after Event Stop.");
+                ModelState.AddModelError("Expired_Date", "Registration end time (Expired Date) must be before the Event Start.");
             }
             if (MaxParticitpant < 1)
             {
@@ -54,7 +57,7 @@ namespace testforproject.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.ExistingCategories = _db.Categories.ToList();
-                return View(); // return form with errors
+                return View(); 
             }
 
             var defaultReq = new Requirements
