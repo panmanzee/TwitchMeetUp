@@ -46,17 +46,32 @@ document.getElementById("registerForm")
     });
 document.querySelectorAll('.password-toggle').forEach(button => {
     button.addEventListener('click', function () {
-        console.log("Hello")
         const input = this.previousElementSibling;
-        console.log(input)
         if (input.type === 'password') {
-            console.log("Hello1")
             input.type = 'text';
             this.innerHTML = '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
         } else {
-            console.log("Hello2")
             input.type = 'password';
             this.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
         }
     });
 });
+
+async function handleGoogleLogin(response) {
+    console.log("Google response:", response);
+    console.log("Credential:", response.credential);
+
+    const res = await fetch('/api/AccountApi/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ token: response.credential })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+        window.location.href = '/';
+    } else {
+        console.error(data.message);
+    }
+}

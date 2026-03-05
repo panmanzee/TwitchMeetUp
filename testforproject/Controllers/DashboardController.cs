@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 using testforproject.Services;
@@ -55,6 +56,18 @@ namespace testforproject.Controllers
             ViewBag.RecommendedEvents = recommendedEvents;
             // --------------------------------------
 
+            var events = query.Take(4).ToList();
+
+            ViewBag.Categories = _db.Categories.ToList();
+            ViewBag.IsLoggedIn = _jwtService.UserId != null;
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.SortOrder = sortorder;
+
+            return View(events);
+        }
+        [HttpGet]
+        public IActionResult SearchEventsAJAX(string searchQuery, string sortorder, string categoryFilter)
+        {
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)

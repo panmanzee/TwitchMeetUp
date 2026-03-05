@@ -6,6 +6,7 @@
     <title>เข้าสู่ระบบ</title>
     <link rel="stylesheet" href="~/css/Account/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -34,6 +35,13 @@
             <div id="errorMessage" style="color:#ef4444; margin-bottom:15px; font-size:14px;"></div>
 
             <button type="submit" class="submit-btn">Login</button>
+
+            <div class="devider">or</div>
+            <div id="g_id_onload"
+                 data-client_id="381740202292-rtg3q475g4njabu97cei3pdk4cnurcd3.apps.googleusercontent.com"
+                 data-callback="handleGoogleLogin">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
 
             <div class="switch-mode">
                 <span>Not a member yet?</span>

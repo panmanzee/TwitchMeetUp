@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260303173702_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260305110227_new-aftermerge")]
+    partial class newaftermerge
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

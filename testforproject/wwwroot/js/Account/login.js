@@ -45,3 +45,22 @@ async function login() {
         console.error("Login error:", error);
     }
 }
+
+async function handleGoogleLogin(response) {
+    console.log("Google response:", response);
+    console.log("Credential:", response.credential);
+
+    const res = await fetch('/api/AccountApi/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ token: response.credential })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+        window.location.href = '/';
+    } else {
+        console.error(data.message);
+    }
+}

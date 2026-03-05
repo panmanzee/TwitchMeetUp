@@ -422,3 +422,135 @@ body {
     background-color: #9146FF;
     color: white;
 }
+
+
+/* =================================================== */
+/* --- RESPONSIVE MEDIA QUERIES --- */
+/* =================================================== */
+
+/* สำหรับหน้าจอขนาดกลาง (แท็บเล็ตแนวนอน หรือ โน้ตบุ๊กจอเล็ก) - จอเล็กกว่า 1200px */
+@media (max-width: 1200px) {
+    .search {
+        margin-left: 20px;
+        /* ลดระยะห่างที่กว้างเกินไป */
+    }
+
+    .search-container-bar input {
+        width: 500px;
+        /* ย่อกล่องค้นหาลง */
+    }
+
+    .event-card {
+        flex: 0 0 400px;
+        /* ย่อการ์ด Event ลงนิดหน่อย */
+    }
+
+    .activity {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+/* สำหรับแท็บเล็ต (iPad) - จอเล็กกว่า 992px */
+@media (max-width: 992px) {
+    .search-container-bar input {
+        width: 350px;
+    }
+
+    .option {
+        /* เปลี่ยนให้แสดงหมวดหมู่ทีละ 2 อันแทน 3 อัน */
+        flex: 0 0 calc((100% / 2) - 15px);
+    }
+
+    .navigaor {
+        font-size: 24px;
+        /* ลดขนาดตัวอักษรเมนู */
+    }
+}
+
+/* สำหรับมือถือทั่วไป - จอเล็กกว่า 768px */
+@media (max-width: 768px) {
+    .head {
+        flex-direction: column;
+        /* เปลี่ยนส่วนหัวให้เรียงซ้อนกันจากบนลงล่าง */
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .search {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .search-container-bar {
+        width: 100%;
+        flex: 1;
+    }
+
+    .search-container-bar input {
+        width: 100%;
+        /* ให้กล่องค้นหาเต็มจอพอดี */
+        box-sizing: border-box;
+        font-size: 16px;
+        /* ย่อตัวหนังสือในช่องค้นหา */
+        padding: 15px;
+    }
+
+    .auth-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .auth-buttons a {
+        margin-left: 0;
+    }
+
+    .event-card {
+        /* ปรับให้การ์ด Event กว้างเกือบเต็มจอมือถือ (เผื่อขอบให้เห็นการ์ดถัดไปนิดนึง) */
+        flex: 0 0 85vw;
+    }
+
+    .activity {
+        width: 280px;
+        height: 280px;
+    }
+
+    .option {
+        height: 300px;
+    }
+}
+
+/* สำหรับมือถือจอเล็กมาก - จอเล็กกว่า 480px */
+@media (max-width: 480px) {
+    .option {
+        /* แสดงหมวดหมู่ทีละ 1 อันเลยบนจอเล็ก */
+        flex: 0 0 80%;
+        height: 250px;
+    }
+
+    .cat-img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .activity {
+        width: 220px;
+        height: 220px;
+    }
+
+    .navigaor {
+        font-size: 18px;
+    }
+
+    .navi {
+        gap: 15px;
+    }
+
+    .image {
+        height: 180px;
+        /* ลดความสูงของรูป Event บนมือถือ */
+    }
+}
