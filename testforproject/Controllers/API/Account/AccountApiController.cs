@@ -92,7 +92,7 @@ namespace testforproject.Controllers.API.Account
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            var token = Request.Cookies["jwt"];
+            Response.Cookies.Delete("jwt");
             return Ok(new { message = "Logged out" });
         }
 
@@ -128,9 +128,6 @@ namespace testforproject.Controllers.API.Account
             _db.SaveChanges();
 
             return Ok(new { message = "Onboarding completed successfully" });
-            Response.Cookies.Delete("jwt");
-
-            return Ok(new { message = "Logged out" });
         }
 
 

@@ -56,18 +56,6 @@ namespace testforproject.Controllers
             ViewBag.RecommendedEvents = recommendedEvents;
             // --------------------------------------
 
-            var events = query.Take(4).ToList();
-
-            ViewBag.Categories = _db.Categories.ToList();
-            ViewBag.IsLoggedIn = _jwtService.UserId != null;
-            ViewBag.SearchQuery = searchQuery;
-            ViewBag.SortOrder = sortorder;
-
-            return View(events);
-        }
-        [HttpGet]
-        public IActionResult SearchEventsAJAX(string searchQuery, string sortorder, string categoryFilter)
-        {
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
@@ -95,7 +83,6 @@ namespace testforproject.Controllers
                     query = query.OrderByDescending(e => e.Name);
                     break;
                 default:
-
                     query = query.OrderByDescending(e => e.Eid);
                     break;
             }
@@ -103,12 +90,13 @@ namespace testforproject.Controllers
             var events = query.Take(4).ToList();
 
             ViewBag.Categories = _db.Categories.ToList();
-
+            ViewBag.IsLoggedIn = _jwtService.UserId != null;
             ViewBag.SearchQuery = searchQuery;
             ViewBag.SortOrder = sortorder;
 
             return View(events);
         }
+
         [HttpGet]
         public IActionResult SearchEventsAJAX(string searchQuery, string sortorder, string categoryFilter)
         {
@@ -168,7 +156,7 @@ namespace testforproject.Controllers
                     e.Categories.Any(c => c.Name.Contains(searchQuery))
                 );
             }
-            var events = _db.Events
+            var events = query
                             .OrderByDescending(x => x.Eid)
                             .Skip(skip)
                             .Take(4)
