@@ -21,13 +21,12 @@ function slide(dir) {
 }
 
 // For photo section
-const mockPhotos = [
-    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
-    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
-    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
-    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
-];
-
+//const mockPhotos = [
+//    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
+//    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
+//    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
+//    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",
+//];
 function renderPhotos() {
     const emptyState = document.querySelector('.empty-state');
     const carousel = document.querySelector('.carousel-wrapper');
@@ -49,6 +48,11 @@ function renderPhotos() {
             .join('');
     }
     console.log(track.innerHTML)
+    const leftArrow = document.querySelector('.left-arrow');
+    const rightArrow = document.querySelector('.right-arrow');
+
+    leftArrow.style.opacity = '0';
+    rightArrow.style.opacity = mockPhotos.length <= 1 ? '0' : '1';
 }
 
 // For remain time to Close Register
@@ -70,33 +74,6 @@ function updateRemainTime() {
     document.getElementById('remainTime').textContent =
         `${days}d ${hours}h ${mins}m remaining`;
 }
-
-
-// For read more button
-const readmoreBtn = document.getElementById('readMoreBtn');
-const detailText = document.querySelector('.detail');
-
-function checkOverflow() {
-    // scrollHeight = full height of content
-    // clientHeight = visible height
-    if (text.scrollHeight <= text.clientHeight) {
-        readmoreBtn.style.display = "none";
-    } else {
-        readmoreBtn.style.display = "inline";
-    }
-}
-
-readmoreBtn.addEventListener("click", function () {
-    detailText.classList.toggle("expanded");
-
-    if (detailText.classList.contains("expanded")) {
-        readmoreBtn.textContent = "Read Less";
-    }
-    else {
-        readmoreBtn.textContent = "Read More";
-    }
-});
-
 
 async function joinEvent(eventId) {
     const response = await fetch('/api/EventApi/join', {
@@ -122,9 +99,33 @@ async function joinEvent(eventId) {
 window.onload = () => {
     updateRemainTime();
     setInterval(updateRemainTime, 60000);
-
     renderPhotos();
     document.querySelector('.left-arrow').style.opacity = '0';
 
     document.querySelector('.left-arrow').style.opacity = '0';
+
+    //---------------------------------------------
+    const readmoreBtn = document.getElementById('readMoreBtn');
+    const detailText = document.querySelector('.detail');
+
+    function toggleText() {
+        detailText.classList.toggle("expanded");
+        readmoreBtn.textContent = detailText.classList.contains("expanded")
+            ? "Read Less"
+            : "Read More";
+    }
+
+    function checkOverflow() {
+        if (detailText.scrollHeight <= detailText.clientHeight) {
+            readmoreBtn.style.display = "none";
+        } else {
+            readmoreBtn.style.display = "inline";
+        }
+    }
+
+    readmoreBtn.addEventListener('click', toggleText);
+    checkOverflow();
+    //---------------------------------------------
+
+    
 }

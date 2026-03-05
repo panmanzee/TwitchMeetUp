@@ -35,13 +35,18 @@ namespace testforproject.Controllers
         public async Task<IActionResult> EventDetails(int id)
         {
             var eventDetail = await _db.Events
-            .Include(e => e.Owner)
-            .FirstOrDefaultAsync(e => e.Eid == id);
+                .Include(e => e.Owner)
+                .Include(e => e.Participants)
+                .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (eventDetail == null)
-            {
                 return NotFound();
-            }
+
+            // Check Join and Login
+            var userId = _jwtService.UserId;
+            ViewBag.IsLoggedIn = userId != null;
+            ViewBag.IsJoined = userId != null &&
+                               eventDetail.Participants.Any(u => u.Uid == userId);
 
             return View(eventDetail);
         }

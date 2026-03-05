@@ -9,28 +9,19 @@
 </head>
 
 <body>
+    <script src="~/js/Event/EventDetails.js"></script>
 
-    <!-- place holder nav -->
-    <nav class="navbar">
-        <div class="nav-logo">EventApp</div>
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Explore</a>
-            <a href="#">My Events</a>
-        </div>
-        <div class="nav-profile">
-            <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg">
-        </div>
-    </nav>
     <div class="Container">
         <div class="devider">
-
             <!-- Left Side -->
             <div class="detail-part">
                 <section class="section-gap">
                     <h1>@Model.Name</h1>
                     <div class="small-profile">
-                        <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg" style="margin-right: 10px;">
+                        <img src="@(!string.IsNullOrEmpty(Model.Owner?.ProfilePictureSrc)
+                                ? Model.Owner.ProfilePictureSrc
+                                : "https://wallpapers.com/images/hd/anonymous-profile-icon-5xbeg73qv03oqvc5.jpg")" 
+                        style="margin-right: 10px;">
                         Host by &nbsp;<a href="" class="Creator-name">@Model.Owner?.Username</a>
                     </div>
                     <!-- <div><i style="margin-right: 10px;" class='fas fa-map-marker-alt'></i>LocationLocation</div>
@@ -39,7 +30,7 @@
                 <section class="section-gap">
                     <h2>Details</h2>
                     <p class="detail">@Model.Description</p>
-                    <button id="readMoreBtn" onclick="toggleText()">Read More</button>
+                    <button id="readMoreBtn">Read More</button>
                 </section>
                 <section class="section-gap">
                     <!-- When empty -->
@@ -65,7 +56,14 @@
                 <div class="img-part">
                     <div class="transparent-img"></div>
                     <div class="main-img">
-                        <img src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Name" style="width: 100%; height: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <span style="color: #adadb8;">No Image</span>
+                        }
                     </div>
                 </div>
                 <div class="reserve-card">
@@ -101,14 +99,41 @@
                             <div style="font-size: 13px; color: gray;">@(Model.MaxParticitpant - Model.Participants.Count) spots remaining</div>
                         </div>
                     </div>
-                    <button class="join_btn" onclick="joinEvent(@Model.Eid)">Join Event</button>
+                    @if (ViewBag.IsLoggedIn == true)
+                    {
+                        if (ViewBag.IsJoined == true)
+                        {
+                            <button class="join_btn" disabled
+                                    style="background: gray; cursor: not-allowed;">
+                                Already Joined ✅
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="join_btn" onclick="joinEvent(@Model.Eid)">
+                                Join Event
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")">
+                            <button class="join_btn">Login to Join</button>
+                        </a>
+                    }
                 </div>
                 <div style="height: 10000px;"></div>
             </div>
 
         </div>
     </div>
-    <script src="~/js/Event/EventDetails.js"></script>
+
+    <script>
+        const mockPhotos = @Html.Raw(Json.Serialize(
+                        new[] { Model.ImageUrl }.Where(x => !string.IsNullOrEmpty(x))
+                ));
+    </script>
+
 </body>
 </html>
 
