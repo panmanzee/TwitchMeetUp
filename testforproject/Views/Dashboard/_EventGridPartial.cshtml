@@ -29,7 +29,7 @@
                 <div class="card-footer">
                     <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
                     <div style="display: flex; gap: 8px; align-items: center;">
-                        <button class="join">Join</button>
+                        <button class="join" onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
                     </div>
                 </div>
             </div>
