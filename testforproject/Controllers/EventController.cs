@@ -37,6 +37,7 @@ namespace testforproject.Controllers
             var eventDetail = await _db.Events
                 .Include(e => e.Owner)
                 .Include(e => e.Participants)
+                .Include(e => e.Categories)
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (eventDetail == null)

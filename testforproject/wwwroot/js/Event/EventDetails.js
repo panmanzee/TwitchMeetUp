@@ -1,5 +1,14 @@
 ﻿let current = 0;
 
+async function logout() {
+    await fetch('/api/AccountApi/logout', {
+        method: 'POST',
+        credentials: 'include'
+    });
+
+    location.reload();
+}
+
 // for carousel slider
 function slide(dir) {
     const track = document.getElementById('carouselTrack');
@@ -88,10 +97,47 @@ async function joinEvent(eventId) {
     const data = await response.json();
 
     if (response.ok) {
-        alert(data.message);
-        location.reload();
+        showToast('✅ ' + data.message, 'success');
+        setTimeout(() => location.reload(), 1000);
     } else {
-        alert(data.message);
+        showToast('❌ ' + data.message, 'error');;
+    }
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast ${type} show`;
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function decodeHtml(html) {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+async function initMap() {
+    const decoded = decodeHtml(eventLocation); // ← decode ก่อน!
+    console.log('decoded:', decoded);
+
+    const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(decoded)}&format=json&limit=1`
+    );
+    const data = await res.json();
+
+    if (data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+        const map = L.map('map').setView([lat, lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.marker([lat, lng]).addTo(map).bindPopup(decoded).openPopup();
+    } else {
+        // ถ้ายัง geocode ไม่ได้ แสดง placeholder
+        document.getElementById('map').innerHTML =
+            '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">📍 Location not found</div>';
     }
 }
 
@@ -103,6 +149,8 @@ window.onload = () => {
     document.querySelector('.left-arrow').style.opacity = '0';
 
     document.querySelector('.left-arrow').style.opacity = '0';
+
+    initMap();
 
     //---------------------------------------------
     const readmoreBtn = document.getElementById('readMoreBtn');

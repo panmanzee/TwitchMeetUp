@@ -38,6 +38,15 @@ namespace testforproject.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            var now = DateTimeOffset.Now;
+
+            if (EventStart <= now)
+            {
+                yield return new ValidationResult(
+                    "Event start must be in the future.",
+                    new[] { nameof(EventStart) });
+            }
+
             if (EventStop <= EventStart)
             {
                 yield return new ValidationResult(
@@ -51,10 +60,36 @@ namespace testforproject.Models
                     "ExpiredDate must be after EventStop",
                     new[] { nameof(ExpiredDate) });
             }
+            if (ExpiredDate <= now)
+            {
+                yield return new ValidationResult(
+                    "Registration deadline must be in the future.",
+                    new[] { nameof(ExpiredDate) });
+            }
         }
 
         [Required]
         public string status { get; set; } = "open";
+
+        [NotMapped]
+        public string ComputedStatus
+        {
+            get
+            {
+                var now = DateTimeOffset.Now;
+
+                if (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant)
+                    return "closed";
+
+                if (now >= EventStart && now <= EventStop)
+                    return "ongoing";
+
+                if (now > EventStop)
+                    return "ended";
+
+                return "open";
+            }
+        }
 
         [Required]
         public string Description { get; set; }

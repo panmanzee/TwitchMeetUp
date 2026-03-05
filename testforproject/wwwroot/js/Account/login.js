@@ -47,14 +47,14 @@ async function login() {
 }
 
 async function handleGoogleLogin(response) {
-    console.log("Google response:", response); // เช็คก่อนครับ
-    console.log("Credential:", response.credential); // ต้องไม่เป็น null
+    console.log("Google response:", response); 
+    console.log("Credential:", response.credential); 
 
     const res = await fetch('/api/AccountApi/google-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ token: response.credential }) // ✅
+        body: JSON.stringify({ token: response.credential }) 
     });
 
     const data = await res.json();

@@ -6,6 +6,7 @@
     <title>Register Page</title>
     <link rel="stylesheet" href="~/css/Account/newregister.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -17,7 +18,7 @@
             </div>
         </div>
 
-        <<form id="registerForm">
+        <form id="registerForm">
             
             <div class="form-group">
                 <label class="form-label" for="username">Username</label>
@@ -48,6 +49,14 @@
             <div id="errorMessage" style="color:red; margin-bottom:10px;"></div>
             <button type="submit" class="submit-btn">Register</button>
 
+            <div class="devider">or</div>
+            <div id="g_id_onload"
+                 data-client_id="381740202292-rtg3q475g4njabu97cei3pdk4cnurcd3.apps.googleusercontent.com"
+                 data-callback="handleGoogleLogin">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
+
+            
             <div class="switch-mode">
                 <span>Already have an account?</span>
                 <a href="/Account/Login">Log in</a>
