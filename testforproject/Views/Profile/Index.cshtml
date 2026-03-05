@@ -61,18 +61,63 @@
                 <div class="section">
                     <h3>Participated Event</h3>
                     <div class="cards">
-                        <div class="card">Event A</div>
-                        <div class="card">Event B</div>
-                        <div class="card">Event C</div>
+                        @if (Model.ParticipatedEvent != null && Model.ParticipatedEvent.Any())
+                        {
+                            @foreach (var ev in Model.ParticipatedEvent)
+                            {
+                                <div class="event-card">
+                                    @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                                    {
+                                        <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="event-card-img no-img">📅</div>
+                                    }
+                                    <div class="event-card-body">
+                                        <div class="event-card-name">@ev.Name</div>
+                                        <div class="event-card-location">📍 @ev.Location</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="empty-text">No participated events yet.</p>
+                        }
                     </div>
                 </div>
+
                 <div class="section">
                     <h3>My Event</h3>
                     <div class="cards">
-                        <div class="card">Tournament</div>
-                        <div class="card">Live Stream</div>
-                        <div class="card">Charity Run</div>
-                        <div class="card">Fan Meetup</div>
+                        @if (Model.OwningEvent != null && Model.OwningEvent.Any())
+                        {
+                            @foreach (var ev in Model.OwningEvent)
+                            {
+                                <div class="event-card">
+                                    @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                                    {
+                                        <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="event-card-img no-img">📅</div>
+                                    }
+                                    <div class="event-card-body">
+                                        <div class="event-card-name">@ev.Name</div>
+                                        <div class="event-card-location">📍 @ev.Location</div>
+                                    </div>
+                                    <div class="event-card-footer">
+                                        <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@ev.Eid" class="event-edit-btn">Edit</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="empty-text">No events created yet.</p>
+                        }
                     </div>
                 </div>
             </div>
