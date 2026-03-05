@@ -103,6 +103,7 @@ app.UseCors("AllowMyApp");
 // Important: Authentication must come before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapStaticAssets();
 

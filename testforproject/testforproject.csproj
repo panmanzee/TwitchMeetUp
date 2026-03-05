@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\imageProfile\" />
+    <Folder Include="wwwroot\imageActivity\" />
   </ItemGroup>
 
   <ItemGroup>

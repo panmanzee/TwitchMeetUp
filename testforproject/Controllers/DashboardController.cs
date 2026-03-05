@@ -18,24 +18,109 @@ namespace testforproject.Controllers
         }
 
         
-        public IActionResult Show()
+public IActionResult Show(string searchQuery,string sortorder,string categoryFilter)
         {
-            var events = _db.Events
-                            
-                            .Include(e => e.Owner)
-                            .OrderByDescending(e => e.Eid)
-                            .Take(4)
-                            .ToList();
+        
+            var query = _db.Events
+                           .Include(e => e.Owner)
+                           .Include(e => e.Categories) 
+                           .AsQueryable();
+
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(e => 
+                    e.Name.Contains(searchQuery) || 
+                    e.Categories.Any(c => c.Name.Contains(searchQuery)) 
+                );
+            }
+
+            switch (sortorder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(e => e.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(e => e.Name);
+                    break;
+                default:
+                    
+                    query = query.OrderByDescending(e => e.Eid);
+                    break;
+            }
+
+            var events = query.Take(4).ToList();
 
             ViewBag.Categories = _db.Categories.ToList();
             ViewBag.IsLoggedIn = _jwtService.UserId != null;
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.SortOrder = sortorder; 
+
             return View(events);
         }
-
-        
         [HttpGet]
-        public IActionResult LoadMoreEvents(int skip)
+        public IActionResult SearchEventsAJAX(string searchQuery, string sortorder,string categoryFilter)
         {
+            var query = _db.Events
+                           .Include(e => e.Owner)
+                           .Include(e => e.Categories)
+                           .AsQueryable();
+            
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(e =>
+                    e.Name.Contains(searchQuery) ||
+                    e.Categories.Any(c => c.Name.Contains(searchQuery))
+                );
+            }
+
+            
+            switch (sortorder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(e => e.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(e => e.Name);
+                    break;
+                default:
+                    query = query.OrderByDescending(e => e.Eid);
+                    break;
+            }
+
+            
+            var events = query.Take(4).ToList();
+
+            
+            return PartialView("_EventGridPartial", events);
+        }
+
+        [HttpGet]
+        public IActionResult LoadMoreEvents(int skip, string searchQuery,string categoryFilter)
+        {
+            var query = _db.Events.Include(e => e.Owner).Include(e => e.Categories).AsQueryable();
+
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                query = query.Where(e => e.Categories.Any(c => c.Name == categoryFilter));
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(e =>
+                    e.Name.Contains(searchQuery) ||
+                    e.Categories.Any(c => c.Name.Contains(searchQuery))
+                );
+            }
             var events = _db.Events
                             .OrderByDescending(x => x.Eid)
                             .Skip(skip)
@@ -48,7 +133,8 @@ namespace testforproject.Controllers
                                 location = x.Location,
                                 Expire = x.ExpiredDate,
                                 maxParticitpant = x.MaxParticitpant,
-                                particitpant = x.Participants
+                                particitpant = x.Participants,
+                                imageUrl = x.ImageUrl
                             })
                             .ToList();
 

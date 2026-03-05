@@ -3,13 +3,29 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-<link rel="stylesheet" href="~/css/Dashboard2.css">
+<link rel="stylesheet" href="~/css/Dashboard/Dashboard2.css">
+
 <div class="container">
     <div class="head">
         <div class="search">
-            <div class="hamburger">☰</div>
+            <div style="position: relative;">
+                <div class="hamburger" onclick="toggleSortMenu()">☰</div>
+
+                <div id="sortMenu" class="sort-dropdown" style="display: none; position: absolute; top: 100%; left: 0; background: #18181b; border: 1px solid #303032; border-radius: 8px; z-index: 100; padding: 10px; min-width: 180px; margin-top: 15px;">
+                    <p style="margin: 0 0 10px 0; font-size: 12px; color: #adadb8;">SORT BY</p>
+                    <div class="sort-option @(ViewBag.SortOrder == "" ? "active" : "")" onclick="applySort('')">Newest First</div>
+                    <div class="sort-option @(ViewBag.SortOrder == "name_asc" ? "active" : "")" onclick="applySort('name_asc')">Name (A-Z)</div>
+                    <div class="sort-option @(ViewBag.SortOrder == "name_desc" ? "active" : "")" onclick="applySort('name_desc')">Name (Z-A)</div>
+                </div>
+            </div>
+
             <div class="search-container-bar">
-                <input type="text" id="search-group" placeholder="search-group" />
+                <form id="searchForm" method="get" asp-controller="Dashboard" asp-action="Show" style="display: flex;">
+                    <input type="text" id="search-group" name="searchQuery" value="@ViewBag.SearchQuery" placeholder="Search activities or categories..." />
+                    <input type="hidden" id="sortOrderInput" name="sortorder" value="@ViewBag.SortOrder" />
+                    <input type="hidden" id="categoryInput" name="CategoryFilter" value="@ViewBag.CategoryFilter" />
+                    <button type="submit" style="display: none;">Search</button>
+                </form>
             </div>
         </div>
         <div class="auth-buttons">
@@ -34,12 +50,55 @@
     <div class="category">
         <button class="slide" onclick="slide('left')">&#10094;</button>
         <div class="category-slide" id="categorylist">
-            <div class="option active">All Activities</div>
-            @if(ViewBag.Categories != null)
-            {
-                @foreach(var cat in ViewBag.Categories)
+            @{
+                bool isActiveAll = false;
+
+                if (string.IsNullOrEmpty(ViewBag.CategoryFilter))
                 {
-                    <div class="option">@cat.Name</div>
+                    isActiveAll = true;
+                }
+            }
+
+            @if (isActiveAll)
+            {
+                <div class="option active" onclick="selectCategory('', this)">
+                    <span>All Activities</span>
+                </div>
+            }
+            else
+            {
+                <div class="option" onclick="selectCategory('', this)">
+                    <span>All Activities</span>
+                </div>
+            }
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var cat in ViewBag.Categories)
+                {
+                    bool isActive = false;
+
+                    if (ViewBag.CategoryFilter != null)
+                    {
+                        if (ViewBag.CategoryFilter.ToString() == cat.Name.ToString())
+                        {
+                            isActive = true;
+                        }
+                    }
+
+                    if (isActive)
+                    {
+                        <div class="option active" onclick="selectCategory('@cat.Name', this)">
+                            <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name" />
+                            <span>@cat.Name</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="option" onclick="selectCategory('@cat.Name', this)">
+                            <img src="@cat.ImageUrl" class="cat-img" alt="@cat.Name" />
+                            <span>@cat.Name</span>
+                        </div>
+                    }
                 }
             }
         </div>
@@ -63,60 +122,12 @@
         <div class="activity">recommend Activity</div>
     </div>
 
-    <section class="event-grid" id="eventGrid">
-        @if(Model != null)
-        {
-            @foreach(var i in Model)
-            {
-                <a href='/Event/EventDetails/@i.Eid'
-                   class="event-link" 
-                   style="text-decoration: none; color: inherit;">
-                    <div class="event-card" id="event-card-@i.Eid">
-                        <div class="image">Image Placeholder</div>
-                        <div class="card">
-                            <h4>@i.Name</h4>
-                            <p>👤 Owner: @i.Owner</p>
-                            <p>📍 Location: @i.Location</p>
-                            <p>Max Participant: @i.MaxParticitpant</p>
-                            <p>ExpiredDate: @i.ExpiredDate</p>
-                            <p>Open: @i.EventStart </p>
-                            <p>close: @i.EventStop</p>
-                            <p>Status: @i.status</p>
-                            <div class="card-footer">
-                                <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
-                                @* <div style="display: flex; gap: 8px; align-items: center;">
-                                    <button class="join" onclick="location.href='/Event/EventDetails/@i.Eid'">Join</button>
-                                </div> *@
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-            }
-        }
+    <section class="event-grid" id="eventGridContainer">
+        <partial name="_EventGridPartial" model="Model" />
     </section>
     <div class="loadmore" id="viewMore">
         <button class="btn-view-more" onclick="loadMore()">View More</button>
     </div>
-    <script src="~/js/Home/loadmore.js"></script>
+    @* <script src="~/js/Home/loadmore.js"></script> *@
+    <script src="~/js/Home/dashboard.js"></script>
 </div>
-<script>
-    async function slide(direction) {
-        const container = document.getElementById("categorylist");
-
-        
-        const widthToScroll = container.clientWidth;
-
-        if (direction === 'right') {
-            container.scrollBy({
-                left: widthToScroll,
-                behavior: 'smooth'
-            });
-        } else {
-            container.scrollBy({
-                left: -widthToScroll,
-                behavior: 'smooth'
-            });
-        }
-    }
-</script>

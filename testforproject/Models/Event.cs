@@ -18,7 +18,6 @@ namespace testforproject.Models
 
         public string Location { get; set; }//
 
-
         [Range(1, int.MaxValue, ErrorMessage = "Max participants must be at least 1.")]
         public int MaxParticitpant { get; set; }//
 
@@ -62,7 +61,6 @@ namespace testforproject.Models
         public int OwnerId { get; set; }
 
         public User Owner { get; set; }
-
 
         public string? ImageUrl { get; set; }
 
