@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260305110227_new-aftermerge")]
-    partial class newaftermerge
+    [Migration("20260305144556_mergenoti")]
+    partial class mergenoti
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
