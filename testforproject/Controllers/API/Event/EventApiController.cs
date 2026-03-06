@@ -32,16 +32,21 @@ namespace testforproject.Controllers.API.Account
 
             var eventItem = await _db.Events
                 .Include(e => e.Participants)
+                .Include(e => e.Owner)
                 .FirstOrDefaultAsync(e => e.Eid == request.EventId);
 
             if (eventItem == null)
                 return NotFound(new { message = "Event not found" });
 
+            if (eventItem.Owner.Uid == userId)
+                return BadRequest(new { message = "You cannot join your own event" });
+
+            if (eventItem.status == "closed")
+                return BadRequest(new { message = "Event is closed" });
+
+
             if (eventItem.Participants.Any(u => u.Uid == userId))
                 return BadRequest(new { message = "Already joined" });
-
-            if (eventItem.Participants.Count >= eventItem.MaxParticitpant)
-                return BadRequest(new { message = "Event is full" });
 
             var user = await _db.Users.FindAsync(userId);
 

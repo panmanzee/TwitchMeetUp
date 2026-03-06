@@ -78,8 +78,8 @@ namespace testforproject.Models
             {
                 var now = DateTimeOffset.Now;
 
-                if (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant)
-                    return "closed";
+                //if (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant)
+                //    return "closed";
 
                 if (now >= EventStart && now <= EventStop)
                     return "ongoing";

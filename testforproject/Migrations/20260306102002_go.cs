@@ -8,25 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class newaftermerge : Migration
+    public partial class go : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Requirements",
                 columns: table => new
@@ -57,11 +43,32 @@ namespace testforproject.Migrations
                     Age = table.Column<long>(type: "bigint", nullable: true),
                     ProfilePictureSrc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HostScore = table.Column<int>(type: "int", nullable: true),
-                    ParticipateScore = table.Column<int>(type: "int", nullable: true)
+                    ParticipateScore = table.Column<int>(type: "int", nullable: true),
+                    PopularityScore = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Uid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserUid = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Users_UserUid",
+                        column: x => x.UserUid,
+                        principalTable: "Users",
+                        principalColumn: "Uid");
                 });
 
             migrationBuilder.CreateTable(
@@ -186,41 +193,46 @@ namespace testforproject.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "ImageUrl", "Name" },
+                columns: new[] { "Id", "ImageUrl", "Name", "UserUid" },
                 values: new object[,]
                 {
-                    { 1, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfY6dGXDvuNyxepwwRCDD4aI8MmrroG4Xj8g&s", "Sports & Fitness" },
-                    { 2, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxoudo-kmIpvw6ATdSFlKh03M2tIMw1P6Jbw&s", "Gaming & eSports" },
-                    { 4, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUXSwrWPMPioZYdGqVU1dBR75K0bNYuixisQ&s", "Technology & Coding" },
-                    { 5, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB_3U8P0eFjlVTUUZtAx2Be8ob_2HiFtH68Q&s", "Education & Learning" },
-                    { 6, "https://voca-land.sgp1.cdn.digitaloceanspaces.com/43844/1723178338611/a55b073aef1b83a4ccf3a83be979de70.jpg", "Arts & Crafts" },
-                    { 7, "https://i.shgcdn.com/3889bf5d-9000-4cbc-a021-cd6051095102/-/format/auto/-/preview/3000x3000/-/quality/lighter/", "Food & Drink" },
-                    { 8, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWlwvLgv80oIsBgM73ux9uS1qWkrduUPplnQ&s", "Travel & Outdoors" },
-                    { 9, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbWVzCwBNaRL8UYHtc_4_MOL6ZBeRmdH2S3g&s", "Health & Wellness" },
-                    { 10, "https://www.abundance.global/wp-content/uploads/2024/06/business-networking-1080x675-1.jpeg", "Networking & Business" },
-                    { 11, "https://img.jakpost.net/c/2019/06/12/2019_06_12_74202_1560308728._large.jpg", "Music & Concerts" },
-                    { 12, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAFJZdr-RTJ5_Sa_unf88P4OIW0dXyYcDcFQ&s", "Movies & Theater" },
-                    { 13, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdrWNEbhPUO60Zaz7LUDmVBbUmBLEWFX38JA&s", "Photography & Video" },
-                    { 14, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRJ88He6SLg3xF2KS-CfXE7pZJBo1r4PaHTA&s", "Books & Writing" },
-                    { 15, "https://carollaguirre.wordpress.com/wp-content/uploads/2013/11/tumblr_inline_mm0kys229c1qz4rgp.jpg", "Language & Culture" },
-                    { 16, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV7uM9mwm9yq3LKp00n1qd0i96m9gpJ-2EUQ&s", "Volunteering & Charity" },
-                    { 17, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEKp_2e5feC9OmHADhkiPoniNzMpVSE6b7KA&s", "Pets & Animals" },
-                    { 18, "https://mpics.mgronline.com/pics/Images/566000002659701.JPEG", "Fashion & Beauty" },
-                    { 19, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLSugPQ0OSBDuPK25QJu8BplFKJwDn1zC3vQ&s", "Science & Research" },
-                    { 20, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5j3y16Pum3NPZThK9FERKVdBzv0jey5-hJA&s", "History & Philosophy" },
-                    { 21, "https://www.focusonthefamily.com/wp-content/uploads/2019/07/D119D43F1A57459B858B9A11EC84408A-1024x575.jpeg", "Parenting & Family" },
-                    { 22, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsdqbWrGfqPZuuSRdAcknqiofR2ibJoYBWPQ&s", "Spirituality & Beliefs" },
-                    { 23, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_kqEOFllhUa_JYjPsbvtdpKzPY6xPrkOgA&s", "Cars & Motorcycles" },
-                    { 24, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE_Cbgok89HHW9w9ub5PlE9A0bEoJSVzWMZQ&s", "Real Estate" },
-                    { 25, "https://capital-placement.com/wp-content/uploads/2020/12/career-development.png", "Career Development" },
-                    { 26, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3WKQeAR7thwxBTzYxQQsSRUBJCUSrXleCyQ&s", "Politics & Society" },
-                    { 27, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbY_kY6LSxZq4oEs_EXUpzua16XDf6QJWqJw&s", "Dancing & Performing" },
-                    { 28, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvK_JEMhb7owBgmSSTO4P_Z1lvxf36WFp7WQ&s", "Board Games & Tabletop" },
-                    { 29, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ9KrCcuANQ3OoN5Ju7OmUCBlI7Tyw8K_Neg&s", "DIY & Home Improvement" },
-                    { 30, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTakHVTgT0jryCuvRX410HBBwTTghRYhXOVYg&s", "Comedy & Improv" },
-                    { 31, "https://earth.org/wp-content/uploads/2023/03/Untitled-683-%C3%97-1024px-1024-%C3%97-683px-73.jpg", "Environment & Nature" },
-                    { 32, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcdLgyLqF6dX_21oeEwpkjpCOT83E-gnL3Iw&s", "Dating & Singles" }
+                    { 1, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfY6dGXDvuNyxepwwRCDD4aI8MmrroG4Xj8g&s", "Sports & Fitness", null },
+                    { 2, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxoudo-kmIpvw6ATdSFlKh03M2tIMw1P6Jbw&s", "Gaming & eSports", null },
+                    { 4, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUXSwrWPMPioZYdGqVU1dBR75K0bNYuixisQ&s", "Technology & Coding", null },
+                    { 5, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB_3U8P0eFjlVTUUZtAx2Be8ob_2HiFtH68Q&s", "Education & Learning", null },
+                    { 6, "https://voca-land.sgp1.cdn.digitaloceanspaces.com/43844/1723178338611/a55b073aef1b83a4ccf3a83be979de70.jpg", "Arts & Crafts", null },
+                    { 7, "https://i.shgcdn.com/3889bf5d-9000-4cbc-a021-cd6051095102/-/format/auto/-/preview/3000x3000/-/quality/lighter/", "Food & Drink", null },
+                    { 8, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWlwvLgv80oIsBgM73ux9uS1qWkrduUPplnQ&s", "Travel & Outdoors", null },
+                    { 9, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbWVzCwBNaRL8UYHtc_4_MOL6ZBeRmdH2S3g&s", "Health & Wellness", null },
+                    { 10, "https://www.abundance.global/wp-content/uploads/2024/06/business-networking-1080x675-1.jpeg", "Networking & Business", null },
+                    { 11, "https://img.jakpost.net/c/2019/06/12/2019_06_12_74202_1560308728._large.jpg", "Music & Concerts", null },
+                    { 12, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAFJZdr-RTJ5_Sa_unf88P4OIW0dXyYcDcFQ&s", "Movies & Theater", null },
+                    { 13, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdrWNEbhPUO60Zaz7LUDmVBbUmBLEWFX38JA&s", "Photography & Video", null },
+                    { 14, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRJ88He6SLg3xF2KS-CfXE7pZJBo1r4PaHTA&s", "Books & Writing", null },
+                    { 15, "https://carollaguirre.wordpress.com/wp-content/uploads/2013/11/tumblr_inline_mm0kys229c1qz4rgp.jpg", "Language & Culture", null },
+                    { 16, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV7uM9mwm9yq3LKp00n1qd0i96m9gpJ-2EUQ&s", "Volunteering & Charity", null },
+                    { 17, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEKp_2e5feC9OmHADhkiPoniNzMpVSE6b7KA&s", "Pets & Animals", null },
+                    { 18, "https://mpics.mgronline.com/pics/Images/566000002659701.JPEG", "Fashion & Beauty", null },
+                    { 19, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLSugPQ0OSBDuPK25QJu8BplFKJwDn1zC3vQ&s", "Science & Research", null },
+                    { 20, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5j3y16Pum3NPZThK9FERKVdBzv0jey5-hJA&s", "History & Philosophy", null },
+                    { 21, "https://www.focusonthefamily.com/wp-content/uploads/2019/07/D119D43F1A57459B858B9A11EC84408A-1024x575.jpeg", "Parenting & Family", null },
+                    { 22, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsdqbWrGfqPZuuSRdAcknqiofR2ibJoYBWPQ&s", "Spirituality & Beliefs", null },
+                    { 23, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_kqEOFllhUa_JYjPsbvtdpKzPY6xPrkOgA&s", "Cars & Motorcycles", null },
+                    { 24, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE_Cbgok89HHW9w9ub5PlE9A0bEoJSVzWMZQ&s", "Real Estate", null },
+                    { 25, "https://capital-placement.com/wp-content/uploads/2020/12/career-development.png", "Career Development", null },
+                    { 26, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3WKQeAR7thwxBTzYxQQsSRUBJCUSrXleCyQ&s", "Politics & Society", null },
+                    { 27, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbY_kY6LSxZq4oEs_EXUpzua16XDf6QJWqJw&s", "Dancing & Performing", null },
+                    { 28, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvK_JEMhb7owBgmSSTO4P_Z1lvxf36WFp7WQ&s", "Board Games & Tabletop", null },
+                    { 29, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ9KrCcuANQ3OoN5Ju7OmUCBlI7Tyw8K_Neg&s", "DIY & Home Improvement", null },
+                    { 30, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTakHVTgT0jryCuvRX410HBBwTTghRYhXOVYg&s", "Comedy & Improv", null },
+                    { 31, "https://earth.org/wp-content/uploads/2023/03/Untitled-683-%C3%97-1024px-1024-%C3%97-683px-73.jpg", "Environment & Nature", null },
+                    { 32, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcdLgyLqF6dX_21oeEwpkjpCOT83E-gnL3Iw&s", "Dating & Singles", null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_UserUid",
+                table: "Categories",
+                column: "UserUid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventCategories_EventsEid",

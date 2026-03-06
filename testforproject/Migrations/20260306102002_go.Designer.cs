@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260305110227_new-aftermerge")]
-    partial class newaftermerge
+    [Migration("20260306102002_go")]
+    partial class go
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,7 +85,12 @@ namespace testforproject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserUid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserUid");
 
                     b.ToTable("Categories");
 
@@ -416,6 +421,9 @@ namespace testforproject.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double?>("PopularityScore")
+                        .HasColumnType("float");
+
                     b.Property<string>("ProfilePictureSrc")
                         .HasColumnType("nvarchar(max)");
 
@@ -472,6 +480,13 @@ namespace testforproject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("testforproject.Models.Category", b =>
+                {
+                    b.HasOne("testforproject.Models.User", null)
+                        .WithMany("PreferredCategories")
+                        .HasForeignKey("UserUid");
+                });
+
             modelBuilder.Entity("testforproject.Models.Event", b =>
                 {
                     b.HasOne("testforproject.Models.User", "Owner")
@@ -499,6 +514,8 @@ namespace testforproject.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("OwningEvent");
+
+                    b.Navigation("PreferredCategories");
                 });
 #pragma warning restore 612, 618
         }

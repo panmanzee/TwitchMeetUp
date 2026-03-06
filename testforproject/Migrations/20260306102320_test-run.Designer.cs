@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260304173326_AddRecommendationFields")]
-    partial class AddRecommendationFields
+    [Migration("20260306102320_test-run")]
+    partial class testrun
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

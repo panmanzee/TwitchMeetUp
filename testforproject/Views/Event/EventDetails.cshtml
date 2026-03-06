@@ -239,6 +239,12 @@
                                 Event Ended
                             </button>
                         }
+                        @* else if (Model.Owner.Uid == ViewBag.UserId)
+                        {
+                            <button class="join_btn join_btn--ended" disabled>
+                                Can't Join Your Own Event'
+                            </button>
+                        } *@
                         else
                         {
                             <button class="join_btn" onclick="joinEvent(@Model.Eid)">
