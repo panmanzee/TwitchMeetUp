@@ -423,6 +423,26 @@ body {
     color: white;
 }
 
+.auth-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.noti-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .noti-wrapper .noti-panel {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        left: auto;
+    }
+
 
 /* =================================================== */
 /* --- RESPONSIVE MEDIA QUERIES --- */

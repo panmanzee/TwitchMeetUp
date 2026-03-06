@@ -30,12 +30,16 @@ namespace testforproject.Controllers
             {
                 currentUser = await _db.Users
                     .Include(u => u.Following)
+                    .Include(u => u.OwningEvent)
+                    .Include(u => u.ParticipatedEvent)
                     .FirstOrDefaultAsync(u => u.Uid == userId);
             }
 
             
             var queryUser = await _db.Users
-                .Include(u => u.Follower) 
+                .Include(u => u.Follower)
+                .Include(u => u.OwningEvent)
+                .Include(u => u.ParticipatedEvent)
                 .FirstOrDefaultAsync(u => u.Username == name);
 
             

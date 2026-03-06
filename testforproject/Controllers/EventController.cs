@@ -9,10 +9,12 @@ namespace testforproject.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IJwtService _jwtService;
-        public EventController(ApplicationDbContext db, IJwtService jwtService)
+        private readonly ILogger<EventApiController> _logger;
+        public EventController(ApplicationDbContext db, IJwtService jwtService, ILogger<EventApiController> logger)
         {
             _db = db;
             _jwtService = jwtService;
+            _logger = logger;
         }
         public IActionResult Index()
         {
@@ -43,13 +45,27 @@ namespace testforproject.Controllers
             if (eventDetail == null)
                 return NotFound();
 
-            // Check Join and Login
+            
             var userId = _jwtService.UserId;
             ViewBag.IsLoggedIn = userId != null;
             ViewBag.IsJoined = userId != null &&
                                eventDetail.Participants.Any(u => u.Uid == userId);
 
             return View(eventDetail);
+        }
+
+        [Route("Event/ManageEvent/{id}")]
+        public async Task<IActionResult> ManageEvent(int id)
+        {
+            
+            var ev = await _db.Events.FindAsync(id); 
+            if (ev == null) return NotFound();
+            
+            if (ev.OwnerId != _jwtService.UserId) 
+            {
+                return NotFound();
+            }
+            return View(ev);
         }
 
 

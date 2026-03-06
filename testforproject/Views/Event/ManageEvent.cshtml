@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/Event/ManageEvent.css">
+</head>
+
+<body data-event-id="@Model.Eid">
+
+<div class="wrapper">
+
+  <!-- LEFT PANEL: Event Management -->
+  <div class="left-panel">
+    <div class="event-title-wrap">
+      <div class="section-label">Event</div>
+      <h2 id="event-name">Loading…</h2>
+      <span class="event-badge" id="event-status">⬡ …</span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="time-group">
+      <div class="section-label">Schedule</div>
+      <div class="time-row">
+        <label>START DATE & TIME</label>
+        <div class="time-input-wrap">
+          <input type="datetime-local" id="start-time" value="2025-06-15T09:00">
+        </div>
+      </div>
+      <div class="time-row">
+        <label>END DATE & TIME</label>
+        <div class="time-input-wrap">
+          <input type="datetime-local" id="end-time" value="2025-06-15T17:00">
+        </div>
+      </div>
+      <div class="time-row">
+        <label>EXPIRED DATE & TIME</label>
+        <div class="time-input-wrap">
+          <input type="datetime-local" id="expire-time" value="2025-06-16T23:59">
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="capacity-wrap">
+      <div class="section-label">Capacity</div>
+      <div class="capacity-control">
+        <button class="cap-btn" onclick="changeCapacity(-1)">−</button>
+        <span id="cap-display">8</span>
+        <button class="cap-btn" onclick="changeCapacity(1)">+</button>
+      </div>
+      <div class="capacity-bar">
+        <div class="capacity-fill" id="cap-fill" style="width:0%"></div>
+      </div>
+      <div class="cap-warning" id="cap-warn">
+        ⚠ Selected exceeds capacity
+      </div>
+      <button class="btn-save" onclick="saveSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Save
+      </button>
+    </div>
+
+    <hr class="divider">
+
+    <button class="btn-close" onclick="closeEvent()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+      Close Event
+    </button>
+  </div>
+
+  <!-- RIGHT PANEL: User Management -->
+  <div class="right-panel">
+    <div class="user-panels">
+
+      <!-- Participated -->
+      <div class="user-box">
+        <div class="user-box-header">
+          <h3>Participated</h3>
+          <span class="count-badge blue" id="part-count">12</span>
+        </div>
+        <div class="user-list" id="participated-list"></div>
+      </div>
+
+      <!-- Selected -->
+      <div class="user-box">
+        <div class="user-box-header">
+          <h3>Selected</h3>
+          <span class="count-badge green" id="sel-count">0</span>
+        </div>
+        <div class="user-list" id="selected-list">
+          <div class="empty-hint" id="sel-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            No users selected yet
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom actions -->
+    <div class="bottom-actions">
+      <button class="btn-fcfs" onclick="firstComeFirstServe()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/>
+        </svg>
+        FIRST COME, FIRST SERVE
+      </button>
+      <button class="btn-confirm" onclick="confirmChanges()">Confirm Changes</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">Done</span>
+</div>
+
+        <script src="~/js/Event/ManageEvent.js"></script>
+</body>
+</html>
