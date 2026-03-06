@@ -44,7 +44,10 @@ namespace testforproject.Controllers.API.Account
             if (eventItem.status == "closed")
                 return BadRequest(new { message = "Event is closed" });
 
-
+            if (eventItem.IsExpired || eventItem.EventStop < DateTime.Now || eventItem.status == "closed")
+            {
+                return BadRequest(new { message = "Registration for this event is closed or the event has already ended." });
+            }
             if (eventItem.Participants.Any(u => u.Uid == userId))
                 return BadRequest(new { message = "Already joined" });
 
@@ -54,6 +57,38 @@ namespace testforproject.Controllers.API.Account
             await _db.SaveChangesAsync();
 
             return Ok(new { message = "Joined successfully" });
+        }
+
+        [HttpPost("unjoin")]
+        public async Task<IActionResult> Unjoin([FromBody] JoinRequest request)
+        {
+            var userId = _jwtService.UserId;
+
+            if (userId == null)
+                return Unauthorized(new { message = "Not logged in" });
+
+            var eventItem = await _db.Events
+                .Include(e => e.Participants)
+                .FirstOrDefaultAsync(e => e.Eid == request.EventId);
+
+            if (eventItem == null)
+                return NotFound(new { message = "Event not found" });
+
+            if (eventItem.EventStop < DateTime.Now || eventItem.status == "closed")
+            {
+                return BadRequest(new { message = "Cannot unjoin an event that is closed or has already ended." });
+            }
+            var user = await _db.Users.FindAsync(userId);
+            if (user == null)
+                return Unauthorized(new { message = "User not found" });
+
+            if (!eventItem.Participants.Any(u => u.Uid == userId))
+                return BadRequest(new { message = "You have not joined this event" });
+
+            eventItem.Participants.Remove(user);
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Unjoined successfully" });
         }
     }
 

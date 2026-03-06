@@ -313,21 +313,14 @@ body {
 /* --------------------------------------------------- */
 
 .event-grid {
-    display: flex;
-    /* 1. Change grid to flex */
-    overflow-x: auto;
-    /* 2. Add horizontal scroll */
-    gap: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
     margin-top: 30px;
     padding-bottom: 20px;
-    /* Space for scrollbar */
 }
 
-/* Also update the event-card to stop it from shrinking */
 .event-card {
-    flex: 0 0 500px;
-    /* 3. Force the card to stay 500px wide */
-
     background-color: #18181b;
     border-radius: 12px;
     overflow: hidden;
@@ -336,6 +329,7 @@ body {
     display: flex;
     flex-direction: column;
     border-top: 3px solid #9146FF;
+    height: 100%;
 }
 
 .event-card:hover {
@@ -436,12 +430,12 @@ body {
     align-items: center;
 }
 
-    .noti-wrapper .noti-panel {
-        position: absolute;
-        top: calc(100% + 12px);
-        right: 0;
-        left: auto;
-    }
+.noti-wrapper .noti-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    left: auto;
+}
 
 
 /* =================================================== */
@@ -460,10 +454,7 @@ body {
         /* ย่อกล่องค้นหาลง */
     }
 
-    .event-card {
-        flex: 0 0 400px;
-        /* ย่อการ์ด Event ลงนิดหน่อย */
-    }
+
 
     .activity {
         width: 350px;
@@ -528,10 +519,7 @@ body {
         margin-left: 0;
     }
 
-    .event-card {
-        /* ปรับให้การ์ด Event กว้างเกือบเต็มจอมือถือ (เผื่อขอบให้เห็นการ์ดถัดไปนิดนึง) */
-        flex: 0 0 85vw;
-    }
+
 
     .activity {
         width: 280px;

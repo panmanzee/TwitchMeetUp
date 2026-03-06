@@ -1,19 +1,24 @@
 ﻿@model testforproject.Models.User
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Creator Profile</title>
     <link rel="stylesheet" href="~/css/Profile/MyProfile.css">
 </head>
+
 <body>
     <div class="container">
         <div class="header" style="position: relative;">
-            <a href="@Url.Action("Show", "Dashboard")" style="position: absolute; left: 0; top: 0; color: #9146FF; text-decoration: none; font-weight: bold;">&larr; Back to Dashboard</a>
+            <a href="@Url.Action("Show", "Dashboard")"
+                style="position: absolute; left: 0; top: 0; color: #9146FF; text-decoration: none; font-weight: bold;">&larr;
+                Back to Dashboard</a>
             <h2>My Profile</h2>
             @if (Model.Username == ViewBag.user)
             {
-                <a href="@Url.Action("edit", "profile")" style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">Edit Profile</a>
+                <a href="@Url.Action("edit", "profile")"
+                    style="background: #ff4d4d; padding: 10px 20px; border-radius: 20px;">Edit Profile</a>
             }
         </div>
         <div class="banner"></div>
@@ -42,10 +47,8 @@
                     }
                     else
                     {
-                        <button id="followBtn"
-                                class="follow-btn @(ViewBag.IsFollowing ? "unfollow" : "")"
-                                data-user-id="@Model.Uid"
-                                data-following="@ViewBag.IsFollowing.ToString().ToLower()">
+                        <button id="followBtn" class="follow-btn @(ViewBag.IsFollowing ? "unfollow" : "")"
+                            data-user-id="@Model.Uid" data-following="@ViewBag.IsFollowing.ToString().ToLower()">
                             @(ViewBag.IsFollowing ? "Unfollow" : "Follow")
                         </button>
                     }
@@ -67,18 +70,41 @@
                             @foreach (var ev in Model.ParticipatedEvent)
                             {
                                 <div class="event-card">
-                                    @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                                    <a href="@Url.Action("EventDetails", "Event", new { id = ev.Eid })"
+                                        style="text-decoration: none; color: inherit; display: block;">
+                                        @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                                        {
+                                            <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
+                                        }
+                                        else
+                                        {
+                                            <div class="event-card-img no-img">📅</div>
+                                        }
+                                        <div class="event-card-body">
+                                            <div class="event-card-name">@ev.Name</div>
+                                            <div class="event-card-location">📍 @ev.Location</div>
+                                        </div>
+                                    </a>
+                                    @if (Model.Username == ViewBag.user)
                                     {
-                                        <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
+                                        <div class="event-card-footer">
+                                            @if (ev.EventStop < DateTime.Now)
+                                            {
+                                                <button class="event-unjoin-btn"
+                                                    style="background-color: #ff9900; color: white; border: none;"
+                                                    onclick="alert('ระบบให้คะแนนกำลังอยู่ในระหว่างการพัฒนา')">Give Score</button>
+                                            }
+                                            else if (ev.IsExpired || ev.status == "closed")
+                                            {
+                                                <button disabled class="event-unjoin-btn"
+                                                    style="background-color: #555; color: #ccc; cursor: not-allowed; border: none;">Locked</button>
+                                            }
+                                            else
+                                            {
+                                                <button onclick="unjoinEvent(@ev.Eid, this)" class="event-unjoin-btn">Unjoin</button>
+                                            }
+                                        </div>
                                     }
-                                    else
-                                    {
-                                        <div class="event-card-img no-img">📅</div>
-                                    }
-                                    <div class="event-card-body">
-                                        <div class="event-card-name">@ev.Name</div>
-                                        <div class="event-card-location">📍 @ev.Location</div>
-                                    </div>
                                 </div>
                             }
                         }
@@ -97,20 +123,24 @@
                             @foreach (var ev in Model.OwningEvent)
                             {
                                 <div class="event-card">
-                                    @if (!string.IsNullOrEmpty(ev.ImageUrl))
-                                    {
-                                        <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
-                                    }
-                                    else
-                                    {
-                                        <div class="event-card-img no-img">📅</div>
-                                    }
-                                    <div class="event-card-body">
-                                        <div class="event-card-name">@ev.Name</div>
-                                        <div class="event-card-location">📍 @ev.Location</div>
-                                    </div>
+                                    <a href="@Url.Action("EventDetails", "Event", new { id = ev.Eid })"
+                                        style="text-decoration: none; color: inherit; display: block;">
+                                        @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                                        {
+                                            <div class="event-card-img" style="background-image:url('@ev.ImageUrl')"></div>
+                                        }
+                                        else
+                                        {
+                                            <div class="event-card-img no-img">📅</div>
+                                        }
+                                        <div class="event-card-body">
+                                            <div class="event-card-name">@ev.Name</div>
+                                            <div class="event-card-location">📍 @ev.Location</div>
+                                        </div>
+                                    </a>
                                     <div class="event-card-footer">
-                                        <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@ev.Eid" class="event-edit-btn">Edit</a>
+                                        <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@ev.Eid"
+                                            class="event-edit-btn">Edit</a>
                                     </div>
                                 </div>
                             }
@@ -127,4 +157,5 @@
 
     <script src="~/js/Profile/MyProfile.js"></script>
 </body>
+
 </html>

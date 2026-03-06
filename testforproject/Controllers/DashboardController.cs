@@ -4,7 +4,6 @@ using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 using testforproject.Services;
-using testforproject.Authen.Services;
 using System.Collections.Generic;
 
 namespace testforproject.Controllers
@@ -59,6 +58,7 @@ namespace testforproject.Controllers
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
@@ -103,6 +103,7 @@ namespace testforproject.Controllers
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
@@ -142,7 +143,11 @@ namespace testforproject.Controllers
         [HttpGet]
         public IActionResult LoadMoreEvents(int skip, string searchQuery, string categoryFilter)
         {
-            var query = _db.Events.Include(e => e.Owner).Include(e => e.Categories).AsQueryable();
+            var query = _db.Events
+                           .Include(e => e.Owner)
+                           .Include(e => e.Categories)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
+                           .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
             {
@@ -160,20 +165,9 @@ namespace testforproject.Controllers
                             .OrderByDescending(x => x.Eid)
                             .Skip(skip)
                             .Take(4)
-                            .Select(x => new
-                            {
-                                eid = x.Eid,
-                                name = x.Name,
-                                owner = x.Owner.Username,
-                                location = x.Location,
-                                Expire = x.ExpiredDate,
-                                maxParticitpant = x.MaxParticitpant,
-                                particitpant = x.Participants,
-                                imageUrl = x.ImageUrl
-                            })
                             .ToList();
 
-            return Json(events);
+            return PartialView("_EventGridPartial", events);
         }
     }
 }

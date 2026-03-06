@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<testforproject.Models.Event>
 
-@if(Model != null)
+@if (Model != null)
 {
-    @foreach(var i in Model)
+    @foreach (var i in Model)
     {
         <div class="event-card" id="event-card-@i.Eid">
-            
+
             <div class="image" style="padding: 0; overflow: hidden;">
                 @if (!string.IsNullOrEmpty(i.ImageUrl))
                 {
@@ -24,12 +24,27 @@
                 <p>ExpiredDate: @i.ExpiredDate.ToString("dd/MM/yyyy")</p>
                 <p>Open: @i.EventStart.ToString("dd/MM/yyyy HH:mm")</p>
                 <p>Close: @i.EventStop.ToString("dd/MM/yyyy HH:mm")</p>
-                <p>Status: @i.status</p>
-                
+                @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
+                {
+                    <p>Status: closed</p>
+                }
+                else
+                {
+                    <p>Status: @i.status</p>
+                }
+
                 <div class="card-footer">
                     <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
                     <div style="display: flex; gap: 8px; align-items: center;">
-                        <button class="join" onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
+                        @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
+                        {
+                            <button class="join" style="background-color: #555; cursor: not-allowed;" disabled>Ended</button>
+                        }
+                        else
+                        {
+                            <button class="join"
+                                onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
+                        }
                     </div>
                 </div>
             </div>

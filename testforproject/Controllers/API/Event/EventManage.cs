@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 
@@ -7,13 +8,15 @@ namespace testforproject.Controllers
 {
     [Route("api/events")]
     [ApiController]
-    public class EventApiController : ControllerBase
+    public class EventManageApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IJwtService _jwtService;
 
-        public EventApiController(ApplicationDbContext context)
+        public EventManageApiController(ApplicationDbContext context, IJwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
         
@@ -69,8 +72,13 @@ namespace testforproject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto dto)
         {
+            var userId = _jwtService.UserId;
+            if (userId == null) return Unauthorized(new { message = "You must be logged in to edit events." });
+
             var ev = await _context.Events.FindAsync(id);
             if (ev == null) return NotFound();
+
+            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
 
             if (ev.status == "closed")
                 return BadRequest(new { message = "Cannot edit a closed event." });
@@ -91,11 +99,16 @@ namespace testforproject.Controllers
         [HttpPost("{id}/participants/confirm")]
         public async Task<IActionResult> ConfirmParticipants(int id, [FromBody] ConfirmParticipantsDto dto)
         {
+            var userId = _jwtService.UserId;
+            if (userId == null) return Unauthorized(new { message = "You must be logged in." });
+
             var ev = await _context.Events
                 .Include(e => e.Participants)
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (ev == null) return NotFound();
+
+            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
 
             if (ev.status == "closed")
                 return BadRequest(new { message = "Cannot change participants on a closed event." });
@@ -116,11 +129,16 @@ namespace testforproject.Controllers
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
         {
+            var userId = _jwtService.UserId;
+            if (userId == null) return Unauthorized(new { message = "You must be logged in." });
+
             var ev = await _context.Events
                 .Include(e => e.Participants)
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (ev == null) return NotFound();
+
+            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
 
             ev.status = dto.Status;
             await _context.SaveChangesAsync();

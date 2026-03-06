@@ -62,11 +62,28 @@ function fetchAjaxData() {
     var sort = document.getElementById("sortOrderInput").value;
     var category = document.getElementById("categoryInput").value;
 
+    // Reset skip counter for Load More functionality
+    if (typeof currentSkip !== 'undefined') {
+        currentSkip = 4;
+    }
+
     fetch(`/Dashboard/SearchEventsAJAX?searchQuery=${encodeURIComponent(query)}&sortorder=${encodeURIComponent(sort)}&categoryFilter=${encodeURIComponent(category)}`)
         .then(response => response.text())
         .then(html => {
-
             document.getElementById("eventGridContainer").innerHTML = html;
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const loadedCount = doc.querySelectorAll('.event-card').length;
+
+            const viewMoreContainer = document.getElementById('viewMore');
+            if (viewMoreContainer) {
+                if (loadedCount < 4) {
+                    viewMoreContainer.style.display = 'none';
+                } else {
+                    viewMoreContainer.style.display = 'block';
+                }
+            }
         })
         .catch(error => console.error('Error fetching data:', error));
 }

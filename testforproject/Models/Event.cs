@@ -23,7 +23,7 @@ namespace testforproject.Models
 
 
 
-        public bool IsExpired => DateTimeOffset.Now > ExpiredDate; // Utc
+        public bool IsExpired => DateTimeOffset.UtcNow > ExpiredDate; // เทียบกับเวลาสากล (UTC) ให้ตรงกับ Controller
         public DateTimeOffset ExpiredDate { get; set; }
 
 
@@ -38,15 +38,7 @@ namespace testforproject.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var now = DateTimeOffset.Now;
-
-            if (EventStart <= now)
-            {
-                yield return new ValidationResult(
-                    "Event start must be in the future.",
-                    new[] { nameof(EventStart) });
-            }
-
+            // 1. งานต้องเลิกหลังจากเริ่ม
             if (EventStop <= EventStart)
             {
                 yield return new ValidationResult(
@@ -54,18 +46,16 @@ namespace testforproject.Models
                     new[] { nameof(EventStop) });
             }
 
-            if (ExpiredDate <= EventStop)
+            // 2. ปิดรับสมัครต้องเกิดก่อนหรืองานเลิก (แปลง DateTime เป็น Offset เพื่อให้เทียบกันได้แบบไม่รวน)
+            if (ExpiredDate > new DateTimeOffset(EventStop))
             {
                 yield return new ValidationResult(
-                    "ExpiredDate must be after EventStop",
+                    "ExpiredDate must be before or equal to EventStop",
                     new[] { nameof(ExpiredDate) });
             }
-            if (ExpiredDate <= now)
-            {
-                yield return new ValidationResult(
-                    "Registration deadline must be in the future.",
-                    new[] { nameof(ExpiredDate) });
-            }
+
+            // หมายเหตุ: เราเอาการเช็ค "เวลาต้องเป็นอนาคต" (now <= EventStart) ออกจากตรงนี้
+            // เพื่อเปิดทางให้ผู้จัดสามารถกด Edit งานที่ถูกจัดไปแล้วในอดีตได้ โดยไม่โดน Error ขวาง
         }
 
         [Required]
@@ -78,18 +68,23 @@ namespace testforproject.Models
             {
                 var now = DateTimeOffset.Now;
 
-                //if (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant)
-                //    return "closed";
-
-                if (now >= EventStart && now <= EventStop)
-                    return "ongoing";
-
+                // 1. ถ้าเวลาเลยตอนจบไปแล้ว = ended
                 if (now > EventStop)
                     return "ended";
 
+                // 2. ถ้างานกำลังจัดอยู่ = ongoing
+                if (now >= EventStart && now <= EventStop)
+                    return "ongoing";
+
+                // 3. ถ้าระบบฐานข้อมูลถูกสั่งปิด หรือ หมดเวลา Expired ไปแล้ว หรือ คนเต็มโควต้าแล้ว = closed
+                if (status == "closed" || IsExpired || (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant))
+                    return "closed";
+
+                // 4. ถ้าไม่เข้าเงื่อนไขบนเลย = open
                 return "open";
             }
         }
+
 
         [Required]
         public string Description { get; set; }

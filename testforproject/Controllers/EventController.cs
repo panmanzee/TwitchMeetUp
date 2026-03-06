@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using testforproject.Authen.Services;
 using testforproject.Data;
@@ -9,8 +9,8 @@ namespace testforproject.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IJwtService _jwtService;
-        private readonly ILogger<EventApiController> _logger;
-        public EventController(ApplicationDbContext db, IJwtService jwtService, ILogger<EventApiController> logger)
+        private readonly ILogger<EventController> _logger;
+        public EventController(ApplicationDbContext db, IJwtService jwtService, ILogger<EventController> logger)
         {
             _db = db;
             _jwtService = jwtService;
@@ -45,7 +45,7 @@ namespace testforproject.Controllers
             if (eventDetail == null)
                 return NotFound();
 
-            
+
             var userId = _jwtService.UserId;
             ViewBag.IsLoggedIn = userId != null;
             ViewBag.IsJoined = userId != null &&
@@ -57,11 +57,11 @@ namespace testforproject.Controllers
         [Route("Event/ManageEvent/{id}")]
         public async Task<IActionResult> ManageEvent(int id)
         {
-            
-            var ev = await _db.Events.FindAsync(id); 
+
+            var ev = await _db.Events.FindAsync(id);
             if (ev == null) return NotFound();
-            
-            if (ev.OwnerId != _jwtService.UserId) 
+
+            if (ev.OwnerId != _jwtService.UserId)
             {
                 return NotFound();
             }

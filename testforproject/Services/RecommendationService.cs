@@ -58,7 +58,7 @@ namespace testforproject.Services
             var activeEvents = _db.Events
                 .Include(e => e.Categories)
                 .Include(e => e.Owner)
-                .Where(e => e.ExpiredDate >= DateTimeOffset.UtcNow)
+                .Where(e => e.ExpiredDate >= DateTimeOffset.UtcNow && e.status == "open")
                 .ToList();
 
             var results = new List<RecommendationScoreResult>();
@@ -112,7 +112,7 @@ namespace testforproject.Services
         {
             return _db.Events
                 .Include(e => e.Owner)
-                .Where(e => e.ExpiredDate >= DateTimeOffset.UtcNow)
+                .Where(e => e.ExpiredDate >= DateTimeOffset.UtcNow && e.status == "open")
                 .OrderByDescending(e => e.EventStart)
                 .Take(limit)
                 .Select(e => new RecommendationScoreResult { Event = e, FinalScore = 0.0, CategoryMatchScore = 0.0 })

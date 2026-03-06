@@ -14,58 +14,49 @@ function loadMore() {
     btn.innerText = "Loading...";
     btn.disabled = true;
 
-    fetch(`/api/DashboardApi/LoadMoreEvents?skip=${currentSkip}`)
+    // ดึงค่า filter จาก form ที่มีอยู่ (ถ้ามี)
+    const searchQuery = document.getElementById('search-group') ? document.getElementById('search-group').value : '';
+    const categoryFilter = document.getElementById('categoryInput') ? document.getElementById('categoryInput').value : '';
+
+    // ส่ง request ไปหา Controller ใหม่ที่คืนค่าเป็น HTML (PartialView)
+    // แล้วแนบค่า filter ต่างๆ ไปด้วยเพื่อให้ LoadMore ได้ข้อมูลที่ตรงหมวดหมู่
+    const url = `/Dashboard/LoadMoreEvents?skip=${currentSkip}&searchQuery=${encodeURIComponent(searchQuery)}&categoryFilter=${encodeURIComponent(categoryFilter)}`;
+
+    fetch(url)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Server error");
             }
-            return response.json();
+            // รับค่ากลับมาเป็นข้อความ HTML แทน JSON
+            return response.text();
         })
-        .then(data => {
-            if (data && data.length > 0) {
-                // ⚠️ ข้อควรระวัง: เช็ค ID ของ Grid ให้ตรงกับใน Show.cshtml ของคุณด้วยนะครับ 
-                // (ถ้าใน HTML เป็น id="eventGridContainer" ตรงนี้ก็ต้องแก้เป็น eventGridContainer ครับ)
-                const grid = document.getElementById('eventGridContainer'); // หรือ 'eventGridContainer'
+        .then(html => {
+            // ถ้ามี html ส่งกลับมา (ไม่ใช่ string ว่าง)
+            if (html && html.trim().length > 0) {
+                const grid = document.getElementById('eventGridContainer');
 
-                data.forEach(item => {
+                // นำ html ไปต่อท้าย grid เดิม
+                grid.insertAdjacentHTML('beforeend', html);
 
-                    // 🌟 1. เช็ครูปภาพ: ถ้ามีลิงก์รูปให้แสดงรูป ถ้าไม่มีให้แสดงข้อความ No Image
-                    let imageHtml = item.imageUrl
-                        ? `<img src="${item.imageUrl}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;" />`
-                        : `<span style="color: #adadb8;">No Image</span>`;
+                // สมมติว่าคืนค่ามา 4 รายการเสมอ (ถ้าอยากเช็คเป๊ะๆ อาจจะต้องนับจำนวน card ใน html ที่ส่งมา)
+                // การหาจำนวน element ใน string HTML ที่เพิ่งเอามาแปะ อาจทำโคลนมานับคร่าวๆ ได้
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const loadedCount = doc.querySelectorAll('.event-card').length;
 
-                    // 🌟 2. เอา imageHtml ไปหยอดลงในการ์ด (ปรับ style กล่องรูปให้แสดงภาพได้พอดี)
-                    const cardHtml = `
-                  <div class="event-card" id="event-card-${item.eid}">
-                      
-                      <div class="card-img" style="padding: 0; overflow: hidden; height: 220px; display: flex; align-items: center; justify-content: center; background-color: #303032;">
-                          ${imageHtml}
-                      </div>
-
-                      <div class="card-content" style="padding: 20px;">
-                          <h4>${item.name}</h4>
-                          <p>👤 Owner: ${item.owner}</p>
-                          <p>📍 ${item.location}</p>
-
-                          <div class="card-footer" style="margin-top: 15px; border-top: 1px solid #303032; padding-top: 10px;">
-                              <span style="font-size: 13px;">🎯 Target: ${item.maxParticitpant}</span>
-                          </div>
-                      </div>
-                  </div>
-              `;
-                    grid.insertAdjacentHTML('beforeend', cardHtml);
-                });
-
-                currentSkip += data.length;
+                currentSkip += loadedCount;
                 btn.innerText = "View More";
                 btn.disabled = false;
 
                 // ถ้าโหลดมาแล้วได้น้อยกว่า 4 แสดงว่าหมดแล้ว ให้ซ่อนปุ่ม
-                if (data.length < 4) {
-                    document.getElementById('viewMoreContainer').style.display = 'none';
+                if (loadedCount < 4) {
+                    document.getElementById('viewMore').style.display = 'none';
                 }
             } else {
-                document.getElementById('viewMoreContainer').style.display = 'none';
+                // ถ้าข้อมูลหมดแล้ว
+                document.getElementById('viewMore').style.display = 'none';
+                btn.innerText = "View More";
+                btn.disabled = false;
             }
         })
         .catch(error => {

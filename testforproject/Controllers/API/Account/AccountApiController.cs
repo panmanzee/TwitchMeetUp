@@ -7,6 +7,7 @@ using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 namespace testforproject.Controllers.API.Account
 {
     [ApiController]
@@ -38,6 +39,11 @@ namespace testforproject.Controllers.API.Account
             {
                 return BadRequest(new { message = "Username already exists" });
             }
+
+            // Hash the password before saving
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.ConfirmPassword = user.Password; // prevent validation errors if any
+
             _db.Users.Add(user);
             _db.SaveChanges();
 
@@ -61,7 +67,25 @@ namespace testforproject.Controllers.API.Account
             {
                 return Unauthorized(new { message = "Username not Found" });
             }
-            if (user.Password != login_user.Password)
+
+            // Verify password hash (fallback to plain text for old users to prevent breaking existing accounts temporarily)
+            bool isPasswordValid = false;
+            if (user.Password != null && user.Password.StartsWith("$2a$")) // BCrypt hash prefix length
+            {
+                isPasswordValid = BCrypt.Net.BCrypt.Verify(login_user.Password, user.Password);
+            }
+            else 
+            {
+                // Fallback for old plain text passwords, then update to hash
+                isPasswordValid = user.Password == login_user.Password;
+                if (isPasswordValid)
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    _db.SaveChanges();
+                }
+            }
+
+            if (!isPasswordValid)
             {
                 return Unauthorized(new { message = "Password Incorrect" });
             }
