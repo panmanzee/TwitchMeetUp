@@ -318,7 +318,7 @@ body {
     overflow-x: auto;
     /* 2. Add horizontal scroll */
     gap: 40px;
-    margin-top: 30px;
+    margin-top: 50px;
     padding-bottom: 20px;
     /* Space for scrollbar */
 }

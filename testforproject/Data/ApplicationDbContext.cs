@@ -13,6 +13,7 @@ namespace testforproject.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Requirements> Requirements { get; set; }
+        public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Category> Categories { get; set; }
 
