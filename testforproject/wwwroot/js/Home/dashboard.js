@@ -55,9 +55,18 @@ function applySort(orderValue) {
     fetchAjaxData();
 }
 
+// 1. ฟังก์ชันคำนวณตำแหน่ง
+function parallax() {
+    var s = document.getElementById("floater");
+    if (s) { // เช็คก่อนว่ามี ID นี้อยู่บนหน้าเว็บจริงๆ จะได้ไม่ Error
+        var yPos = 0 - (window.pageYOffset / 5);
+        s.style.top = 50 + yPos + "%";
+    }
+}
 
+// 2. 🌟 ตัวจุดชนวน: สั่งให้เบราว์เซอร์เรียกใช้ฟังก์ชันนี้ทุกครั้งที่มีการเลื่อนหน้าจอ 🌟
+window.addEventListener("scroll", parallax);
 function fetchAjaxData() {
-
     var query = document.getElementById("search-group").value;
     var sort = document.getElementById("sortOrderInput").value;
     var category = document.getElementById("categoryInput").value;
@@ -70,19 +79,32 @@ function fetchAjaxData() {
     fetch(`/Dashboard/SearchEventsAJAX?searchQuery=${encodeURIComponent(query)}&sortorder=${encodeURIComponent(sort)}&categoryFilter=${encodeURIComponent(category)}`)
         .then(response => response.text())
         .then(html => {
-            document.getElementById("eventGridContainer").innerHTML = html;
+           
+            const activityArea = document.getElementById("eventGridContainer");
 
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const loadedCount = doc.querySelectorAll('.event-card').length;
+            if (activityArea) {
+                
+                activityArea.innerHTML = html;
 
-            const viewMoreContainer = document.getElementById('viewMore');
-            if (viewMoreContainer) {
-                if (loadedCount < 4) {
-                    viewMoreContainer.style.display = 'none';
-                } else {
-                    viewMoreContainer.style.display = 'block';
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const loadedCount = doc.querySelectorAll('.event-card').length;
+
+                const viewMoreContainer = document.getElementById('viewMore');
+                if (viewMoreContainer) {
+                    if (loadedCount < 4) {
+                        viewMoreContainer.style.display = 'none';
+                    } else {
+                        viewMoreContainer.style.display = 'block';
+                    }
                 }
+
+                
+                activityArea.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
             }
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -103,3 +125,63 @@ window.onclick = function (event) {
         }
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search-group");
+    const autocompleteList = document.getElementById("complete");
+
+    // Listen for every letter typed into the search bar
+    searchInput.addEventListener("input", function () {
+        let query = this.value;
+
+        // If the box is empty, hide the dropdown
+        if (!query) {
+            autocompleteList.style.display = "none";
+            return;
+        }
+
+        // Ask the C# Controller for matching names
+        fetch(`/Dashboard/Suggestions?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                autocompleteList.innerHTML = ""; 
+
+                if (data.length > 0) {
+                    autocompleteList.style.display = "block"; // Show dropdown
+
+                    // Create a row for each suggestion
+                    data.forEach(suggestion => {
+                        let item = document.createElement("div");
+                        item.innerHTML = suggestion;
+
+                        // What happens when you click a suggestion?
+                        item.addEventListener("click", function () {
+                            searchInput.value = suggestion; // Put text in search bar
+                            autocompleteList.style.display = "none"; // Hide dropdown
+
+                            // Optional: Automatically trigger the search right after clicking!
+                            if (typeof fetchAjaxData === "function") {
+                                fetchAjaxData();
+                            } else {
+                                document.getElementById("searchForm").submit();
+                            }
+                        });
+
+                        autocompleteList.appendChild(item);
+                    });
+                } else {
+                    autocompleteList.style.display = "none"; // Hide if no matches
+                }
+            })
+            .catch(error => console.error("Error fetching suggestions:", error));
+    });
+
+    // Hide dropdown if the user clicks anywhere else on the page
+    document.addEventListener("click", function (e) {
+        if (e.target !== searchInput) {
+            autocompleteList.style.display = "none";
+        }
+    });
+
+
+});

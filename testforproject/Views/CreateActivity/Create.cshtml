@@ -1,91 +1,109 @@
 ﻿<link rel="stylesheet" href="~/css/CreateActivity/create-activity.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 @{
     Layout = null;
 }
 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div style="background:#2a0a0a; border:1px solid #ff4d4d; border-radius:8px; padding:15px; margin-bottom:20px;">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p style="color:#ff4d4d; margin:4px 0;">⚠️ @error.ErrorMessage</p>
-        }
-    </div>
-}
+<body>
+    <div class="bg-blob purple-blob"></div>
+    <div class="bg-blob pink-blob"></div>
 
-<div class="form-container" style="position: relative; padding-top: 40px;">
-    <a href="@Url.Action("Show", "Dashboard")" style="position: absolute; left: 30px; top: 20px; color: #9146FF; text-decoration: none; font-weight: bold;">&larr; Back to Dashboard</a>
-    <h1>Create New Activity</h1>
-    <div id="clientErrors"></div>
-    <form action="/CreateActivity/Create" method="post" enctype="multipart/form-data">
-        <div class="group">
-            <label for="name">Activity Title</label>
-            <input type="text" id="name" name="Name" placeholder="Enter your Activity" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="error-banner">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p class="error-text">⚠️ @error.ErrorMessage</p>
+            }
         </div>
+    }
 
-        <div class="group">
-            <label for="image">Upload Image</label>
-            <input type="file" id="image" name="ImageFile" accept="image/*" />
-        </div>
+    <div class="form-container">
+        <a href="@Url.Action("Show", "Dashboard")" class="back-link">&larr; Back to Dashboard</a>
 
-        <div class="group relative">
-            <label>Categories</label>
-            <div class="multiple">
-                <div class="multi-select-header" onclick="toggle_category()">
-                    <span id="select">Select categories</span>
-                    <span class="arrow">▼</span>
+        <h1 class="page-title">Create New Activity</h1>
+        <div id="clientErrors"></div>
+
+        <form action="/CreateActivity/Create" method="post" enctype="multipart/form-data">
+
+            <div class="form-grid-layout">
+
+                <div class="left-col">
+                    <div class="group">
+                        <label for="name">Activity Title</label>
+                        <input type="text" id="name" name="Name" placeholder="Enter your Activity" />
+                    </div>
+
+                    <div class="group">
+                        <label for="image">Upload Image</label>
+                        <input type="file" id="image" name="ImageFile" accept="image/*" class="file-input" />
+                    </div>
+
+                    <div class="group relative">
+                        <label>Categories</label>
+                        <div class="multiple">
+                            <div class="multi-select-header" onclick="toggle_category()">
+                                <span id="select">Select categories</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="drop" id="drop" style="display: none;">
+                                @if (ViewBag.ExistingCategories != null)
+                                {
+                                    foreach (var cat in ViewBag.ExistingCategories)
+                                    {
+                                        <label class="category-option">
+                                            <input type="checkbox" name="SelectedCategoryIds" value="@cat.Id" onchange="show_Select_categories()">
+                                            @cat.Name
+                                        </label>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group desc-group">
+                        <label for="description">About Activity</label>
+                        <textarea id="description" name="Decription" placeholder="Describe what we will do..."></textarea>
+                    </div>
                 </div>
-                <div class="drop" id="drop" style="display: none;">
-                    @if (ViewBag.ExistingCategories != null)
-                    {
-                        foreach (var cat in ViewBag.ExistingCategories)
-                        {
-                            <label class="category-option">
-                                <input type="checkbox" name="SelectedCategoryIds" value="@cat.Id" onchange="show_Select_categories()">
-                                @cat.Name
-                            </label>
-                        }
-                    }
+
+                <div class="right-col">
+                    <div class="form-row">
+                        <div class="group" style="flex: 2;">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="Location" placeholder="Open map" readonly class="pointer-input" />
+                        </div>
+                        <div class="group" style="flex: 1;">
+                            <label for="max">Max Participants</label>
+                            <input type="number" id="max" name="MaxParticitpant" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <div id="map-container" class="map-wrapper" style="display: none;"></div>
+
+                    <div class="form-row">
+                        <div class="group">
+                            <label for="StartTime">Event Start</label>
+                            <input type="datetime-local" id="StartTime" name="StartTime" />
+                        </div>
+                        <div class="group">
+                            <label for="closetime">Event Stop</label>
+                            <input type="datetime-local" id="closetime" name="closetime" />
+                        </div>
+                    </div>
+
+                    <div class="group">
+                        <label for="Expired-Date">Registration Close</label>
+                        <input type="datetime-local" id="Expired-Date" name="Expired_Date" />
+                    </div>
                 </div>
+
             </div>
-        </div>
+            <button type="submit" class="btn-submit">Start Activity</button>
+        </form>
 
-
-        <div class="group">
-            <label for="location">Location</label>
-            <input type="text" id="location" name="Location" placeholder="Open map" readonly style="cursor: pointer;" />
-
-            <div id="map-container" style="display: none; height: 300px; margin-top: 10px; border-radius: 8px; border: 1px solid #ccc;"></div>
-        </div>
-
-        <div class="group" style="flex: 1;">
-            <label for="max">Max Participants</label>
-            <input type="number" id="max" name="MaxParticitpant" placeholder="0" />
-        </div>
-
-
-
-        <div class="group">
-            <label for="StartTime">Event Start</label>
-            <input type="datetime-local" id="StartTime" name="StartTime" />
-        </div>
-
-        <div class="group">
-            <label for="closetime">Event Stop</label>
-            <input type="datetime-local" id="closetime" name="closetime" />
-        </div>
-        <div class="group">
-            <label for="Expired-Date">Expired Date</label>
-            <input type="datetime-local" id="Expired-Date" name="Expired_Date" />
-        </div>
-        <div class="group">
-            <label for="description">About Activity</label>
-            <textarea id="description" name="Decription" placeholder=""></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Start Activity</button>
-    </form>
-    <script src="~/js/Create/createActivity.js"></script>
-</div>
+        <script src="~/js/Create/createActivity.js"></script>
+    </div>
+</body>
