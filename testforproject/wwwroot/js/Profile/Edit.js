@@ -1,4 +1,4 @@
-﻿const button = document.querySelector(".save");
+const button = document.querySelector(".save");
 const modal = document.getElementById("uploadModal");
 const openBtn = document.querySelector("img");
 const closeBtn = document.querySelector(".close");
@@ -38,17 +38,17 @@ form.addEventListener("submit", async function (event) {
 
     const data = await response.json();
     modal.style.display = "none";
-    openBtn.src = `/imageProfile/${uid}.jpg?t=`+ new Date().getTime()
+    openBtn.src = `/imageProfile/${uid}.jpg?t=` + new Date().getTime()
 });
 
 button.addEventListener("click", () => {
 
     const Bio = document.querySelector("#Bio");
     const DisplayName = document.querySelector("#DisplayName");
-    const Age = document.querySelector("#Age"); 
+    const Age = document.querySelector("#Age");
     const Gender = document.querySelector("#Gender");
     const ageError = document.querySelector("#ageError");
-    
+
 
     const Data = {
         Bio: Bio.value,
@@ -61,12 +61,12 @@ button.addEventListener("click", () => {
     if (isNaN(ageValue) || ageValue < 1 || ageValue > 80) {
         ageError.textContent = "Please enter age between 1 and 80";
         ageError.style.display = "block";
-        return; 
+        return;
     }
     if (!Gender.value) {
         ageError.textContent = "Please select your gender";
         ageError.style.display = "block";
-        return; 
+        return;
     }
 
 
@@ -79,8 +79,8 @@ button.addEventListener("click", () => {
     })
         .then(res => res.json())
         .then(result => {
-            if (result.ok) {
-
+            if (result.ok || result) { // handle different success response shapes
+                window.location.href = `/User/`; // redirect to the user's profile view
             }
             else {
                 if (result.errors.age !== null) {

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace testforproject.Models
@@ -54,10 +54,10 @@ namespace testforproject.Models
                     new[] { nameof(EventStop) });
             }
 
-            if (ExpiredDate <= EventStop)
+            if (ExpiredDate >= EventStart)
             {
                 yield return new ValidationResult(
-                    "ExpiredDate must be after EventStop",
+                    "Registration deadline (ExpiredDate) must be before the Event starts.",
                     new[] { nameof(ExpiredDate) });
             }
             if (ExpiredDate <= now)
@@ -95,7 +95,7 @@ namespace testforproject.Models
         public string Description { get; set; }
         public int OwnerId { get; set; }
 
-        public User Owner { get; set; }
+        public User? Owner { get; set; }
 
         public string? ImageUrl { get; set; }
 

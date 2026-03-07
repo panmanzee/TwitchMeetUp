@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using testforproject.Authen;
@@ -29,10 +29,21 @@ namespace testforproject.Controllers.API.Profile
 
             }
             var user = _db.Users.FirstOrDefault(u => u.Uid == int.Parse(userId));
+            if (user == null) return NotFound();
+
             user.DisplayName = data.DisplayName;
             user.Bio = data.Bio;
-            user.Gender = data.Gender;
-            user.Age = data.Age;
+
+            // Only allow setting Age and Gender if they are currently null
+            if (user.Age == null)
+            {
+                user.Age = data.Age;
+            }
+            if (string.IsNullOrEmpty(user.Gender))
+            {
+                user.Gender = data.Gender;
+            }
+
             _db.SaveChanges();
             
             return Ok(new {message = "email" });

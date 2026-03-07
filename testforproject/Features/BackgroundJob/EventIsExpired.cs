@@ -22,7 +22,7 @@ public class EventIsExpired : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await CheckExpiredEvents();
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); 
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
 
@@ -33,21 +33,21 @@ public class EventIsExpired : BackgroundService
 
         var expiredEvents = db.Events
             .Where(e => e.ExpiredDate < DateTimeOffset.UtcNow
-                     && e.status == "false")
+                     && e.status == "open")
             .ToList();
 
         foreach (var ev in expiredEvents)
         {
-            ev.status = "true";
+            ev.status = "closed";
 
-           
+
             db.Notifications.Add(new Models.Notification
             {
                 Title = "Test",
                 UserUid = ev.OwnerId,
                 Description = $" '{ev.Name}'  expired.",
                 Date = (DateTimeOffset.UtcNow).ToString(),
-                
+
             });
         }
 

@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;

@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using testforproject.Data;
 using testforproject.Models;
 
-namespace testforproject.Controllers
+namespace testforproject.Controllers.API.Event
 {
-    [Route("api/events")]
     [ApiController]
-    public class EventApiController : ControllerBase
+    [Route("api/events")]
+    public class EventManage : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public EventApiController(ApplicationDbContext context)
+        public EventManage(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -48,20 +48,26 @@ namespace testforproject.Controllers
             var ev = await _context.Events
                 .Include(e => e.Participants)
                 .FirstOrDefaultAsync(e => e.Eid == id);
-
+        
             if (ev == null) return NotFound();
-
+        
             bool isClosed = ev.status == "closed";
-
+        
+            var confirmedUserIds = await _context.ParticipantConfirmations
+                .Where(c => c.EventId == id)
+                .Select(c => c.UserId)
+                .ToListAsync();
+        
             var users = ev.Participants.Select(u => new
             {
                 u.Uid,
                 u.Username,
                 u.DisplayName,
                 u.ProfilePictureSrc,
-                JoinedAt = DateTime.UtcNow   
+                JoinedAt = DateTime.MinValue.AddSeconds(u.Uid), // Proxy logic
+                IsConfirmed = confirmedUserIds.Contains(u.Uid)
             }).ToList();
-
+        
             return Ok(new { isClosed, users });
         }
 
@@ -91,25 +97,25 @@ namespace testforproject.Controllers
         [HttpPost("{id}/participants/confirm")]
         public async Task<IActionResult> ConfirmParticipants(int id, [FromBody] ConfirmParticipantsDto dto)
         {
-            var ev = await _context.Events
-                .Include(e => e.Participants)
-                .FirstOrDefaultAsync(e => e.Eid == id);
+            var ev = await _context.Events.AnyAsync(e => e.Eid == id);
+            if (!ev) return NotFound();
 
-            if (ev == null) return NotFound();
+            // Remove existing confirmations for this event
+            var existing = _context.ParticipantConfirmations.Where(c => c.EventId == id);
+            _context.ParticipantConfirmations.RemoveRange(existing);
 
-            if (ev.status == "closed")
-                return BadRequest(new { message = "Cannot change participants on a closed event." });
-
-            var selectedUsers = await _context.Users
-                .Where(u => dto.UserIds.Contains(u.Uid))
-                .ToListAsync();
-
-            ev.Participants.Clear();
-            foreach (var user in selectedUsers)
-                ev.Participants.Add(user);
+            // Add new confirmations
+            foreach (var userId in dto.UserIds)
+            {
+                _context.ParticipantConfirmations.Add(new ParticipantConfirmation
+                {
+                    EventId = id,
+                    UserId = userId
+                });
+            }
 
             await _context.SaveChangesAsync();
-            return Ok(new { message = $"{selectedUsers.Count} participants confirmed." });
+            return Ok(new { message = $"{dto.UserIds.Count} participants confirmed." });
         }
 
         
@@ -120,11 +126,8 @@ namespace testforproject.Controllers
                 .Include(e => e.Participants)
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
-            if (ev == null) return NotFound();
-
             ev.status = dto.Status;
             await _context.SaveChangesAsync();
-
             
             return Ok(new
             {
