@@ -24,7 +24,7 @@ builder.Services.AddScoped<INotification, NotificationService>();
 builder.Services.AddScoped<testforproject.Services.VectorCalculator>();
 builder.Services.AddScoped<testforproject.Services.RecommendationService>();
 builder.Services.AddOpenApi();
-//builder.Services.AddHostedService<EventIsExpired>();
+builder.Services.AddHostedService<EventIsExpired>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyApp", builder =>
@@ -73,7 +73,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     })
-    .AddGoogle(options => {
+    .AddGoogle(options =>
+    {
         options.ClientId = builder.Configuration["Google:ClientId"]!;
         options.ClientSecret = builder.Configuration["Google:ClientSecret"]!;
     });
