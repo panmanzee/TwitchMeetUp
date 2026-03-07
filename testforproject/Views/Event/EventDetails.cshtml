@@ -1,4 +1,4 @@
-﻿@model testforproject.Models.Event
+@model testforproject.Models.Event
 
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +150,23 @@
                     <div id="map" style="height:300px; border-radius:16px; border:1px solid var(--border);"></div>
                 </section>
 
+                <!-- Event Chat Section (Only for participants or host) -->
+                @if (ViewBag.IsJoined == true || (ViewBag.IsLoggedIn == true && Model.OwnerId == ViewBag.UserId))
+                {
+                    <section class="section-gap">
+                        <h2>Event Chat</h2>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- Messages will be rendered here dynamically -->
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chatInput" placeholder="Type a message..." maxlength="255" />
+                                <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </section>
+                }
+
             </div>
 
             <!-- RIGHT SIDE -->
@@ -220,7 +237,15 @@
 
                     @if (ViewBag.IsLoggedIn == true)
                     {
-                        if (ViewBag.IsJoined == true)
+                        if (ViewBag.IsJoined == true && Model.status == "closed")
+                        {
+                            <a href="@Url.Action("EventScore", "Event", new { id = Model.Eid })" style="text-decoration:none;">
+                                <button class="join_btn" style="background-color: #ffd700; color: #000; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);">
+                                    <i class="fas fa-star"></i> Rate Event
+                                </button>
+                            </a>
+                        }
+                        else if (ViewBag.IsJoined == true)
                         {
                             <button class="join_btn" disabled>
                                 Already Joined
@@ -271,6 +296,102 @@
         const eventLocation = "@Model.Location";
     </script>
     <script src="~/js/Event/EventDetails.js"></script>
+
+    @if (ViewBag.IsJoined == true || (ViewBag.IsLoggedIn == true && Model.OwnerId == ViewBag.UserId))
+    {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const eventId = @Model.Eid;
+            const chatMessagesContent = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const sendChatBtn = document.getElementById('sendChatBtn');
+            let lastMessageCount = 0;
+
+            async function fetchMessages() {
+                try {
+                    const response = await fetch(`/api/ChatApi/${eventId}`);
+                    if (!response.ok) return;
+                    const messages = await response.json();
+
+                    if (messages.length !== lastMessageCount) {
+                        chatMessagesContent.innerHTML = '';
+                        messages.forEach(msg => {
+                            const isSelf = msg.senderName === 'You';
+                            const timeString = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            
+                            const msgHtml = `
+                                <div class="chat-message ${isSelf ? 'self' : 'other'}">
+                                    ${!isSelf ? `<div class="chat-sender">${msg.senderName}</div>` : ''}
+                                    <div class="chat-bubble">${msg.message}</div>
+                                    <div class="chat-time">${timeString}</div>
+                                </div>
+                            `;
+                            chatMessagesContent.insertAdjacentHTML('beforeend', msgHtml);
+                        });
+                        
+                        // Auto scroll to bottom
+                        chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
+                        lastMessageCount = messages.length;
+                    }
+                } catch (err) {
+                    console.error("Failed to load chat", err);
+                }
+            }
+
+            async function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                chatInput.disabled = true;
+                sendChatBtn.disabled = true;
+
+                try {
+                    const userId = @(ViewBag.UserId ?? "0"); // Supply the acting user ID
+                    await connection.invoke("SendMessage", eventId, text, userId);
+                    chatInput.value = '';
+                } catch (err) {
+                    console.error("SignalR SendMessage Error: ", err);
+                } finally {
+                    chatInput.disabled = false;
+                    sendChatBtn.disabled = false;
+                    chatInput.focus();
+                }
+            }
+
+            sendChatBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // SignalR Connection Setup
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            connection.on("ReceiveNewMessage", () => {
+                fetchMessages(); // Immediately pull new messages
+            });
+
+            async function startSignalR() {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected.");
+                    // Join the specific event group
+                    await connection.invoke("JoinEventGroup", eventId.toString());
+                } catch (err) {
+                    console.error("SignalR Connection Error: ", err);
+                    setTimeout(startSignalR, 5000);
+                }
+            }
+
+            // Initial messages load and connect
+            fetchMessages();
+            startSignalR();
+        });
+    </script>
+    }
 
 </body>
 </html>

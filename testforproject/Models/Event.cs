@@ -90,7 +90,7 @@ namespace testforproject.Models
         public string Description { get; set; }
         public int OwnerId { get; set; }
 
-        public User Owner { get; set; }
+        public User? Owner { get; set; }
 
         public string? ImageUrl { get; set; }
 

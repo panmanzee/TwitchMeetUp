@@ -4,22 +4,21 @@ using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Models;
 
-namespace testforproject.Controllers
+namespace testforproject.Controllers.API.Event
 {
-    [Route("api/events")]
     [ApiController]
-    public class EventManageApiController : ControllerBase
+    [Route("api/events")]
+    public class EventManage : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IJwtService _jwtService;
-
-        public EventManageApiController(ApplicationDbContext context, IJwtService jwtService)
+        public EventManage(ApplicationDbContext context)
         {
             _context = context;
             _jwtService = jwtService;
         }
 
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEvent(int id)
         {
@@ -44,7 +43,7 @@ namespace testforproject.Controllers
             return Ok(ev);
         }
 
-        
+
         [HttpGet("{id}/participants")]
         public async Task<IActionResult> GetParticipants(int id)
         {
@@ -56,19 +55,25 @@ namespace testforproject.Controllers
 
             bool isClosed = ev.status == "closed";
 
+            var confirmedUserIds = await _context.ParticipantConfirmations
+                .Where(c => c.EventId == id)
+                .Select(c => c.UserId)
+                .ToListAsync();
+
             var users = ev.Participants.Select(u => new
             {
                 u.Uid,
                 u.Username,
                 u.DisplayName,
                 u.ProfilePictureSrc,
-                JoinedAt = DateTime.UtcNow   
+                JoinedAt = DateTime.MinValue.AddSeconds(u.Uid), // Proxy logic
+                IsConfirmed = confirmedUserIds.Contains(u.Uid)
             }).ToList();
 
             return Ok(new { isClosed, users });
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto dto)
         {
@@ -95,7 +100,7 @@ namespace testforproject.Controllers
             return Ok();
         }
 
-        
+
         [HttpPost("{id}/participants/confirm")]
         public async Task<IActionResult> ConfirmParticipants(int id, [FromBody] ConfirmParticipantsDto dto)
         {
@@ -107,6 +112,10 @@ namespace testforproject.Controllers
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (ev == null) return NotFound();
+
+            // Remove existing confirmations for this event
+            var existing = _context.ParticipantConfirmations.Where(c => c.EventId == id);
+            _context.ParticipantConfirmations.RemoveRange(existing);
 
             if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
 
@@ -120,12 +129,21 @@ namespace testforproject.Controllers
             ev.Participants.Clear();
             foreach (var user in selectedUsers)
                 ev.Participants.Add(user);
+            // Add new confirmations
+            foreach (var uId in dto.UserIds)
+            {
+                _context.ParticipantConfirmations.Add(new ParticipantConfirmation
+                {
+                    EventId = id,
+                    UserId = uId
+                });
+            }
 
             await _context.SaveChangesAsync();
-            return Ok(new { message = $"{selectedUsers.Count} participants confirmed." });
+            return Ok(new { message = $"{dto.UserIds.Count} participants confirmed." });
         }
 
-        
+
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
         {
@@ -143,7 +161,6 @@ namespace testforproject.Controllers
             ev.status = dto.Status;
             await _context.SaveChangesAsync();
 
-            
             return Ok(new
             {
                 message = $"Event status updated to '{dto.Status}'.",

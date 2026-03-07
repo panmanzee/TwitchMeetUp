@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using testforproject.Authen;
 using testforproject.Authen.Services;
 using testforproject.Data;

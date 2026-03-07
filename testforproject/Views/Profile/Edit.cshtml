@@ -1,4 +1,4 @@
-﻿@model testforproject.Models.User
+@model testforproject.Models.User
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,13 +66,13 @@
 
         <div class="bottom-row form-group">
                 <label>age</label>
-                <input type="text" id="Age" value="@Model.Username">
+                <input type="number" id="Age" placeholder="Age 1-80 yrs" value="@(Model.Age?.ToString() ?? "")" min="1" max="80" @(Model.Age.HasValue ? "disabled" : "")>
                 <label>gender</label>
-                <select class="dropdown" id="Gender">
+                <select class="dropdown" id="Gender" @(!string.IsNullOrEmpty(Model.Gender) ? "disabled" : "")>
                     <option value="">Select gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
+                    <option selected="@(Model.Gender == "Male")">Male</option>
+                    <option selected="@(Model.Gender == "Female")">Female</option>
+                    <option selected="@(Model.Gender == "Other")">Other</option>
                 </select>   
                 <button class="save">บันทึกการเปลี่ยนแปลง</button>
 

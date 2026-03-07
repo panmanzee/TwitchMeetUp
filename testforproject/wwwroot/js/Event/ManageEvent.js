@@ -1,4 +1,4 @@
-﻿// ── CONFIG ──
+// ── CONFIG ──
 // eventId is injected by Razor: <body data-event-id="@Model.Eid">
 const EVENT_ID = parseInt(document.body.dataset.eventId, 10);
 
@@ -70,8 +70,9 @@ async function loadParticipants() {
             lockClosedUI();
         } else {
             isClosed = false;
-            participated = data.users.map(normaliseUser);
-            selected = [];
+            // Sorting users based on isConfirmed flag from our new tracking table
+            participated = data.users.filter(u => !u.isConfirmed).map(normaliseUser);
+            selected = data.users.filter(u => u.isConfirmed).map(normaliseUser);
             render();
         }
     } catch (err) {
@@ -127,10 +128,7 @@ async function saveSettings() {
  * Server replaces Event.Participants with this list.
  */
 async function confirmChanges() {
-    if (selected.length === 0) {
-        showToast('⚠', 'No users selected yet');
-        return;
-    }
+    // We allow zero participants to be confirmed as per user request
 
     const payload = { userIds: selected.map(u => u.uid) };
 
@@ -327,6 +325,7 @@ function normaliseUser(u) {
         displayName: u.displayName ?? '',
         profilePictureSrc: u.profilePictureSrc ?? null,
         joinedAt: u.joinedAt ?? new Date().toISOString(),
+        isConfirmed: u.isConfirmed ?? false,
     };
 }
 

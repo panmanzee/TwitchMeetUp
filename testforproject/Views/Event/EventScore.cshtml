@@ -1,0 +1,199 @@
+@model testforproject.Models.Event
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rate @Model.Name - TwitchMeet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --container-bg: #1a1a20;
+            --text-color: #ffffff;
+            --accent: #b46bd6;
+            --accent-hover: #9c55bc;
+            --border: #2a2a30;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .score-container {
+            background-color: var(--container-bg);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .event-name {
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 40px;
+            color: #444;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffd700;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            box-sizing: border-box;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .submit-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(180, 107, 214, 0.3);
+        }
+
+        .already-rated {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(180, 107, 214, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="score-container">
+        <h1>Rate Event</h1>
+        <div class="event-name">@Model.Name</div>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="already-rated">
+                <i class="fas fa-info-circle"></i> @ViewBag.Message
+            </div>
+            <a href="@Url.Action("EventDetails", new { id = Model.Eid })" class="back-link">Back to Event</a>
+        }
+        else
+        {
+            <form action="/Event/SubmitEventScore" method="post">
+                <input type="hidden" name="eventId" value="@Model.Eid" />
+                
+                <div class="form-group" style="text-align: center;">
+                    <label>How was your experience?</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="score" value="5" required />
+                        <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star4" name="score" value="4" />
+                        <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star3" name="score" value="3" />
+                        <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star2" name="score" value="2" />
+                        <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star1" name="score" value="1" />
+                        <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Leave a comment (Optional)</label>
+                    <textarea id="comment" name="comment" placeholder="Tell us what you liked or how it could be improved..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Rating</button>
+                <a href="@Url.Action("EventDetails", new { id = Model.Eid })" class="back-link">Cancel</a>
+            </form>
+        }
+    </div>
+
+</body>
+</html>

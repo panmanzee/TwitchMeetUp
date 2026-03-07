@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -7,6 +7,7 @@ using testforproject.Authen.Services;
 using testforproject.Data;
 using testforproject.Features.BackgroundJob;
 using testforproject.Features.Notification;
+using testforproject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,5 +116,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Show}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
