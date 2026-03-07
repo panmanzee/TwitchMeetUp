@@ -8,25 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNotificationHref : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ParticipantConfirmations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParticipantConfirmations", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Requirements",
                 columns: table => new
@@ -122,6 +108,7 @@ namespace testforproject.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserUid = table.Column<int>(type: "int", nullable: false),
+                    TriggerUserUid = table.Column<int>(type: "int", nullable: true),
                     IsReaded = table.Column<bool>(type: "bit", nullable: false),
                     Href = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -245,7 +232,8 @@ namespace testforproject.Migrations
                 columns: table => new
                 {
                     Eid = table.Column<int>(type: "int", nullable: false),
-                    ParticitpantUid = table.Column<int>(type: "int", nullable: false)
+                    ParticitpantUid = table.Column<int>(type: "int", nullable: false),
+                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -261,6 +249,32 @@ namespace testforproject.Migrations
                         column: x => x.ParticitpantUid,
                         principalTable: "Users",
                         principalColumn: "Uid");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParticipantConfirmations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticipantConfirmations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParticipantConfirmations_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Eid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ParticipantConfirmations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Uid",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -345,6 +359,16 @@ namespace testforproject.Migrations
                 name: "IX_Notifications_UserUid",
                 table: "Notifications",
                 column: "UserUid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParticipantConfirmations_EventId",
+                table: "ParticipantConfirmations",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParticipantConfirmations_UserId",
+                table: "ParticipantConfirmations",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserFollows_FollowingUid",

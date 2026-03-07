@@ -30,6 +30,7 @@ namespace testforproject.Controllers
             {
                 currentUser = await _db.Users
                     .Include(u => u.Following)
+                    .Include(u => u.Follower)
                     .Include(u => u.OwningEvent)
                     .Include(u => u.ParticipatedEvent)
                     .FirstOrDefaultAsync(u => u.Uid == userId);
@@ -51,6 +52,7 @@ namespace testforproject.Controllers
             if (currentUser != null && name == null)
             {
                 ViewBag.user = currentUser.Username;
+                ViewBag.FollowerCount = currentUser.Follower?.Count ?? 0;
                 return View(currentUser);
             }
             if ( queryUser == null)

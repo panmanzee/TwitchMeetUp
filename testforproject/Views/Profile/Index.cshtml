@@ -1,4 +1,4 @@
-﻿@model testforproject.Models.User
+@model testforproject.Models.User
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,8 +58,7 @@
                 <div class="bio">
                     <h3>About Me</h3>
                     <p>
-                        Hey everyone! I'm goatstreamer226 and I'm on a mission to redefine gaming excellence.
-                        I love experimenting with new ideas and building a strong community.
+                        @(string.IsNullOrWhiteSpace(Model.Bio) ? "No bio provided." : Model.Bio)
                     </p>
                 </div>
                 <div class="section">
