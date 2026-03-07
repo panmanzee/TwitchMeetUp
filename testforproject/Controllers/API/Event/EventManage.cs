@@ -12,10 +12,13 @@ namespace testforproject.Controllers.API.Event
     {
         private readonly ApplicationDbContext _context;
         private readonly IJwtService _jwtService;
-        public EventManage(ApplicationDbContext context)
+        private readonly testforproject.Features.Notification.INotification _notiService;
+
+        public EventManage(ApplicationDbContext context, IJwtService jwtService, testforproject.Features.Notification.INotification notiService)
         {
             _context = context;
             _jwtService = jwtService;
+            _notiService = notiService;
         }
 
 
@@ -60,15 +63,18 @@ namespace testforproject.Controllers.API.Event
                 .Select(c => c.UserId)
                 .ToListAsync();
 
-            var users = ev.Participants.Select(u => new
-            {
-                u.Uid,
-                u.Username,
-                u.DisplayName,
-                u.ProfilePictureSrc,
-                JoinedAt = DateTime.MinValue.AddSeconds(u.Uid), // Proxy logic
-                IsConfirmed = confirmedUserIds.Contains(u.Uid)
-            }).ToList();
+            var users = await _context.EventParticipants
+                .Where(ep => ep.Eid == id)
+                .Select(ep => new
+                {
+                    ep.Participant.Uid,
+                    ep.Participant.Username,
+                    ep.Participant.DisplayName,
+                    ep.Participant.ProfilePictureSrc,
+                    JoinedAt = ep.JoinedAt,
+                    IsConfirmed = confirmedUserIds.Contains(ep.ParticitpantUid)
+                })
+                .ToListAsync();
 
             return Ok(new { isClosed, users });
         }
@@ -160,6 +166,20 @@ namespace testforproject.Controllers.API.Event
 
             ev.status = dto.Status;
             await _context.SaveChangesAsync();
+
+            if (dto.Status == "closed")
+            {
+                var participants = ev.Participants.ToList();
+                if (participants.Any())
+                {
+                    var title = "You are confirmed!";
+                    var desc = $"Great news! The event '{ev.Name}' is now finalized and you are confirmed as a participant.";
+                    var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
+                    var href = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#";
+
+                    await _notiService.CreateNotification(title, desc, date, participants, href, ev.OwnerId);
+                }
+            }
 
             return Ok(new
             {

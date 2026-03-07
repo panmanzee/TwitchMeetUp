@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Microsoft.EntityFrameworkCore;
 using testforproject.Data;
 using testforproject.Models;
 
@@ -13,19 +13,21 @@ namespace testforproject.Features.Notification
             _db = db;
         }
 
-        public async Task CreateNotification(string Title, string Description, string Date, List<User> user) 
+        public async Task CreateNotification(string Title, string Description, string Date, List<User> user, string? Href = null, int? TriggerUserUid = null)
         {
             for (int i = 0; i < user.Count; i++)
             {
-            var Noti = new testforproject.Models.Notification
-            {
-               Title = Title,
-               Description = Description,
-               Date = Date,
-               UserUid = user[i].Uid,
-            };
-              await _db.Notifications.AddAsync(Noti);
-              await _db.SaveChangesAsync();
+                var Noti = new testforproject.Models.Notification
+                {
+                    Title = Title,
+                    Description = Description,
+                    Date = Date,
+                    UserUid = user[i].Uid,
+                    Href = Href,
+                    TriggerUserUid = TriggerUserUid
+                };
+                await _db.Notifications.AddAsync(Noti);
+                await _db.SaveChangesAsync();
             }
 
         }

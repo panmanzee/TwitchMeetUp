@@ -6,11 +6,14 @@ namespace testforproject.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public int EventId { get; set; }
-        
+
         [Required]
         public int UserId { get; set; }
+
+        public virtual Event Event { get; set; } = null!;
+        public virtual User Participant { get; set; } = null!;
     }
 }

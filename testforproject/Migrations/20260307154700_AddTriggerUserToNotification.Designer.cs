@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260306145346_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260307154700_AddTriggerUserToNotification")]
+    partial class AddTriggerUserToNotification
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,6 +283,36 @@ namespace testforproject.Migrations
                         });
                 });
 
+            modelBuilder.Entity("testforproject.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("testforproject.Models.Event", b =>
                 {
                     b.Property<int>("Eid")
@@ -332,6 +362,38 @@ namespace testforproject.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("testforproject.Models.EventScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventScores");
+                });
+
             modelBuilder.Entity("testforproject.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -348,6 +410,9 @@ namespace testforproject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Href")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsReaded")
                         .HasColumnType("bit");
 
@@ -355,14 +420,38 @@ namespace testforproject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TriggerUserUid")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserUid")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TriggerUserUid");
+
                     b.HasIndex("UserUid");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("testforproject.Models.ParticipantConfirmation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParticipantConfirmations");
                 });
 
             modelBuilder.Entity("testforproject.Models.Requirements", b =>
@@ -487,6 +576,25 @@ namespace testforproject.Migrations
                         .HasForeignKey("UserUid");
                 });
 
+            modelBuilder.Entity("testforproject.Models.ChatMessage", b =>
+                {
+                    b.HasOne("testforproject.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("testforproject.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("testforproject.Models.Event", b =>
                 {
                     b.HasOne("testforproject.Models.User", "Owner")
@@ -498,13 +606,39 @@ namespace testforproject.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("testforproject.Models.EventScore", b =>
+                {
+                    b.HasOne("testforproject.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("testforproject.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("testforproject.Models.Notification", b =>
                 {
+                    b.HasOne("testforproject.Models.User", "TriggerUser")
+                        .WithMany()
+                        .HasForeignKey("TriggerUserUid")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("testforproject.Models.User", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("TriggerUser");
 
                     b.Navigation("User");
                 });

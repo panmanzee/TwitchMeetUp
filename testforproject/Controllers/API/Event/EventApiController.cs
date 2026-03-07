@@ -15,11 +15,13 @@ namespace testforproject.Controllers.API.Account
     {
         private readonly ApplicationDbContext _db;
         private readonly IJwtService _jwtService;
+        private readonly testforproject.Features.Notification.INotification _notiService;
 
-        public EventApiController(ApplicationDbContext db, IJwtService jwtService)
+        public EventApiController(ApplicationDbContext db, IJwtService jwtService, testforproject.Features.Notification.INotification notiService)
         {
             _db = db;
             _jwtService = jwtService;
+            _notiService = notiService;
         }
 
         [HttpPost("join")]
@@ -38,7 +40,7 @@ namespace testforproject.Controllers.API.Account
             if (eventItem == null)
                 return NotFound(new { message = "Event not found" });
 
-            if (eventItem.Owner.Uid == userId)
+            if (eventItem.Owner?.Uid == userId)
                 return BadRequest(new { message = "You cannot join your own event" });
 
             if (eventItem.status == "closed")
@@ -53,8 +55,25 @@ namespace testforproject.Controllers.API.Account
 
             var user = await _db.Users.FindAsync(userId);
 
-            eventItem.Participants.Add(user);
+            _db.EventParticipants.Add(new EventParticipant
+            {
+                Eid = eventItem.Eid,
+                ParticitpantUid = user.Uid,
+                JoinedAt = DateTime.Now
+            });
+
             await _db.SaveChangesAsync();
+
+            // Notify event owner
+            if (eventItem.Owner != null)
+            {
+                var title = "Someone joined your event!";
+                var desc = $"{user.DisplayName ?? user.Username} has joined \"{eventItem.Name}\".";
+                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
+                var href = $"http://localhost:5189/Profile/ManageEvent/{eventItem.Eid}#";
+
+                await _notiService.CreateNotification(title, desc, date, new List<User> { eventItem.Owner }, href, user.Uid);
+            }
 
             return Ok(new { message = "Joined successfully" });
         }
@@ -87,6 +106,19 @@ namespace testforproject.Controllers.API.Account
 
             eventItem.Participants.Remove(user);
             await _db.SaveChangesAsync();
+
+            // Notify event owner
+            // Need to fetch owner as it might not be included in unjoin initial query
+            var eventWithOwner = await _db.Events.Include(e => e.Owner).FirstOrDefaultAsync(e => e.Eid == request.EventId);
+            if (eventWithOwner?.Owner != null)
+            {
+                var title = "Someone left your event";
+                var desc = $"{user.DisplayName ?? user.Username} has unjoined \"{eventWithOwner.Name}\".";
+                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
+                var href = $"http://localhost:5189/Profile/ManageEvent/{eventWithOwner.Eid}#";
+
+                await _notiService.CreateNotification(title, desc, date, new List<User> { eventWithOwner.Owner }, href, user.Uid);
+            }
 
             return Ok(new { message = "Unjoined successfully" });
         }

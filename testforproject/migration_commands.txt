@@ -1,0 +1,18 @@
+Please stop the application (`Ctrl+C` in your terminal where `dotnet run` is running) and run these commands one by one to update your database with the new `Href` property for Notifications:
+
+1. **Delete old migrations (to start fresh since you dropped the DB):**
+```bash
+Remove-Item -Path "Migrations" -Recurse -Force -ErrorAction SilentlyContinue
+```
+
+2. **Create the new Migration from the updated code:**
+```bash
+dotnet ef migrations add AddNotificationHref
+```
+
+3. **Update the database:**
+```bash
+dotnet ef database update
+```
+
+Once `Done.` appears, you can run `dotnet run` again!

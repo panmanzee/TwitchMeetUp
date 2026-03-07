@@ -24,7 +24,7 @@ namespace testforproject.Controllers.API.Notification
         [HttpPost("CreateNoti")]
         public async Task<IActionResult> CreateNoti(string Title, string Description, string Date, int Uid)
         {
-           
+
             var followers = _db.Users
              .Where(u => u.Uid == Uid)
              .SelectMany(u => u.Follower)
@@ -36,11 +36,9 @@ namespace testforproject.Controllers.API.Notification
         [HttpGet("GetNoti")]
         public async Task<IActionResult> GetNoti()
         {
-            int userIdStr = 3;
-            if (userIdStr == null)
+            var userId = _jwtService.UserId;
+            if (userId == null)
                 return Unauthorized();
-
-            int userId =(userIdStr);
 
             var notis = await _db.Notifications
                 .Where(n => n.UserUid == userId)
@@ -52,11 +50,21 @@ namespace testforproject.Controllers.API.Notification
                     description = n.Description,
                     isReaded = n.IsReaded,
                     date = n.Date,
+                    href = n.Href,
 
                     user = new
                     {
                         username = n.User.Username
-                    }
+                    },
+                    // Manual lookup to avoid navigation property ambiguity
+                    triggerUser = _db.Users
+                        .Where(u => u.Uid == n.TriggerUserUid)
+                        .Select(u => new
+                        {
+                            username = u.Username,
+                            profileImage = u.ProfilePictureSrc
+                        })
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
@@ -65,11 +73,9 @@ namespace testforproject.Controllers.API.Notification
         [HttpPut("MarkRead/{id}")]
         public async Task<IActionResult> MarkRead(int id)
         {
-            //var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //if (userIdStr == null)
-            //    return Unauthorized();
-
-            int userId = int.Parse("3");
+            var userId = _jwtService.UserId;
+            if (userId == null)
+                return Unauthorized();
 
             var noti = await _db.Notifications
                 .FirstOrDefaultAsync(n => n.Id == id && n.UserUid == userId);
@@ -83,5 +89,5 @@ namespace testforproject.Controllers.API.Notification
             return Ok(noti);
         }
     }
-    
+
 }

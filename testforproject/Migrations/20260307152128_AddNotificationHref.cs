@@ -8,11 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddNotificationHref : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ParticipantConfirmations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticipantConfirmations", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Requirements",
                 columns: table => new
@@ -108,7 +122,8 @@ namespace testforproject.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserUid = table.Column<int>(type: "int", nullable: false),
-                    IsReaded = table.Column<bool>(type: "bit", nullable: false)
+                    IsReaded = table.Column<bool>(type: "bit", nullable: false),
+                    Href = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -145,6 +160,34 @@ namespace testforproject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Eid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Uid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventCategories",
                 columns: table => new
                 {
@@ -165,6 +208,35 @@ namespace testforproject.Migrations
                         column: x => x.EventsEid,
                         principalTable: "Events",
                         principalColumn: "Eid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventScores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventScores_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Eid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventScores_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Uid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -235,6 +307,16 @@ namespace testforproject.Migrations
                 column: "UserUid");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_EventId",
+                table: "ChatMessages",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_UserId",
+                table: "ChatMessages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventCategories_EventsEid",
                 table: "EventCategories",
                 column: "EventsEid");
@@ -243,6 +325,16 @@ namespace testforproject.Migrations
                 name: "IX_Events_OwnerId",
                 table: "Events",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventScores_EventId",
+                table: "EventScores",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventScores_UserId",
+                table: "EventScores",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventUser_ParticitpantUid",
@@ -264,13 +356,22 @@ namespace testforproject.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ChatMessages");
+
+            migrationBuilder.DropTable(
                 name: "EventCategories");
+
+            migrationBuilder.DropTable(
+                name: "EventScores");
 
             migrationBuilder.DropTable(
                 name: "EventUser");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "ParticipantConfirmations");
 
             migrationBuilder.DropTable(
                 name: "Requirements");

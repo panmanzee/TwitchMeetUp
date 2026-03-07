@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using testforproject.Data;
 using testforproject.Models;
@@ -7,22 +8,25 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace testforproject.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class CreateActivityController : Controller
     {
         private readonly ApplicationDbContext _db;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CreateActivityController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        private readonly testforproject.Features.Notification.INotification _notiService;
+
+        public CreateActivityController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, testforproject.Features.Notification.INotification notiService)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;
+            _notiService = notiService;
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            
+
             ViewBag.ExistingCategories = _db.Categories.ToList() ?? new List<Category>();
             return View();
         }
@@ -33,7 +37,7 @@ namespace testforproject.Controllers
             List<int> SelectedCategoryIds, DateTime Expired_Date,
             string Decription, DateTime StartTime, DateTime closetime, IFormFile? ImageFile)
         {
-            
+
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdString))
             {
@@ -57,7 +61,7 @@ namespace testforproject.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.ExistingCategories = _db.Categories.ToList();
-                return View(); 
+                return View();
             }
 
             var defaultReq = new Requirements
@@ -104,17 +108,17 @@ namespace testforproject.Controllers
                 Name = Name,
                 Location = Location,
                 MaxParticitpant = MaxParticitpant,
-                OwnerId = currentUserId, 
+                OwnerId = currentUserId,
                 ExpiredDate = Expired_Date,
                 EventStart = StartTime == default ? DateTime.Now : StartTime,
-                EventStop = closetime ,
+                EventStop = closetime,
                 status = "open",
                 Description = Decription ?? "",
 
                 ImageUrl = savedImageUrl
             };
 
-           
+
             if (SelectedCategoryIds != null)
             {
                 foreach (var catId in SelectedCategoryIds)
@@ -129,6 +133,21 @@ namespace testforproject.Controllers
 
             _db.Events.Add(newEvent);
             await _db.SaveChangesAsync();
+
+            // Notify followers
+            var currentUserWithFollowers = await _db.Users
+                .Include(u => u.Follower)
+                .FirstOrDefaultAsync(u => u.Uid == currentUserId);
+
+            if (currentUserWithFollowers?.Follower != null && currentUserWithFollowers.Follower.Any())
+            {
+                var title = $"{currentUserWithFollowers.DisplayName} created a new event!";
+                var desc = $"Check out \"{newEvent.Name}\" happening at {newEvent.Location}.";
+                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
+                var href = $"http://localhost:5189/Event/EventDetails/{newEvent.Eid}#";
+
+                await _notiService.CreateNotification(title, desc, date, currentUserWithFollowers.Follower.ToList(), href, currentUserId);
+            }
 
             return RedirectToAction("Show", "Dashboard");
         }

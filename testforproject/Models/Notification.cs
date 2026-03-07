@@ -10,7 +10,9 @@ namespace testforproject.Models
         public string Description { get; set; }
         public string Date { get; set; }
         public int UserUid { get; set; }
+        public int? TriggerUserUid { get; set; }
         public bool IsReaded { get; set; }
+        public string? Href { get; set; }
         public User User { get; set; }
     }
 }

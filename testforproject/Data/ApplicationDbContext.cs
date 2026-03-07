@@ -18,6 +18,7 @@ namespace testforproject.Data
         public DbSet<EventScore> EventScores { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public DbSet<ParticipantConfirmation> ParticipantConfirmations { get; set; }
+        public DbSet<EventParticipant> EventParticipants { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,31 +29,35 @@ namespace testforproject.Data
                 .WithMany(u => u.Follower)
                 .UsingEntity(j => j.ToTable("UserFollows"));
 
-            
+
             modelBuilder.Entity<Event>()
                 .HasOne(e => e.Owner)
                 .WithMany(u => u.OwningEvent)
                 .HasForeignKey(e => e.OwnerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            
+
             modelBuilder.Entity<Event>()
                 .HasMany(e => e.Participants)
                 .WithMany(u => u.ParticipatedEvent)
-                .UsingEntity<Dictionary<string, object>>(
-                    "EventUser",
+                .UsingEntity<EventParticipant>(
                     j => j
-                        .HasOne<User>()
+                        .HasOne(ep => ep.Participant)
                         .WithMany()
-                        .HasForeignKey("ParticitpantUid")
+                        .HasForeignKey(ep => ep.ParticitpantUid)
                         .OnDelete(DeleteBehavior.NoAction),
                     j => j
-                        .HasOne<Event>()
+                        .HasOne(ep => ep.Event)
                         .WithMany()
-                        .HasForeignKey("Eid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey(ep => ep.Eid)
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j =>
+                    {
+                        j.ToTable("EventUser");
+                        j.HasKey(ep => new { ep.Eid, ep.ParticitpantUid });
+                    }
                 );
-           
+
 
             // 2. จัดการความสัมพันธ์ตาราง Category แบบ Many-to-Many (ส่วนนี้คือโค้ดใหม่ที่ถูกต้อง)
             modelBuilder.Entity<Event>()
@@ -60,7 +65,7 @@ namespace testforproject.Data
                 .WithMany(c => c.Events)
                 .UsingEntity(j => j.ToTable("EventCategories"));
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Sports & Fitness" ,ImageUrl= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfY6dGXDvuNyxepwwRCDD4aI8MmrroG4Xj8g&s" },
+                new Category { Id = 1, Name = "Sports & Fitness", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfY6dGXDvuNyxepwwRCDD4aI8MmrroG4Xj8g&s" },
                 new Category { Id = 2, Name = "Gaming & eSports", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxoudo-kmIpvw6ATdSFlKh03M2tIMw1P6Jbw&s" },
                 new Category { Id = 4, Name = "Technology & Coding", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUXSwrWPMPioZYdGqVU1dBR75K0bNYuixisQ&s" },
                 new Category { Id = 5, Name = "Education & Learning", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB_3U8P0eFjlVTUUZtAx2Be8ob_2HiFtH68Q&s" },

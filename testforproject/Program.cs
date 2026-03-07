@@ -26,6 +26,7 @@ builder.Services.AddScoped<testforproject.Services.VectorCalculator>();
 builder.Services.AddScoped<testforproject.Services.RecommendationService>();
 builder.Services.AddOpenApi();
 builder.Services.AddHostedService<EventIsExpired>();
+builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyApp", builder =>

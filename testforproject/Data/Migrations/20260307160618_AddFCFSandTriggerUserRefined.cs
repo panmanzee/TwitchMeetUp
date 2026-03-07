@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace testforproject.Migrations
+namespace testforproject.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class heemhaq : Migration
+    public partial class AddFCFSandTriggerUserRefined : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

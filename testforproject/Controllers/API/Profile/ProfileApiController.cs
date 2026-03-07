@@ -14,10 +14,12 @@ namespace testforproject.Controllers.API.Profile
     {
         private readonly ApplicationDbContext _db;
         private readonly IJwtService _jwtService;
-        public ProfileApiController(ApplicationDbContext db, TokenProvider tokenProvider, IJwtService jwtService)
+        private readonly testforproject.Features.Notification.INotification _notiService;
+        public ProfileApiController(ApplicationDbContext db, TokenProvider tokenProvider, IJwtService jwtService, testforproject.Features.Notification.INotification notiService)
         {
             _jwtService = jwtService;
             _db = db;
+            _notiService = notiService;
         }
         [HttpPost("Edit")]
         public IActionResult Edit([FromBody] User data)
@@ -45,8 +47,8 @@ namespace testforproject.Controllers.API.Profile
             }
 
             _db.SaveChanges();
-            
-            return Ok(new {message = "email" });
+
+            return Ok(new { message = "email" });
         }
         [HttpPost("Follow")]
         public IActionResult Follow([FromBody] FollowRequest req)
@@ -68,6 +70,15 @@ namespace testforproject.Controllers.API.Profile
             {
                 currentUser.Following.Add(targetUser);
                 _db.SaveChanges();
+
+                // Notify target user
+                var title = "New Follower!";
+                var desc = $"{currentUser.DisplayName ?? currentUser.Username} is now following you.";
+                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
+                // Href to the follower's profile
+                var href = $"http://localhost:5189/Profile/Index/{currentUser.Uid}#";
+
+                _notiService.CreateNotification(title, desc, date, new List<User> { targetUser }, href, currentUser.Uid);
             }
 
             var followerCount = _db.Users

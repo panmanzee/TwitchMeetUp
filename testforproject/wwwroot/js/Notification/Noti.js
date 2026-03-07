@@ -1,20 +1,16 @@
 ﻿
 const API_BASE = '/api/NotiApi';
 
-
-
-
 async function fetchNotifications() {
     const res = await fetch(`${API_BASE}/GetNoti`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            
         }
     });
 
     if (!res.ok) throw new Error(`Failed to fetch notifications: ${res.status}`);
-    return await res.json(); 
+    return await res.json();
 }
 
 async function markAsRead(id) {
@@ -22,14 +18,12 @@ async function markAsRead(id) {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            
         }
     });
 
     if (!res.ok) throw new Error(`Failed to mark notification as read: ${res.status}`);
     return await res.json();
 }
-
 
 function formatRelativeTime(dateStr) {
     const now = new Date();
@@ -39,7 +33,7 @@ function formatRelativeTime(dateStr) {
     const diffHr = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHr / 24);
 
-    if (isNaN(date.getTime())) return dateStr;       
+    if (isNaN(date.getTime())) return dateStr;
     if (diffMin < 1) return 'เมื่อกี้';
     if (diffMin < 60) return `${diffMin} นาทีที่ผ่านมา`;
     if (diffHr < 24) return `${diffHr} ชั่วโมงที่ผ่านมา`;
@@ -47,20 +41,22 @@ function formatRelativeTime(dateStr) {
     return date.toLocaleDateString('th-TH');
 }
 
-
-
- 
 function buildItem(n) {
-    const initials = n.user?.username
-        ? n.user.username.slice(0, 2).toUpperCase()
+    // Show the user who triggered the event (invoke the event)
+    const displayUser = n.triggerUser || n.user;
+
+    const initials = displayUser?.username
+        ? displayUser.username.slice(0, 2).toUpperCase()
         : '🔔';
 
-    const avatarContent = n.user?.profileImage
-        ? `<img src="${n.user.profileImage}" alt="${n.user.username ?? ''}">`
+    const avatarContent = displayUser?.profileImage
+        ? `<img src="${displayUser.profileImage}" alt="${displayUser.username ?? ''}">`
         : initials;
 
+    const href = n.href || '#';
+
     return `
-    <div class="noti-item ${!n.isReaded ? 'unread' : ''}" data-id="${n.id}">
+    <div class="noti-item ${!n.isReaded ? 'unread' : ''}" data-id="${n.id}" data-href="${href}">
       <div class="avatar">${avatarContent}</div>
       <div class="noti-content">
         <div class="noti-title">${n.title}</div>
@@ -75,8 +71,6 @@ function buildItem(n) {
     </div>
   `;
 }
-
-
 
 function renderLoading() {
     document.getElementById('notiList').innerHTML = `
@@ -110,7 +104,6 @@ function renderNotifications(allNotis) {
         return;
     }
 
-    
     const unread = allNotis.filter(n => !n.isReaded);
     const read = allNotis.filter(n => n.isReaded);
 
@@ -129,24 +122,29 @@ function renderNotifications(allNotis) {
 
     list.innerHTML = html;
 
-    
     list.querySelectorAll('.noti-item').forEach(el => {
         el.addEventListener('click', async e => {
             if (e.target.closest('.more-btn')) return;
-            if (!el.classList.contains('unread')) return; 
 
             const id = parseInt(el.dataset.id);
-            try {
-                await markAsRead(id);
-                el.classList.remove('unread');
-                updateBadge();
-            } catch (err) {
-                console.error('Mark as read failed:', err);
+            const href = el.dataset.href;
+
+            if (el.classList.contains('unread')) {
+                try {
+                    await markAsRead(id);
+                    el.classList.remove('unread');
+                    updateBadge();
+                } catch (err) {
+                    console.error('Mark as read failed:', err);
+                }
+            }
+
+            if (href && href !== '#') {
+                window.location.href = href;
             }
         });
     });
 }
-
 
 function updateBadge() {
     const unreadCount = document.querySelectorAll('.noti-item.unread').length;
@@ -158,6 +156,7 @@ function updateBadge() {
         badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
     }
 }
+
 async function initBadge() {
     try {
         const notis = await fetchNotifications();
@@ -171,36 +170,37 @@ async function initBadge() {
         }
     } catch (err) {
         console.warn('Could not load notification count:', err);
-        document.getElementById('badgeCount').style.display = 'none';
+        const badge = document.getElementById('badgeCount');
+        if (badge) badge.style.display = 'none';
     }
 }
-
 
 const bellBtn = document.getElementById('bellBtn');
 const notiPanel = document.getElementById('notiPanel');
 
-bellBtn.addEventListener('click', async e => {
-    e.stopPropagation();
-    const isOpen = notiPanel.classList.toggle('open');
+if (bellBtn) {
+    bellBtn.addEventListener('click', async e => {
+        e.stopPropagation();
+        const isOpen = notiPanel.classList.toggle('open');
 
-    if (isOpen) {
-        renderLoading();
-        try {
-            const notis = await fetchNotifications();
-            renderNotifications(notis);
-            updateBadge();
-        } catch (err) {
-            console.error('Failed to load notifications:', err);
-            renderError('โหลดการแจ้งเตือนไม่สำเร็จ');
+        if (isOpen) {
+            renderLoading();
+            try {
+                const notis = await fetchNotifications();
+                renderNotifications(notis);
+                updateBadge();
+            } catch (err) {
+                console.error('Failed to load notifications:', err);
+                renderError('โหลดการแจ้งเตือนไม่สำเร็จ');
+            }
         }
-    }
-});
+    });
+}
 
 document.addEventListener('click', e => {
-    if (!notiPanel.contains(e.target)) {
+    if (notiPanel && !notiPanel.contains(e.target)) {
         notiPanel.classList.remove('open');
     }
 });
-
 
 initBadge();
