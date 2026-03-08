@@ -66,15 +66,15 @@ namespace testforproject.Models
         {
             get
             {
-                var now = DateTimeOffset.Now;
+                var now = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7));
 
                 // 1. ถ้าเวลาเลยตอนจบไปแล้ว = ended
                 if (now > EventStop)
                     return "ended";
 
                 // 2. ถ้างานกำลังจัดอยู่ = ongoing
-                if (now >= EventStart && now <= EventStop)
-                    return "ongoing";
+                //if (now >= EventStart && now <= EventStop)
+                //    return "ongoing";
 
                 // 3. ถ้าระบบฐานข้อมูลถูกสั่งปิด หรือ หมดเวลา Expired ไปแล้ว หรือ คนเต็มโควต้าแล้ว = closed
                 if (status == "closed" || IsExpired || (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant))

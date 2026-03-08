@@ -1,4 +1,7 @@
 @model testforproject.Models.Event
+@{
+    var now = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7));
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,8 +24,8 @@
 
         <div class="nav-links">
             <a href="/" class="active">Home</a>
-            <a href="#">Idk</a>
-            <a href="#">My Events</a>
+            @* <a href="#">Idk</a> *@
+            <a href="@Url.Action("Index", "Profile")">My Events</a>
         </div>
 
         <div class="nav-right">
@@ -117,7 +120,7 @@
                 <div class="hero-tag @statusClass">
                     <i class="fas fa-circle" style="font-size:8px;"></i> @Model.ComputedStatus
                 </div>
-                @if (Model.ComputedStatus == "ongoing")
+                @if (now >= Model.EventStart && now <= Model.EventStop)
                 {
                     <div class="attendance-public">
                         <i class="fas fa-clipboard-check" style="color:#4ade80; font-size:13px;"></i>
@@ -191,7 +194,8 @@
                 }
                 
                 <section>
-                    @if (Model.Owner?.Uid == ViewBag.UserId && Model.ComputedStatus == "ongoing")
+                    
+                    @if (Model.Owner?.Uid == ViewBag.UserId && now >= Model.EventStart && now <= Model.EventStop)
                     {
                         <h2>Attendance</h2>
                         <div class="attendance-host">
@@ -375,7 +379,7 @@
                         </a>      
                     }
                     @* Qr Code *@
-                    @if (ViewBag.UserId == Model.Owner?.Uid && Model.ComputedStatus == "ongoing")
+                    @if (Model.Owner?.Uid == ViewBag.UserId && now >= Model.EventStart && now <= Model.EventStop)
                     {
                         <div class="qr-section">
                             <div class="qr-label">📱 Attendance QR</div>

@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260307203810_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260308104623_pan")]
+    partial class pan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,28 @@ namespace testforproject.Migrations
                     b.HasIndex("FollowingUid");
 
                     b.ToTable("UserFollows", (string)null);
+                });
+
+            modelBuilder.Entity("testforproject.Models.AttendanceRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("AttendedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttendanceRecords");
                 });
 
             modelBuilder.Entity("testforproject.Models.Category", b =>

@@ -563,21 +563,6 @@ namespace testforproject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EventUser", b =>
-                {
-                    b.HasOne("testforproject.Models.Event", null)
-                        .WithMany()
-                        .HasForeignKey("Eid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("testforproject.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("ParticitpantUid")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("UserUser", b =>
                 {
                     b.HasOne("testforproject.Models.User", null)

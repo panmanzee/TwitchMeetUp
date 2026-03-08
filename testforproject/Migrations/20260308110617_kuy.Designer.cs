@@ -9,11 +9,11 @@ using testforproject.Data;
 
 #nullable disable
 
-namespace testforproject.Data.Migrations
+namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260307182518_finish")]
-    partial class finish
+    [Migration("20260308110617_kuy")]
+    partial class kuy
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,28 @@ namespace testforproject.Data.Migrations
                     b.HasIndex("FollowingUid");
 
                     b.ToTable("UserFollows", (string)null);
+                });
+
+            modelBuilder.Entity("testforproject.Models.AttendanceRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("AttendedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttendanceRecords");
                 });
 
             modelBuilder.Entity("testforproject.Models.Category", b =>
