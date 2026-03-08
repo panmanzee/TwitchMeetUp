@@ -12,8 +12,8 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260308104623_pan")]
-    partial class pan
+    [Migration("20260308214335_newDB")]
+    partial class newDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -128,9 +128,10 @@ async function saveSettings() {
  * Server replaces Event.Participants with this list.
  */
 async function confirmChanges() {
-    // We allow zero participants to be confirmed as per user request
-
-    const payload = { userIds: selected.map(u => u.uid) };
+    const payload = {
+        confirmedUserIds: selected.map(u => u.uid),      // people in Selected column
+        participatedUserIds: participated.map(u => u.uid) // people in Participated column
+    };
 
     try {
         const res = await fetch(`/api/events/${EVENT_ID}/participants/confirm`, {

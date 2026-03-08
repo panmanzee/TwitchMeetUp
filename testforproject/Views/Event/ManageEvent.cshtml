@@ -11,7 +11,7 @@
 <body data-event-id="@Model.Eid">
 
 <div class="wrapper">
-
+    <a href="@Url.Action("Index", "Profile")"style="position: absolute; left: 30px; top: 20px; color: #9146FF; text-decoration: none; font-weight: bold;">&larr; Back to Profile</a>
   <!-- LEFT PANEL: Event Management -->
   <div class="left-panel">
     <div class="event-title-wrap">
@@ -85,7 +85,7 @@
       <!-- Participated -->
       <div class="user-box">
         <div class="user-box-header">
-          <h3>Participated</h3>
+          <h3>Applied</h3>
           <span class="count-badge blue" id="part-count">12</span>
         </div>
         <div class="user-list" id="participated-list"></div>
@@ -94,7 +94,7 @@
       <!-- Selected -->
       <div class="user-box">
         <div class="user-box-header">
-          <h3>Selected</h3>
+          <h3>Confirmed</h3>
           <span class="count-badge green" id="sel-count">0</span>
         </div>
         <div class="user-list" id="selected-list">

@@ -110,7 +110,7 @@ function renderNotifications(allNotis) {
     let html = '';
 
     if (unread.length > 0) {
-        html += `<div class="section-label">สำคัญ</div>`;
+        html += `<div class="section-label">ล่าสุด</div>`;
         unread.forEach(n => (html += buildItem(n)));
     }
 

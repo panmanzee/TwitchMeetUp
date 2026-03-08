@@ -84,7 +84,16 @@ document.querySelector("form").addEventListener("submit", function (e) {
     const stop = new Date(document.getElementById("closetime").value);
     const expired = new Date(document.getElementById("Expired-Date").value);
     const max = parseInt(document.getElementById("max").value);
+    const name = document.getElementById("name").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const description = document.getElementById("description").value.trim(); 
+    const now = new Date();
     let errors = [];
+
+    // ADD: Required field checks
+    if (!name) errors.push("Title is required.");
+    if (!location) errors.push("Location is required.");
+    if (!description) errors.push("Description is required.");
 
     // Check for missing dates so it doesn't crash
     if (isNaN(start.getTime())) errors.push("Please select an Event Start time.");
@@ -92,18 +101,15 @@ document.querySelector("form").addEventListener("submit", function (e) {
 
     // Validation rules
     if (stop <= start) errors.push("Event Stop must be later than Event Start.");
-    if (expired > start) errors.push("Expired Date must be after Event Stop.");
+    if (expired > start) errors.push("Expired Date must be before Event Start.");
     if (max < 1 || isNaN(max)) errors.push("Max Participants must be at least 1.");
+    if (start < now) errors.push("Event Start cannot be in the past.");
 
     if (errors.length > 0) {
-        e.preventDefault(); // Stops the form from sending to C#
-
+        e.preventDefault();
         const box = document.getElementById("clientErrors");
-
         box.innerHTML = errors.map(err => `<p style="margin:4px 0;">⚠️ ${err}</p>`).join('');
-        box.style.display = "block"; // Shows the hidden error box
-
-        // Scroll to the top so the user sees the error
+        box.style.display = "block";
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });

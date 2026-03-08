@@ -21,7 +21,6 @@ namespace testforproject.Controllers.API.Event
             _notiService = notiService;
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEvent(int id)
         {
@@ -45,7 +44,6 @@ namespace testforproject.Controllers.API.Event
             if (ev == null) return NotFound();
             return Ok(ev);
         }
-
 
         [HttpGet("{id}/participants")]
         public async Task<IActionResult> GetParticipants(int id)
@@ -79,7 +77,6 @@ namespace testforproject.Controllers.API.Event
             return Ok(new { isClosed, users });
         }
 
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto dto)
         {
@@ -89,7 +86,7 @@ namespace testforproject.Controllers.API.Event
             var ev = await _context.Events.FindAsync(id);
             if (ev == null) return NotFound();
 
-            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
+            if (ev.OwnerId != userId) return Forbid();
 
             if (ev.status == "closed")
                 return BadRequest(new { message = "Cannot edit a closed event." });
@@ -106,7 +103,6 @@ namespace testforproject.Controllers.API.Event
             return Ok();
         }
 
-
         [HttpPost("{id}/participants/confirm")]
         public async Task<IActionResult> ConfirmParticipants(int id, [FromBody] ConfirmParticipantsDto dto)
         {
@@ -118,25 +114,16 @@ namespace testforproject.Controllers.API.Event
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (ev == null) return NotFound();
-
-            // Remove existing confirmations for this event
-            var existing = _context.ParticipantConfirmations.Where(c => c.EventId == id);
-            _context.ParticipantConfirmations.RemoveRange(existing);
-
-            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
-
+            if (ev.OwnerId != userId) return Forbid();
             if (ev.status == "closed")
                 return BadRequest(new { message = "Cannot change participants on a closed event." });
 
-            var selectedUsers = await _context.Users
-                .Where(u => dto.UserIds.Contains(u.Uid))
-                .ToListAsync();
+            // ✅ FIX: Only update confirmations, never touch who is actually in the event
+            var existing = _context.ParticipantConfirmations.Where(c => c.EventId == id);
+            _context.ParticipantConfirmations.RemoveRange(existing);
 
-            ev.Participants.Clear();
-            foreach (var user in selectedUsers)
-                ev.Participants.Add(user);
-            // Add new confirmations
-            foreach (var uId in dto.UserIds)
+            // Add confirmed users to the confirmation table only
+            foreach (var uId in dto.ConfirmedUserIds)
             {
                 _context.ParticipantConfirmations.Add(new ParticipantConfirmation
                 {
@@ -145,10 +132,10 @@ namespace testforproject.Controllers.API.Event
                 });
             }
 
+            // ✅ FIX: DO NOT touch ev.Participants at all — everyone stays in the event
             await _context.SaveChangesAsync();
-            return Ok(new { message = $"{dto.UserIds.Count} participants confirmed." });
+            return Ok(new { message = $"{dto.ConfirmedUserIds.Count} participants confirmed." });
         }
-
 
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
@@ -161,8 +148,7 @@ namespace testforproject.Controllers.API.Event
                 .FirstOrDefaultAsync(e => e.Eid == id);
 
             if (ev == null) return NotFound();
-
-            if (ev.OwnerId != userId) return Forbid(); // Check authorization (IDOR protection)
+            if (ev.OwnerId != userId) return Forbid();
 
             ev.status = dto.Status;
             await _context.SaveChangesAsync();
@@ -197,9 +183,11 @@ namespace testforproject.Controllers.API.Event
         public int MaxParticitpant { get; set; }
     }
 
+    // ✅ FIX: Updated DTO to carry both lists
     public class ConfirmParticipantsDto
     {
-        public List<int> UserIds { get; set; } = new();
+        public List<int> ConfirmedUserIds { get; set; } = new();
+        public List<int> ParticipatedUserIds { get; set; } = new();
     }
 
     public class UpdateStatusDto

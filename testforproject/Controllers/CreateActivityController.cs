@@ -44,7 +44,10 @@ namespace testforproject.Controllers
                 return RedirectToAction("Login", "Account");
             }
             int currentUserId = int.Parse(userIdString);
-
+            if (StartTime < DateTime.Now)
+            {
+                ModelState.AddModelError("StartTime", "Event Start must not be in the past.");
+            }
             if (closetime <= StartTime)
             {
                 ModelState.AddModelError("closetime", "Event Stop must be later than Event Start.");

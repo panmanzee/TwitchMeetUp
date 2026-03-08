@@ -77,7 +77,7 @@ namespace testforproject.Models
                 //    return "ongoing";
 
                 // 3. ถ้าระบบฐานข้อมูลถูกสั่งปิด หรือ หมดเวลา Expired ไปแล้ว หรือ คนเต็มโควต้าแล้ว = closed
-                if (status == "closed" || IsExpired || (MaxParticitpant > 0 && Participants?.Count >= MaxParticitpant))
+                if (status == "closed" || IsExpired)
                     return "closed";
 
                 // 4. ถ้าไม่เข้าเงื่อนไขบนเลย = open
