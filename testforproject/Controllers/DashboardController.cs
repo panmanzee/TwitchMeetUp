@@ -87,7 +87,7 @@ namespace testforproject.Controllers
                     break;
             }
 
-            var events = query.Take(4).ToList();
+            var events = query.Take(8).ToList();
 
             ViewBag.Categories = _db.Categories.ToList();
             ViewBag.IsLoggedIn = _jwtService.UserId != null;
@@ -144,7 +144,7 @@ namespace testforproject.Controllers
             }
 
 
-            var events = query.Take(4).ToList();
+            var events = query.Take(8).ToList();
 
 
             return PartialView("_EventGridPartial", events);
@@ -210,7 +210,7 @@ namespace testforproject.Controllers
             var events = query
                             .OrderByDescending(x => x.Eid)
                             .Skip(skip)
-                            .Take(4)
+                            .Take(8)
                             .ToList();
 
             return PartialView("_EventGridPartial", events);

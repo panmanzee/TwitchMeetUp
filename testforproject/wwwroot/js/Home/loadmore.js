@@ -1,4 +1,4 @@
-﻿let currentSkip = 4;
+﻿let currentSkip = 8;
 
 async function logout() {
     await fetch('/api/AccountApi/logout', {
@@ -49,7 +49,7 @@ function loadMore() {
                 btn.disabled = false;
 
                 // ถ้าโหลดมาแล้วได้น้อยกว่า 4 แสดงว่าหมดแล้ว ให้ซ่อนปุ่ม
-                if (loadedCount < 4) {
+                if (loadedCount < 8) {
                     document.getElementById('viewMore').style.display = 'none';
                 }
             } else {
