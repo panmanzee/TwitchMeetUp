@@ -4,7 +4,7 @@
 {
     @foreach (var i in Model)
     {
-        <div class="event-card premium-card" id="event-card-@i.Eid">
+        <div class="event-card premium-card" onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'" id="event-card-@i.Eid">
 
             <div class="card-image-wrapper">
                 @if (!string.IsNullOrEmpty(i.ImageUrl))
@@ -42,7 +42,7 @@
                     <span class="icon">🎯</span> Target: <strong>@i.MaxParticitpant</strong>
                 </div>
 
-                <div class="card-actions">
+                @* <div class="card-actions">
                     @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
                     {
                         <button class="btn-ended" disabled>Ended</button>
@@ -51,7 +51,7 @@
                     {
                         <button class="btn-join" onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
                     }
-                </div>
+                </div> *@
             </div>
         </div>
     }

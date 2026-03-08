@@ -29,6 +29,11 @@ function slide(dir) {
     document.querySelector('.right-arrow').style.opacity = translateX >= maxScroll ? '0' : '1';
 }
 
+function scroll(dir) {
+    const el = document.getElementById('attendScroll');
+    el.scrollBy({ left: dir * 120, behavior: 'smooth' });
+}
+
 // For photo section
 //const mockPhotos = [
 //    "https://m.media-amazon.com/images/S/pv-target-images/fe3fd7d72c5b6a289353e46dff534db8da37702d99366bb4fb571ede0abf5387._SX1080_FMjpg_.jpg",

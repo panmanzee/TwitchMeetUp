@@ -883,7 +883,7 @@ hr {
     background: var(--purple);
     color: white;
     border: none;
-    cursor: pointer;
+        cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -893,3 +893,296 @@ hr {
 #sendChatBtn:hover {
     transform: scale(1.05);
 }
+
+
+.qr-section {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-align: center;
+}
+
+.qr-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+}
+
+.qr-img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.qr-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+}
+
+.attendance-public {
+    margin-left: 50px;
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.attendance-public-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4ade80;
+    letter-spacing: 0.3px;
+}
+
+.attendance-public-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.attendance-public-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    border-radius: 99px;
+    width: 45%;
+}
+
+/* ===== HOST ATTENDANCE ===== */
+.attendance-host {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .attendance-host::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #4ade80 40%, #22d3ee 70%, transparent 100%);
+    }
+
+.attend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 10px;
+}
+
+.attend-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.attend-header-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #4ade80;
+}
+
+.attend-header-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.attend-header-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+.attend-count-badge {
+    background: rgba(74,222,128,0.12);
+    border: 1px solid rgba(74,222,128,0.25);
+    color: #4ade80;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 99px;
+}
+
+.attend-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 18px;
+}
+
+.attend-scroll-wrap {
+    position: relative;
+    padding: 16px 0;
+}
+
+    .attend-scroll-wrap::before,
+    .attend-scroll-wrap::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .attend-scroll-wrap::before {
+        left: 0;
+        background: linear-gradient(to right, var(--bg-2), transparent);
+    }
+
+    .attend-scroll-wrap::after {
+        right: 0;
+        background: linear-gradient(to left, var(--bg-2), transparent);
+    }
+
+.attend-scroll {
+    display: flex;
+    gap: 10px;
+    padding: 0 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+    .attend-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+.attend-card {
+    flex-shrink: 0;
+    width: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    scroll-snap-align: start;
+    transition: transform 0.2s;
+    cursor: default;
+}
+
+    .attend-card:hover {
+        transform: translateY(-3px);
+    }
+
+.attend-avatar-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+}
+
+.attend-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4ade80;
+    box-shadow: 0 0 10px rgba(74,222,128,0.25);
+}
+
+.attend-check {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 18px;
+    height: 18px;
+    background: #4ade80;
+    border-radius: 50%;
+    border: 2px solid var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #000;
+    font-weight: 900;
+}
+
+.attend-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.attend-time {
+    font-size: 10px;
+    color: #4ade80;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.attend-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--text-muted);
+}
+
+    .attend-empty i {
+        font-size: 24px;
+        opacity: 0.4;
+    }
+
+    .attend-empty span {
+        font-size: 12px;
+    }
+
+.attend-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px 14px;
+}
+
+.attend-footer-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.attend-arrows {
+    display: flex;
+    gap: 5px;
+}
+
+.attend-arrow-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-3);
+    color: var(--text-dim);
+    font-size: 10px;
+    transition: all 0.15s;
+}
+
+    .attend-arrow-btn:hover {
+        background: rgba(74,222,128,0.1);
+        border-color: rgba(74,222,128,0.3);
+        color: #4ade80;
+    }

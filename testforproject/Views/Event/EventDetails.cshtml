@@ -36,8 +36,12 @@
                     <span class="username">@ViewBag.Username</span>
                     <span class="chevron">▼</span>
                     <div class="profile-dropdown">
-                        <a href="#">My Profile</a>
-                        <a href="#">My Events</a>
+                        <a href="@Url.Action("Index", "Profile")">My Profile</a>
+                        <a href="@Url.Action("Create", "CreateActivity")">Create Event</a>
+                        @if (Model.Owner?.Uid == ViewBag.UserId)
+                        {
+                            <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@Model.Eid">Manage Event</a>
+                        }
                         <div class="divider"></div>
                         <a href="#" class="logout" onclick="logout()">Logout</a>
                     </div>
@@ -113,7 +117,26 @@
                 <div class="hero-tag @statusClass">
                     <i class="fas fa-circle" style="font-size:8px;"></i> @Model.ComputedStatus
                 </div>
+                @if (Model.ComputedStatus == "ongoing")
+                {
+                    <div class="attendance-public">
+                        <i class="fas fa-clipboard-check" style="color:#4ade80; font-size:13px;"></i>
+                        <span class="attendance-public-text">@ViewBag.AttendCount people attended</span>
+                        <div class="attendance-public-bar">
+                            @{
+                                int attendCount = (int)(ViewBag.AttendCount ?? 0);
+                            }
+                            <div class="attendance-public-fill"
+                                 style="width: @(Model.MaxParticitpant > 0
+                                          ? ((double)attendCount / Model.MaxParticitpant * 100)
+                                          : 0)%">
+                            </div>
+                        </div>
+                        <span style="font-size:12px; color:var(--text-muted);">of @Model.MaxParticitpant</span>
+                    </div>   
+                }
             </div>
+
         </div>
     </div>
 
@@ -166,6 +189,81 @@
                         </div>
                     </section>
                 }
+                
+                <section>
+                    @if (Model.Owner?.Uid == ViewBag.UserId && Model.ComputedStatus == "ongoing")
+                    {
+                        <h2>Attendance</h2>
+                        <div class="attendance-host">
+                            <div class="attend-header">
+                                <div class="attend-header-left">
+                                    <div class="attend-header-icon">
+                                        <i class="fas fa-clipboard-check"></i>
+                                    </div>
+                                    <div>
+                                        <div class="attend-header-title">Who Attended</div>
+                                        <div class="attend-header-sub">Scanned during event</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <div class="attend-count-badge">@ViewBag.AttendCount attended</div>
+                                    <div class="attend-count-badge" style="background:rgba(248,113,113,0.12); border-color:rgba(248,113,113,0.25); color:#f87171;">
+                                        @(Model.Participants.Count - (int)(ViewBag.AttendCount ?? 0))
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="attend-divider"></div>
+
+                            @if (ViewBag.AttendList != null && ((List<testforproject.Models.User>)ViewBag.AttendList).Any())
+                            {
+                                <div class="attend-scroll-wrap">
+                                    <div class="attend-scroll" id="attendScroll">
+                                        @foreach (var user in (List<testforproject.Models.User>)ViewBag.AttendList)
+                                        {
+                                            <div class="attend-card">
+                                                <div class="attend-avatar-wrap">
+                                                    <img class="attend-avatar"
+                                                         src="@(!string.IsNullOrEmpty(user.ProfilePictureSrc)
+                                                                                                        ? user.ProfilePictureSrc
+                                                                                                        : "https://wallpapers.com/images/hd/anonymous-profile-icon-5xbeg73qv03oqvc5.jpg")"
+                                                         onerror="this.src='https://wallpapers.com/images/hd/anonymous-profile-icon-5xbeg73qv03oqvc5.jpg'" />
+                                                    <div class="attend-check"><i class="fas fa-check"></i></div>
+                                                </div>
+                                                <div class="attend-name">@user.Username</div>
+                                                <div class="attend-time">
+                                                    @(ViewBag.AttendTimes != null &&
+                                                        ((Dictionary<int, DateTimeOffset>)ViewBag.AttendTimes).ContainsKey(user.Uid)
+                                                        ? ((Dictionary<int, DateTimeOffset>)ViewBag.AttendTimes)[user.Uid].ToString("hh:mm tt")
+                                                        : "")
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="attend-footer">
+                                    <div class="attend-footer-hint">
+                                        <i class="fas fa-hand-pointer" style="font-size:10px;"></i>
+                                        swipe or use arrows
+                                    </div>
+                                    <div class="attend-arrows">
+                                        <button class="attend-arrow-btn" onclick="scrollAttend(-1)">◀</button>
+                                        <button class="attend-arrow-btn" onclick="scrollAttend(1)">▶</button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="attend-empty">
+                                    <i class="fas fa-user-clock"></i>
+                                    <span>No one has scanned yet</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </section>
+
 
             </div>
 
@@ -226,16 +324,16 @@
                         <div style="width: 100%;">
                             <div class="in-card-label">Participants</div>
                             <div class="in-card-value">@Model.Participants.Count / @Model.MaxParticitpant Joined</div>
-                            <div class="in-card-sub">@(Model.MaxParticitpant - Model.Participants.Count) spots remaining</div>
+                            @* <div class="in-card-sub">@(Model.MaxParticitpant - Model.Participants.Count) spots remaining</div>
                             <div class="participant-bar">
                                 <div class="participant-bar-fill"
                                      style="width: @(((double)Model.Participants.Count / Model.MaxParticitpant) * 100)%">
                                 </div>
-                            </div>
+                            </div> *@
                         </div>
                     </div>
 
-                    @if (ViewBag.IsLoggedIn == true)
+                    @if (ViewBag.IsLoggedIn == true && Model.Owner?.Uid != ViewBag.UserId)
                     {
                         if (ViewBag.IsJoined == true && Model.status == "closed")
                         {
@@ -251,25 +349,18 @@
                                 Already Joined
                             </button>
                         }
-                        else if (Model.ComputedStatus == "closed" || 
-                                    Model.Participants.Count >= Model.MaxParticitpant)
-                        {
-                            <button class="join_btn join_btn--full" disabled>
-                                Event Full
-                            </button>
-                        }
                         else if (Model.ComputedStatus == "ended")
                         {
                             <button class="join_btn join_btn--ended" disabled>
                                 Event Ended
                             </button>
                         }
-                        @* else if (Model.Owner.Uid == ViewBag.UserId)
+                        else if (Model.ComputedStatus == "closed" || Model.ComputedStatus == "ongoing")
                         {
-                            <button class="join_btn join_btn--ended" disabled>
-                                Can't Join Your Own Event'
+                            <button class="join_btn join_btn--full" disabled>
+                                Registration Closed
                             </button>
-                        } *@
+                        }
                         else
                         {
                             <button class="join_btn" onclick="joinEvent(@Model.Eid)">
@@ -277,11 +368,20 @@
                             </button>
                         }
                     }
-                    else
+                    else if (ViewBag.IsLoggedIn != true)
                     {
                         <a href="@Url.Action("Login", "Account")">
                             <button class="join_btn">Login to Join</button>
                         </a>      
+                    }
+                    @* Qr Code *@
+                    @if (ViewBag.UserId == Model.Owner?.Uid && Model.ComputedStatus == "ongoing")
+                    {
+                        <div class="qr-section">
+                            <div class="qr-label">📱 Attendance QR</div>
+                            <img src="/Event/QRCode/@Model.Eid" class="qr-img" />
+                            <div class="qr-sub">ให้ผู้เข้าร่วม scan เพื่อยืนยันการเข้าร่วม</div>
+                        </div>
                     }
                 </div>
             </div>
