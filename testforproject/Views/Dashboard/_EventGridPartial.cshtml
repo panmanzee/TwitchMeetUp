@@ -4,50 +4,57 @@
 {
     @foreach (var i in Model)
     {
-        <div class="event-card" id="event-card-@i.Eid">
+        <div class="event-card premium-card" id="event-card-@i.Eid">
 
-            <div class="image" style="padding: 0; overflow: hidden;">
+            <div class="card-image-wrapper">
                 @if (!string.IsNullOrEmpty(i.ImageUrl))
                 {
-                    <img src="@i.ImageUrl" alt="@i.Name" style="width: 100%; height: 100%; object-fit: cover;" />
+                    <img src="@i.ImageUrl" alt="@i.Name" class="card-img" />
                 }
                 else
                 {
-                    <span style="color: #adadb8;">No Image</span>
-                }
-            </div>
-            <div class="card">
-                <h4>@i.Name</h4>
-                <p>👤 Owner: @(i.Owner != null ? i.Owner.Username : "Unknown")</p>
-                <p>📍 Location: @i.Location</p>
-                <p>Max Participant: @i.MaxParticitpant</p>
-                <p>ExpiredDate: @i.ExpiredDate.ToString("dd/MM/yyyy")</p>
-                <p>Open: @i.EventStart.ToString("dd/MM/yyyy HH:mm")</p>
-                <p>Close: @i.EventStop.ToString("dd/MM/yyyy HH:mm")</p>
-                @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
-                {
-                    <p>Status: closed</p>
-                }
-                else
-                {
-                    <p>Status: @i.status</p>
+                    <div class="card-no-img">No Image</div>
                 }
 
-                <div class="card-footer">
-                    <span style="font-size: 13px;">🎯 Target: @i.MaxParticitpant</span>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
-                        {
-                            <button class="join" style="background-color: #555; cursor: not-allowed;" disabled>Ended</button>
-                        }
-                        else
-                        {
-                            <button class="join"
-                                onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
-                        }
-                    </div>
+                @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
+                {
+                    <span class="status-badge badge-closed">Closed</span>
+                }
+                else
+                {
+                    <span class="status-badge badge-open">@i.status</span>
+                }
+            </div>
+
+            <div class="card-body">
+                <h4 class="card-title" title="@i.Name">@i.Name</h4>
+
+                <div class="card-info-grid">
+                    <p title="Owner"><span class="icon">👤</span> @(i.Owner != null ? i.Owner.Username : "Unknown")</p>
+                    <p title="Location"><span class="icon">📍</span> @i.Location</p>
+                    <p title="Open"><span class="icon">🟢</span> @i.EventStart.ToString("dd/MM/yy HH:mm")</p>
+                    <p title="Close"><span class="icon">🔴</span> @i.EventStop.ToString("dd/MM/yy HH:mm")</p>
+                </div>
+            </div>
+
+            <div class="card-footer-premium">
+                <div class="target-box">
+                    <span class="icon">🎯</span> Target: <strong>@i.MaxParticitpant</strong>
+                </div>
+
+                <div class="card-actions">
+                    @if (i.IsExpired || i.EventStop < DateTime.Now || i.status == "closed")
+                    {
+                        <button class="btn-ended" disabled>Ended</button>
+                    }
+                    else
+                    {
+                        <button class="btn-join" onclick="window.location.href='@Url.Action("EventDetails", "Event", new { id = i.Eid })'">Join</button>
+                    }
                 </div>
             </div>
         </div>
     }
 }
+
+

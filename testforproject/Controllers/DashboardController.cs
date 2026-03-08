@@ -113,12 +113,22 @@ namespace testforproject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                query = query.Where(e =>
-                    e.Name.Contains(searchQuery) ||
-                    e.Categories.Any(c => c.Name.Contains(searchQuery))
-                );
+                if (searchQuery.StartsWith("@"))
+                {
+                    
+                    var ownerName = searchQuery.Substring(1);
+                    query = query.Where(e => e.Owner != null && e.Owner.Username.Contains(ownerName));
+                }
+                else
+                {
+                    
+                    query = query.Where(e =>
+                        e.Name.Contains(searchQuery) ||
+                        e.Categories.Any(c => c.Name.Contains(searchQuery)) ||
+                        (e.Owner != null && e.Owner.Username.Contains(searchQuery))
+                    );
+                }
             }
-
 
             switch (sortorder)
             {
@@ -141,6 +151,41 @@ namespace testforproject.Controllers
         }
 
         [HttpGet]
+        public IActionResult Suggestions(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Json(new List<string>());
+            }
+
+            List<string> suggestions = new List<string>();
+
+            if (query.StartsWith("@"))
+            {
+               
+                var ownerQuery = query.Substring(1);
+                suggestions = _db.Events
+                                 .Include(e => e.Owner)
+                                 .Where(e => e.status == "open" && e.Owner != null && e.Owner.Username.Contains(ownerQuery))
+                                 .Select(e => "@" + e.Owner.Username) 
+                                 .Distinct()
+                                 .Take(8)
+                                 .ToList();
+            }
+            else
+            {
+                
+                suggestions = _db.Events
+                                 .Where(e => e.status == "open" && e.Name.Contains(query))
+                                 .Select(e => e.Name)
+                                 .Distinct()
+                                 .Take(8)
+                                 .ToList();
+            }
+
+            return Json(suggestions);
+        }
+        [HttpGet]
         public IActionResult LoadMoreEvents(int skip, string searchQuery, string categoryFilter)
         {
             var query = _db.Events
@@ -159,6 +204,7 @@ namespace testforproject.Controllers
                 query = query.Where(e =>
                     e.Name.Contains(searchQuery) ||
                     e.Categories.Any(c => c.Name.Contains(searchQuery))
+
                 );
             }
             var events = query
