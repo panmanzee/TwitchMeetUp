@@ -71,7 +71,7 @@ function renderPhotos() {
 
 // For remain time to Close Register
 function updateRemainTime() {
-    const closeTime = new Date('2027-02-23T22:00:00');
+    const closeTime = new Date(expiredDateStr);
     const now = new Date();
     const diff = closeTime - now;
 

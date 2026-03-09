@@ -36,12 +36,13 @@ public class AccountController : Controller
         return View();
     }
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string returnUrl = null)
     {
         if (_jwtService.UserId != null)
         {
             return RedirectToAction("Show", "Dashboard");
         }
+        ViewBag.ReturnUrl = returnUrl;
         return View();
     }
 

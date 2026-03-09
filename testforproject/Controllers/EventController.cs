@@ -91,15 +91,16 @@ namespace testforproject.Controllers
 
         public async Task<IActionResult> QRCode(int id)
         {
-            // ดึง event จาก DB แบบ async
             var ev = await _db.Events.FindAsync(id);
             if (ev == null) return NotFound();
 
-            // สร้าง URL ที่จะ encode ใน QR
-            var scanUrl = Url.Action("ScanAttend", "Event",
-                new { eventId = id }, Request.Scheme);
+            //var debugUrl = $"{Request.Scheme}://{Request.Host}";
+            //return Content(debugUrl);
 
-            // Generate QR (QRCoder ไม่มี async แต่เป็น CPU task เบามากครับ)
+            //make URL
+            var scanUrl = $"https://panmanzeeweb-hvhqg6fzcufmbnhx.japaneast-01.azurewebsites.net/Event/ScanAttend?eventId={id}";
+
+            //Generate QR
             var qrBytes = await Task.Run(() =>
             {
                 using var qrGenerator = new QRCodeGenerator();
@@ -122,20 +123,40 @@ namespace testforproject.Controllers
                 .FirstOrDefaultAsync(e => e.Eid == eventId);
 
             if (ev == null) return NotFound();
-            if (ev.ComputedStatus != "ongoing")
-                return BadRequest("Event is not ongoing");
+            //if (ev.ComputedStatus != "ongoing")
+            //    return BadRequest("Event is not ongoing");
+
+            if (userId == null)
+            {
+                var returnUrl = Uri.EscapeDataString(
+                    Url.Action("ScanAttend", "Event", new { eventId }) ?? "/"
+                );
+                return Redirect($"/Account/Login?returnUrl={returnUrl}");
+            }
 
             var isParticipant = ev.Participants.Any(u => u.Uid == userId);
             if (!isParticipant)
                 return BadRequest("You are not a participant");
 
-            // เช็คว่า scan ไปแล้วหรือยัง
+            //Check Scan
             var alreadyScanned = await _db.AttendanceRecords
                 .AnyAsync(a => a.EventId == eventId && a.UserId == userId);
             if (alreadyScanned)
-                return View("AlreadyAttended");
+                return Content(@"
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta name='viewport' content='width=device-width, initial-scale=1'>
+                        <meta http-equiv='refresh' content='3;url=/Dashboard/Show' />
+                    </head>
+                    <body style='background:#08080a; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:sans-serif; margin:0;'>
+                        <div style='background:#111114; border:1px solid #2a2a30; border-radius:20px; padding:40px; text-align:center;'>
+                            <div style='color:#4ade80; font-size:20px; font-weight:700; margin-top:12px;'>Already Attendancediv>
+                            <div style='color:#8b8a96; font-size:14px; margin-top:8px;'>Redirecting to dashboard in 3 seconds...</div>
+                        </div>
+                    </body>
+                    </html>", "text/html");
 
-            // บันทึก
             _db.AttendanceRecords.Add(new AttendanceRecord
             {
                 EventId = eventId,
@@ -143,7 +164,20 @@ namespace testforproject.Controllers
             });
             await _db.SaveChangesAsync();
 
-            return View("AttendSuccess");
+            return Content(@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta name='viewport' content='width=device-width, initial-scale=1'>
+                    <meta http-equiv='refresh' content='3;url=/Dashboard/Show' />
+                </head>
+                <body style='background:#08080a; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:sans-serif; margin:0;'>
+                    <div style='background:#111114; border:1px solid #2a2a30; border-radius:20px; padding:40px; text-align:center;'>
+                        <div style='color:#4ade80; font-size:20px; font-weight:700; margin-top:12px;'>Attendance Confirmed!</div>
+                        <div style='color:#8b8a96; font-size:14px; margin-top:8px;'>Redirecting to dashboard in 3 seconds...</div>
+                    </div>
+                </body>
+                </html>", "text/html");
         }
         
         

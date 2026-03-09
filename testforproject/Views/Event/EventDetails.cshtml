@@ -398,6 +398,7 @@
                         new[] { Model.ImageUrl }.Where(x => !string.IsNullOrEmpty(x))
                 ));
         const eventLocation = "@Model.Location";
+        const expiredDateStr = "@Model.ExpiredDate.ToString("o")";
     </script>
     <script src="~/js/Event/EventDetails.js"></script>
 
@@ -405,6 +406,7 @@
     {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
+
         document.addEventListener('DOMContentLoaded', () => {
             const eventId = @Model.Eid;
             const chatMessagesContent = document.getElementById('chatMessages');

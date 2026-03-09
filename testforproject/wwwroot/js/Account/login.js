@@ -39,7 +39,10 @@ async function login() {
             return;
         }
 
-        window.location.href = "/Dashboard/Show";
+        const params = new URLSearchParams(window.location.search);
+        const returnUrl = params.get('returnUrl');
+        window.location.href = returnUrl ?? "/Dashboard/Show";
+
     } catch (error) {
         errorMessage.innerText = "An unexpected error occured";
         console.error("Login error:", error);
@@ -59,7 +62,9 @@ async function handleGoogleLogin(response) {
 
     const data = await res.json();
     if (res.ok) {
-        window.location.href = '/';
+        const params = new URLSearchParams(window.location.search);
+        const returnUrl = params.get('returnUrl');
+        window.location.href = returnUrl ?? '/';
     } else {
         console.error(data.message);
     }
