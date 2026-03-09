@@ -63,11 +63,6 @@ function buildItem(n) {
         <div class="noti-description">${n.description}</div>
         <div class="noti-time">${formatRelativeTime(n.date)}</div>
       </div>
-      <button class="more-btn" title="More options">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-        </svg>
-      </button>
     </div>
   `;
 }

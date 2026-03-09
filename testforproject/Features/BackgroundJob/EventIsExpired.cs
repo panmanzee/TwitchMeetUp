@@ -45,6 +45,7 @@ public class EventIsExpired : BackgroundService
         var notiService = scope.ServiceProvider.GetRequiredService<testforproject.Features.Notification.INotification>();
 
         var now = DateTimeOffset.UtcNow;
+        var nowThai = DateTime.UtcNow.AddHours(7);
 
         // 1. Check Expired Events
         var expiredEvents = await db.Events
@@ -107,8 +108,8 @@ public class EventIsExpired : BackgroundService
                 {
                     var notiTitle = "You are confirmed!";
                     var notiDesc = $"Great news! You've been confirmed for the event '{ev.Name}'.";
-                    var notiDate = now.ToString("dd MMM yyyy HH:mm");
-                    var notiHref = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#";
+                    var notiDate = nowThai.ToString("dd MMM yyyy HH:mm");
+                    var notiHref = $"/Event/EventDetails/{ev.Eid}#";
                     await notiService.CreateNotification(notiTitle, notiDesc, notiDate, allConfirmedUsers, notiHref, null);
                 }
             }
@@ -117,17 +118,17 @@ public class EventIsExpired : BackgroundService
             {
                 var title = "Event Registration Closed";
                 var desc = $"The registration for '{ev.Name}' has expired. {existingConfirmedIds.Count} were manual, and {newlyConfirmed.Count} were auto-confirmed.";
-                var date = now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#";
+                var date = nowThai.ToString("dd MMM yyyy HH:mm");
+                var href = $"/Event/EventDetails/{ev.Eid}#";
                 await notiService.CreateNotification(title, desc, date, new List<User> { ev.Owner }, href, null);
             }
         }
 
         // 2. Check Started Events
-        var minuteAgo = now.AddMinutes(-1.5);
+        var minuteAgo = nowThai.AddMinutes(-1.5);
         var startedEvents = await db.Events
             .Include(e => e.Participants)
-            .Where(e => e.EventStart <= now && e.EventStart > minuteAgo && e.status == "open")
+            .Where(e => e.EventStart <= nowThai && e.EventStart > minuteAgo && e.status == "open")
             .ToListAsync();
 
         foreach (var ev in startedEvents)
@@ -136,8 +137,8 @@ public class EventIsExpired : BackgroundService
             {
                 var title = "Event Started!";
                 var desc = $"The event '{ev.Name}' you joined has just started.";
-                var date = now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#";
+                var date = nowThai.ToString("dd MMM yyyy HH:mm");
+                var href = $"/Event/EventDetails/{ev.Eid}#";
                 await notiService.CreateNotification(title, desc, date, ev.Participants.ToList(), href, ev.OwnerId);
             }
         }
@@ -145,7 +146,7 @@ public class EventIsExpired : BackgroundService
         // 3. Check Ended Events
         var endedEvents = await db.Events
              .Include(e => e.Participants)
-             .Where(e => e.EventStop <= now && e.EventStop > minuteAgo && e.status == "open")
+             .Where(e => e.EventStop <= nowThai && e.EventStop > minuteAgo && e.status == "open")
              .ToListAsync();
 
         foreach (var ev in endedEvents)
@@ -155,8 +156,8 @@ public class EventIsExpired : BackgroundService
             {
                 var title = "Event Ended. Please Score!";
                 var desc = $"The event '{ev.Name}' has concluded. Please leave a score and review.";
-                var date = now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#score";
+                var date = nowThai.ToString("dd MMM yyyy HH:mm");
+                var href = $"/Event/EventDetails/{ev.Eid}#score";
                 await notiService.CreateNotification(title, desc, date, ev.Participants.ToList(), href, ev.OwnerId);
             }
         }

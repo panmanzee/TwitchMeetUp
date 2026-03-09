@@ -44,7 +44,7 @@ namespace testforproject.Controllers
                 return RedirectToAction("Login", "Account");
             }
             int currentUserId = int.Parse(userIdString);
-            if (StartTime < DateTime.Now)
+            if (StartTime < DateTime.UtcNow.AddHours(7))
             {
                 ModelState.AddModelError("StartTime", "Event Start must not be in the past.");
             }
@@ -112,8 +112,8 @@ namespace testforproject.Controllers
                 Location = Location,
                 MaxParticitpant = MaxParticitpant,
                 OwnerId = currentUserId,
-                ExpiredDate = Expired_Date,
-                EventStart = StartTime == default ? DateTime.Now : StartTime,
+                ExpiredDate = new DateTimeOffset(Expired_Date, TimeSpan.FromHours(7)),
+                EventStart = StartTime == default ? DateTime.UtcNow.AddHours(7) : StartTime,
                 EventStop = closetime,
                 status = "open",
                 Description = Decription ?? "",
@@ -146,8 +146,8 @@ namespace testforproject.Controllers
             {
                 var title = $"{currentUserWithFollowers.DisplayName} created a new event!";
                 var desc = $"Check out \"{newEvent.Name}\" happening at {newEvent.Location}.";
-                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Event/EventDetails/{newEvent.Eid}#";
+                var date = DateTime.UtcNow.AddHours(7).ToString("dd MMM yyyy HH:mm");
+                var href = $"Event/EventDetails/{newEvent.Eid}#";
 
                 await _notiService.CreateNotification(title, desc, date, currentUserWithFollowers.Follower.ToList(), href, currentUserId);
             }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace testforproject.Migrations
 {
     /// <inheritdoc />
-    public partial class newDB : Migration
+    public partial class pan : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

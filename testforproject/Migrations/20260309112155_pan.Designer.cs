@@ -12,7 +12,7 @@ using testforproject.Data;
 namespace testforproject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260309092244_pan")]
+    [Migration("20260309112155_pan")]
     partial class pan
     {
         /// <inheritdoc />

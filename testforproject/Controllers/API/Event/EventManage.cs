@@ -160,8 +160,8 @@ namespace testforproject.Controllers.API.Event
                 {
                     var title = "You are confirmed!";
                     var desc = $"Great news! The event '{ev.Name}' is now finalized and you are confirmed as a participant.";
-                    var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
-                    var href = $"http://localhost:5189/Event/EventDetails/{ev.Eid}#";
+                    var date = DateTime.UtcNow.AddHours(7).ToString("dd MMM yyyy HH:mm");
+                    var href = $"/Event/EventDetails/{ev.Eid}#";
 
                     await _notiService.CreateNotification(title, desc, date, participants, href, ev.OwnerId);
                 }

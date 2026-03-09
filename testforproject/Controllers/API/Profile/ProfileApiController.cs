@@ -21,6 +21,7 @@ namespace testforproject.Controllers.API.Profile
             _db = db;
             _notiService = notiService;
         }
+
         [HttpPost("Edit")]
         public IActionResult Edit([FromBody] User data)
         {
@@ -28,15 +29,14 @@ namespace testforproject.Controllers.API.Profile
             if (userId == null)
             {
                 return RedirectToAction("Login");
-
             }
+
             var user = _db.Users.FirstOrDefault(u => u.Uid == int.Parse(userId));
             if (user == null) return NotFound();
 
             user.DisplayName = data.DisplayName;
             user.Bio = data.Bio;
 
-            // Only allow setting Age and Gender if they are currently null
             if (user.Age == null)
             {
                 user.Age = data.Age;
@@ -50,6 +50,7 @@ namespace testforproject.Controllers.API.Profile
 
             return Ok(new { message = "email" });
         }
+
         [HttpPost("Follow")]
         public IActionResult Follow([FromBody] FollowRequest req)
         {
@@ -66,25 +67,29 @@ namespace testforproject.Controllers.API.Profile
             if (currentUser == null || targetUser == null)
                 return NotFound();
 
+            bool justFollowed = false;
+
             if (!currentUser.Following.Contains(targetUser))
             {
                 currentUser.Following.Add(targetUser);
                 _db.SaveChanges();
+                justFollowed = true;
+            }
 
-                // Notify target user
+            // Query follower count BEFORE calling notiService
+            var followerCount = _db.Users
+                .Where(u => u.Uid == targetUser.Uid)
+                .Select(u => u.Follower.Count)
+                .FirstOrDefault();
+
+            if (justFollowed)
+            {
                 var title = "New Follower!";
                 var desc = $"{currentUser.DisplayName ?? currentUser.Username} is now following you.";
                 var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
-                // Href to the follower's profile
-                var href = $"http://localhost:5189/Profile/Index/{currentUser.Uid}#";
-
+                var href = $"/User/{currentUser.Username}";
                 _notiService.CreateNotification(title, desc, date, new List<User> { targetUser }, href, currentUser.Uid);
             }
-
-            var followerCount = _db.Users
-                .Include(u => u.Follower)
-                .First(u => u.Uid == targetUser.Uid)
-                .Follower.Count;
 
             return Ok(new
             {
@@ -116,10 +121,13 @@ namespace testforproject.Controllers.API.Profile
                 _db.SaveChanges();
             }
 
+            // Detach targetUser to avoid tracking conflict on re-query
+            _db.Entry(targetUser).State = EntityState.Detached;
+
             var followerCount = _db.Users
-                .Include(u => u.Follower)
-                .First(u => u.Uid == targetUser.Uid)
-                .Follower.Count;
+                .Where(u => u.Uid == req.TargetUserId)
+                .Select(u => u.Follower.Count)
+                .FirstOrDefault();
 
             return Ok(new
             {
@@ -129,23 +137,9 @@ namespace testforproject.Controllers.API.Profile
             });
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         public class FollowRequest
         {
             public int TargetUserId { get; set; }
         }
-
     }
 }

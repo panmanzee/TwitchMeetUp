@@ -58,7 +58,7 @@ namespace testforproject.Controllers
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
-                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.UtcNow.AddHours(7))
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
@@ -103,7 +103,7 @@ namespace testforproject.Controllers
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
-                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.UtcNow.AddHours(7))
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
@@ -191,7 +191,7 @@ namespace testforproject.Controllers
             var query = _db.Events
                            .Include(e => e.Owner)
                            .Include(e => e.Categories)
-                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.Now)
+                           .Where(e => e.status == "open" && e.ExpiredDate >= DateTimeOffset.UtcNow && e.EventStop >= DateTime.UtcNow.AddHours(7))
                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))

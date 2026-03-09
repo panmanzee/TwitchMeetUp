@@ -46,7 +46,7 @@ namespace testforproject.Controllers.API.Account
             if (eventItem.status == "closed")
                 return BadRequest(new { message = "Event is closed" });
 
-            if (eventItem.IsExpired || eventItem.EventStop < DateTime.Now || eventItem.status == "closed")
+            if (eventItem.IsExpired || eventItem.EventStop < DateTime.UtcNow.AddHours(7) || eventItem.status == "closed")
             {
                 return BadRequest(new { message = "Registration for this event is closed or the event has already ended." });
             }
@@ -59,7 +59,7 @@ namespace testforproject.Controllers.API.Account
             {
                 Eid = eventItem.Eid,
                 ParticitpantUid = user.Uid,
-                JoinedAt = DateTime.Now
+                JoinedAt = DateTime.UtcNow.AddHours(7)
             });
 
             await _db.SaveChangesAsync();
@@ -69,8 +69,8 @@ namespace testforproject.Controllers.API.Account
             {
                 var title = "Someone joined your event!";
                 var desc = $"{user.DisplayName ?? user.Username} has joined \"{eventItem.Name}\".";
-                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Profile/ManageEvent/{eventItem.Eid}#";
+                var date = DateTime.UtcNow.AddHours(7).ToString("dd MMM yyyy HH:mm");
+                var href = $"/event/ManageEvent/{eventItem.Eid}#";
 
                 await _notiService.CreateNotification(title, desc, date, new List<User> { eventItem.Owner }, href, user.Uid);
             }
@@ -93,7 +93,7 @@ namespace testforproject.Controllers.API.Account
             if (eventItem == null)
                 return NotFound(new { message = "Event not found" });
 
-            if (eventItem.EventStop < DateTime.Now || eventItem.status == "closed")
+            if (eventItem.EventStop < DateTime.UtcNow.AddHours(7) || eventItem.status == "closed")
             {
                 return BadRequest(new { message = "Cannot unjoin an event that is closed or has already ended." });
             }
@@ -114,8 +114,8 @@ namespace testforproject.Controllers.API.Account
             {
                 var title = "Someone left your event";
                 var desc = $"{user.DisplayName ?? user.Username} has unjoined \"{eventWithOwner.Name}\".";
-                var date = DateTime.Now.ToString("dd MMM yyyy HH:mm");
-                var href = $"http://localhost:5189/Profile/ManageEvent/{eventWithOwner.Eid}#";
+                var date = DateTime.UtcNow.AddHours(7).ToString("dd MMM yyyy HH:mm");
+                var href = $"/event/ManageEvent/{eventWithOwner.Eid}#";
 
                 await _notiService.CreateNotification(title, desc, date, new List<User> { eventWithOwner.Owner }, href, user.Uid);
             }

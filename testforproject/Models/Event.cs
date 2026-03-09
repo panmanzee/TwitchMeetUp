@@ -66,7 +66,7 @@ namespace testforproject.Models
         {
             get
             {
-                var now = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7));
+                var now = DateTime.UtcNow.AddHours(7);
 
                 // 1. ถ้าเวลาเลยตอนจบไปแล้ว = ended
                 if (now > EventStop)

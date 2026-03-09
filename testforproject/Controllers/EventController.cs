@@ -49,11 +49,13 @@ namespace testforproject.Controllers
 
 
             var userId = _jwtService.UserId;
+            var user = _db.Users.Find(userId);
             ViewBag.IsLoggedIn = userId != null;
             ViewBag.UserId = userId;
             ViewBag.IsJoined = userId != null &&
                                eventDetail.Participants.Any(u => u.Uid == userId);
             ViewBag.UserId = userId;
+            ViewBag.ProfilePic = user?.ProfilePictureSrc;
 
             //attnedance part
             var attendRecords = await _db.AttendanceRecords
@@ -87,6 +89,15 @@ namespace testforproject.Controllers
                 return NotFound();
             }
             return View(ev);
+        }
+
+        public IActionResult ServerTime()
+        {
+            return Content($@"
+                Server UTC: {DateTime.UtcNow}
+                Server Local: {DateTime.Now}
+                DateTimeOffset Now: {DateTimeOffset.Now}
+                ");
         }
 
         public async Task<IActionResult> QRCode(int id)
