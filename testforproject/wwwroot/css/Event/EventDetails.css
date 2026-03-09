@@ -1186,3 +1186,309 @@ hr {
         border-color: rgba(74,222,128,0.3);
         color: #4ade80;
     }
+
+/* ========== HAMBURGER (mobile nav) ========== */
+.nav-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+    line-height: 1;
+    transition: background 0.2s;
+}
+
+.nav-hamburger:hover {
+    background: var(--bg-3);
+}
+
+/* Mobile nav open state */
+.navbar.nav-open .nav-links {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: rgba(8,8,10,0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px 16px;
+    gap: 2px;
+    z-index: 98;
+}
+
+.navbar.nav-open .nav-links a {
+    padding: 10px 14px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Large desktop adjustment */
+@media (max-width: 1200px) {
+    .Container {
+        padding: 36px 28px;
+    }
+    .devider {
+        grid-template-columns: 1fr 360px;
+        gap: 48px;
+    }
+    .hero-content {
+        padding: 0 28px 44px;
+    }
+    .hero-title {
+        font-size: 48px;
+    }
+}
+
+/* Laptop / Tablet landscape */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 0 24px;
+    }
+    .devider {
+        grid-template-columns: 1fr 300px;
+        gap: 32px;
+    }
+    .hero-title {
+        font-size: 40px;
+    }
+    .Container {
+        padding: 30px 24px;
+    }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px) {
+    /* --- Navbar --- */
+    .navbar {
+        padding: 0 16px;
+        height: 56px;
+        position: relative; /* needed for mobile dropdown */
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* --- Hero --- */
+    .event-hero {
+        height: 300px;
+    }
+
+    .hero-content {
+        padding: 0 16px 28px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+        letter-spacing: -1px;
+        margin-bottom: 14px;
+    }
+
+    .hero-meta {
+        gap: 8px;
+    }
+
+    .hero-tag {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    .attendance-public {
+        margin-left: 0;
+        flex-wrap: wrap;
+    }
+
+    /* --- Main layout: single column --- */
+    .Container {
+        padding: 24px 16px;
+    }
+
+    .devider {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Reserve card + image block moves above details on mobile */
+    .right-part {
+        order: -1;
+        margin-bottom: 32px;
+    }
+
+    .reserve-card {
+        position: static;
+    }
+
+    /* --- Chat --- */
+    .chat-container {
+        height: 300px;
+    }
+
+    /* --- Toast --- */
+    .toast {
+        bottom: 16px;
+        right: 12px;
+        left: 12px;
+        min-width: unset;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    /* --- Navbar --- */
+    .navbar {
+        padding: 0 12px;
+        height: 52px;
+    }
+
+    .navbar.nav-open .nav-links {
+        top: 52px;
+    }
+
+    .nav-logo {
+        font-size: 17px;
+        gap: 8px;
+    }
+
+    .nav-logo .logo-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+
+    .nav-profile .username {
+        display: none;
+    }
+
+    .btn-login,
+    .btn-register {
+        padding: 7px 12px;
+        font-size: 13px;
+    }
+
+    /* --- Hero --- */
+    .event-hero {
+        height: 240px;
+    }
+
+    .hero-content {
+        padding: 0 12px 20px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+    }
+
+    .hero-categories {
+        margin-bottom: 8px;
+    }
+
+    .hero-cat-tag {
+        font-size: 10px;
+        padding: 3px 10px;
+    }
+
+    .hero-host img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .hero-host-info {
+        font-size: 12px;
+    }
+
+    /* --- Main layout --- */
+    .Container {
+        padding: 18px 12px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    /* --- Carousel --- */
+    .carousel-track img {
+        width: 150px;
+        height: 110px;
+    }
+
+    /* --- Map --- */
+    #map {
+        height: 220px !important;
+    }
+
+    /* --- Chat --- */
+    .chat-container {
+        height: 280px;
+    }
+
+    /* --- Reserve card --- */
+    .reserve-card {
+        padding: 16px;
+    }
+
+    .in-card {
+        gap: 12px;
+        padding: 12px 0;
+    }
+
+    .in-card-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 14px;
+    }
+
+    .in-card-value {
+        font-size: 13px;
+    }
+
+    .join_btn {
+        font-size: 15px;
+        padding: 13px;
+    }
+
+    /* --- QR --- */
+    .qr-img {
+        max-width: 180px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+    .event-hero {
+        height: 200px;
+    }
+
+    .hero-title {
+        font-size: 20px;
+    }
+
+    .hero-tag {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .Container {
+        padding: 16px 10px;
+    }
+
+    .in-card-label {
+        font-size: 10px;
+    }
+}

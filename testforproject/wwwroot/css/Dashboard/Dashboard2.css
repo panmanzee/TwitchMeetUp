@@ -1027,6 +1027,10 @@ body {
 /* 📱 RESPONSIVE                                      */
 /* =================================================== */
 
+/* =================================================== */
+/* 📱 RESPONSIVE                                      */
+/* =================================================== */
+
 @media (max-width: 1200px) {
     .search {
         margin: 0 16px;
@@ -1040,30 +1044,41 @@ body {
 
 @media (max-width: 992px) {
     .option {
-        flex: 0 0 calc((100% / 2) - 10px);
+        flex: 0 0 calc(50% - 10px);
     }
 
     .navigaor {
         font-size: 14px;
     }
+
+    .activity {
+        width: 180px;
+        height: 180px;
+    }
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 10px 14px;
+    }
+
     .head {
         flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
+        gap: 10px;
+        align-items: stretch;
     }
 
     .search {
         margin: 0;
         width: 100%;
         justify-content: flex-start;
+        gap: 8px;
     }
 
     .search-container-bar {
         width: 100%;
         flex: 1;
+        max-width: none;
     }
 
         .search-container-bar input {
@@ -1075,7 +1090,7 @@ body {
 
     .auth-buttons {
         width: 100%;
-        justify-content: flex-start;
+        justify-content: flex-end;
         gap: 8px;
     }
 
@@ -1084,21 +1099,55 @@ body {
         }
 
     .activity {
-        width: 180px;
-        height: 180px;
+        width: 160px;
+        height: 160px;
     }
 
     .option {
-        height: 200px;
+        height: 190px;
     }
 
     .event-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 12px;
+    }
+
+    .navi {
+        justify-content: flex-start;
+        padding-left: 4px;
+    }
+}
+
+@media (max-width: 576px) {
+    .option {
+        flex: 0 0 calc(50% - 8px);
+        height: 180px;
+    }
+
+    .event-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+    }
+
+    .activity {
+        width: 150px;
+        height: 150px;
+    }
+
+    .scroll-container {
+        gap: 10px;
     }
 }
 
 @media (max-width: 480px) {
+    .container {
+        padding: 8px 10px;
+    }
+
+    .head {
+        gap: 8px;
+    }
+
     .option {
         flex: 0 0 75%;
         height: 180px;
@@ -1107,11 +1156,11 @@ body {
     .cat-img {
         width: 60px;
         height: 60px;
-    }.complete-items
+    }
 
     .activity {
-        width: 180px;
-        height: 180px;
+        width: 140px;
+        height: 140px;
     }
 
     .navigaor {
@@ -1123,11 +1172,47 @@ body {
     }
 
     .image {
-        height: 120px;
+        height: 110px;
     }
 
     .event-grid {
         grid-template-columns: 1fr 1fr;
         gap: 10px;
+    }
+
+    .auth-buttons {
+        justify-content: flex-start;
+    }
+
+    .sort-dropdown {
+        min-width: 160px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+    .container {
+        padding: 8px;
+    }
+
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .option {
+        flex: 0 0 80%;
+    }
+
+    .activity {
+        width: 130px;
+        height: 130px;
+    }
+
+    .search-container-bar {
+        max-width: none;
+    }
+
+    .card-info-grid {
+        grid-template-columns: 1fr;
     }
 }

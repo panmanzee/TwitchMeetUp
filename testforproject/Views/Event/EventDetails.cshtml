@@ -29,6 +29,7 @@
         </div>
 
         <div class="nav-right">
+            <button class="nav-hamburger" id="navHamburger" aria-label="Menu">&#9776;</button>
             @if (ViewBag.IsLoggedIn == true)
             {
                 <div class="nav-profile">
@@ -401,6 +402,22 @@
         const expiredDateStr = "@Model.ExpiredDate.ToString("o")";
     </script>
     <script src="~/js/Event/EventDetails.js"></script>
+    <script>
+        // Mobile nav hamburger toggle
+        (function () {
+            var btn = document.getElementById('navHamburger');
+            var nav = document.querySelector('.navbar');
+            if (btn && nav) {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    nav.classList.toggle('nav-open');
+                });
+                document.addEventListener('click', function () {
+                    nav.classList.remove('nav-open');
+                });
+            }
+        })();
+    </script>
 
     @if (ViewBag.IsJoined == true || (ViewBag.IsLoggedIn == true && Model.OwnerId == ViewBag.UserId))
     {
