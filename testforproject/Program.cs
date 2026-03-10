@@ -115,9 +115,9 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Show}/{id?}")
-    .WithStaticAssets();
-
+    //pattern: "{controller=Dashboard}/{action=Show}/{id?}")
+    //.WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

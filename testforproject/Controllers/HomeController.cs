@@ -24,7 +24,10 @@ namespace testforproject.Controllers
         // Handle Root / Default Route
         public IActionResult Index()
         {
-            return RedirectToAction("Show", "Dashboard");
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Show", "Dashboard");
+
+            return View();
         }
 
         public IActionResult Dashboard()
