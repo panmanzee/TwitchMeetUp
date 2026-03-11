@@ -137,10 +137,13 @@
                                             <div class="event-card-location">📍 @ev.Location</div>
                                         </div>
                                     </a>
-                                    <div class="event-card-footer">
-                                        <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@ev.Eid"
-                                            class="event-edit-btn">Edit</a>
-                                    </div>
+                                    @if (Model.Username == ViewBag.user)
+                                    {
+                                        <div class="event-card-footer">
+                                            <a asp-controller="Event" asp-action="ManageEvent" asp-route-id="@ev.Eid"
+                                                class="event-edit-btn">Edit</a>
+                                        </div>
+                                    }
                                 </div>
                             }
                         }
