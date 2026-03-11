@@ -178,6 +178,10 @@ if (bellBtn) {
         e.stopPropagation();
         const isOpen = notiPanel.classList.toggle('open');
 
+        // Close profile dropdown if open
+        const profileDropdown = document.getElementById('profileDropdown');
+        if (profileDropdown) profileDropdown.style.display = 'none';
+
         if (isOpen) {
             renderLoading();
             try {
@@ -195,6 +199,11 @@ if (bellBtn) {
 document.addEventListener('click', e => {
     if (notiPanel && !notiPanel.contains(e.target)) {
         notiPanel.classList.remove('open');
+    }
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileBtn = document.getElementById('profileDropdownBtn');
+    if (profileDropdown && profileBtn && !profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+        profileDropdown.style.display = 'none';
     }
 });
 

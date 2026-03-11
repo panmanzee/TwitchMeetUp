@@ -1062,22 +1062,33 @@ body {
         padding: 10px 14px;
     }
 
+    #profileDropdown {
+        width: 210px !important;
+    }
+
+    #profileDropdown a {
+        padding: 10px 16px !important;
+        font-size: 13px;
+    }
+
     .head {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
     }
 
     .search {
         margin: 0;
-        width: 100%;
+        flex: 1;
+        min-width: 0;
         justify-content: flex-start;
         gap: 8px;
     }
 
     .search-container-bar {
-        width: 100%;
         flex: 1;
+        min-width: 0;
         max-width: none;
     }
 
@@ -1089,7 +1100,7 @@ body {
         }
 
     .auth-buttons {
-        width: 100%;
+        flex-shrink: 0;
         justify-content: flex-end;
         gap: 8px;
     }
@@ -1145,7 +1156,17 @@ body {
     }
 
     .head {
-        gap: 8px;
+        gap: 6px;
+    }
+
+    #profileDropdown {
+        width: 190px !important;
+        font-size: 13px;
+    }
+
+    #profileDropdown a {
+        padding: 10px 14px !important;
+        font-size: 13px;
     }
 
     .option {
@@ -1181,7 +1202,8 @@ body {
     }
 
     .auth-buttons {
-        justify-content: flex-start;
+        justify-content: flex-end;
+        flex-shrink: 0;
     }
 
     .sort-dropdown {

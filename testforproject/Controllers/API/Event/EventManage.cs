@@ -137,6 +137,36 @@ namespace testforproject.Controllers.API.Event
             return Ok(new { message = $"{dto.ConfirmedUserIds.Count} participants confirmed." });
         }
 
+        [HttpPatch("{id}/image")]
+        public async Task<IActionResult> UpdateImage(int id, IFormFile imageFile)
+        {
+            var userId = _jwtService.UserId;
+            if (userId == null) return Unauthorized(new { message = "You must be logged in." });
+
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null) return NotFound();
+            if (ev.OwnerId != userId) return Forbid();
+
+            if (imageFile == null || imageFile.Length == 0)
+                return BadRequest(new { message = "No file provided." });
+
+            string uploadFolder = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "images", "events");
+            Directory.CreateDirectory(uploadFolder);
+
+            string uniqueFileName = Guid.NewGuid() + "_" +
+                Path.GetFileName(imageFile.FileName).Replace(" ", "_");
+            string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+            using (var fs = new FileStream(filePath, FileMode.Create))
+                await imageFile.CopyToAsync(fs);
+
+            ev.ImageUrl = "/images/events/" + uniqueFileName;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { imageUrl = ev.ImageUrl });
+        }
+
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
         {

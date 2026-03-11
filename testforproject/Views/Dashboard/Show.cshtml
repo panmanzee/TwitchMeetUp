@@ -59,7 +59,7 @@
                 </div>
                 <!-- Profile Dropdown -->
                 <div class="profile-btn-container" style="position: relative; display: inline-block;">
-                    <button id="profileDropdownBtn" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'block' ? 'none' : 'block';" style="width: 40px; height: 40px; background: #9146FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; color: white; border: 2px solid #303032; padding: 0; overflow: hidden; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#9146FF';" onmouseout="this.style.borderColor='#303032';">
+                    <button id="profileDropdownBtn" onclick="event.stopPropagation(); var pd=document.getElementById('profileDropdown'); pd.style.display = pd.style.display === 'block' ? 'none' : 'block'; if(pd.style.display==='block'){ var np=document.getElementById('notiPanel'); if(np) np.classList.remove('open'); }" style="width: 40px; height: 40px; background: #9146FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; color: white; border: 2px solid #303032; padding: 0; overflow: hidden; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#9146FF';" onmouseout="this.style.borderColor='#303032';">
                         @if (ViewBag.ProfilePic != null)
                         {
                             <img src="~/imageProfile/@(ViewBag.Uid + ".jpg")" style="width: 100%; height: 100%; object-fit: cover;" />

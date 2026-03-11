@@ -20,6 +20,14 @@
       <span class="event-badge" id="event-status">⬡ …</span>
     </div>
 
+    <div class="image-change-wrap">
+      <div class="event-img-preview" id="event-img-preview">
+        <span id="img-placeholder">No image</span>
+      </div>
+      <label class="btn-img-upload" for="event-img-input">Change Image</label>
+      <input type="file" id="event-img-input" accept="image/*" style="display:none" onchange="uploadEventImage(this)">
+    </div>
+
     <hr class="divider">
 
     <div class="time-group">

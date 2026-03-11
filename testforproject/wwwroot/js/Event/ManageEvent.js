@@ -44,6 +44,11 @@ async function loadEvent() {
         document.getElementById('expire-time').value = toDateTimeLocal(event.expiredDate);
         document.getElementById('cap-display').textContent = capacity;
 
+        const preview = document.getElementById('event-img-preview');
+        if (event.imageUrl) {
+            preview.innerHTML = `<img src="${event.imageUrl}" alt="Event image">`;
+        }
+
         updateStats();
     } catch (err) {
         showToast('❌', `Failed to load event: ${err.message}`);
@@ -356,6 +361,29 @@ function flattenErrors(body) {
         return Object.values(body.errors).flat().join(' | ');
     }
     return body.message || body.title || '';
+}
+
+async function uploadEventImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const formData = new FormData();
+    formData.append('imageFile', input.files[0]);
+    try {
+        const res = await fetch(`/api/events/${EVENT_ID}/image`, {
+            method: 'PATCH',
+            body: formData,
+        });
+        if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            throw new Error(body.message || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        const preview = document.getElementById('event-img-preview');
+        preview.innerHTML = `<img src="${data.imageUrl}" alt="Event image">`;
+        showToast('🖼', 'Image updated');
+    } catch (err) {
+        showToast('❌', `Image upload failed: ${err.message}`);
+    }
+    input.value = '';
 }
 
 // ── TOAST ──
