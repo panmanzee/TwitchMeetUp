@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/kowpa/Documents/GitHub/TwitchMeetUp/testforproject/Views/Home -name \"*.cshtml\" | xargs ls -lh)",
+      "Bash(find /c/Users/kowpa/Documents/GitHub/TwitchMeetUp/testforproject/Views -name \"*.cshtml\" -exec wc -l {} + | sort -n | head -20)",
+      "Bash(find /c/Users/kowpa/Documents/GitHub/TwitchMeetUp/testforproject/Models -name \"*.cs\" -exec basename {} \\\\; | sort)"
+    ]
+  }
+}

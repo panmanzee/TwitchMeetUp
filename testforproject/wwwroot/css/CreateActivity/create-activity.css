@@ -444,3 +444,27 @@ input:focus, textarea:focus {
         left: -40px;
     }
 }
+
+#locationSuggestions {
+    position: absolute;
+    background: #1a1a1f;
+    border: 1px solid #2a2a30;
+    border-radius: 8px;
+    z-index: 999;
+    width: 100%;
+    top: 100%;
+    left: 0;
+}
+
+.map-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9147ff;
+    font-size: 18px;
+    padding: 0;
+}

@@ -1,5 +1,6 @@
 ﻿<link rel="stylesheet" href="~/css/CreateActivity/create-activity.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" /> />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 @{
@@ -73,7 +74,20 @@
                     <div class="form-row">
                         <div class="group" style="flex: 2;">
                             <label for="location">Location</label>
-                            <input type="text" id="location" name="Location" placeholder="Open map" readonly class="pointer-input" />
+
+                            <div style="position: relative;">
+                                <input type="text" id="locationSearch"
+                                       name="Location"
+                                       placeholder="Search or pin on map..."
+                                       autocomplete="off"
+                                       style="padding-right: 44px;" />
+                                <button type="button" id="location" name="Location" 
+                                        title="Open Map" class="map-button">
+                                    <i class="fa-regular fa-map"></i>
+                                </button>
+                                <div id="locationSuggestions"></div>
+                            </div>
+
                         </div>
                         <div class="group" style="flex: 1;">
                             <label for="max">Max Participants</label>
