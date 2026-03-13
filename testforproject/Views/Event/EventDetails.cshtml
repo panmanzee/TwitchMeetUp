@@ -1,6 +1,6 @@
 @model testforproject.Models.Event
 @{
-    var now = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7));
+    var now = DateTime.UtcNow.AddHours(7);
 }
 
 <!DOCTYPE html>

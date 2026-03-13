@@ -105,11 +105,8 @@ namespace testforproject.Controllers
             var ev = await _db.Events.FindAsync(id);
             if (ev == null) return NotFound();
 
-            //var debugUrl = $"{Request.Scheme}://{Request.Host}";
-            //return Content(debugUrl);
-
             //make URL
-            var scanUrl = $"https://panmanzeeweb-hvhqg6fzcufmbnhx.japaneast-01.azurewebsites.net/Event/ScanAttend?eventId={id}";
+            var scanUrl = $"{Request.Scheme}://{Request.Host}/Event/ScanAttend?eventId={id}";
 
             //Generate QR
             var qrBytes = await Task.Run(() =>
@@ -162,7 +159,7 @@ namespace testforproject.Controllers
                     </head>
                     <body style='background:#08080a; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:sans-serif; margin:0;'>
                         <div style='background:#111114; border:1px solid #2a2a30; border-radius:20px; padding:40px; text-align:center;'>
-                            <div style='color:#4ade80; font-size:20px; font-weight:700; margin-top:12px;'>Already Attendancediv>
+                            <div style='color:#4ade80; font-size:20px; font-weight:700; margin-top:12px;'>Already Attended</div>
                             <div style='color:#8b8a96; font-size:14px; margin-top:8px;'>Redirecting to dashboard in 3 seconds...</div>
                         </div>
                     </body>
